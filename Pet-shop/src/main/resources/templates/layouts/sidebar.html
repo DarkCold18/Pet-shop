@@ -1,0 +1,9 @@
+<div th:fragment="sidebar">
+  <h2 th:text="#{ sidebar }"></h2>
+  <ul class="list-group">
+    <li class="list-group-item" th:each="category : ${ categs }">
+      <a th:href="@{'/shop/category/' +${ category.id }}" th:text="${category.name}"></a>
+
+    </li>
+  </ul>
+</div>
