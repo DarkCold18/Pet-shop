@@ -2,142 +2,228 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <title th:text="${ title }"></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" xintegrity="sha512-z3gLpd7yknf1YoNbCzqN7z0t9e/QJ9Xz4vA24tY2l3y3c5/j6t5V/E/wA5R/K1a4uP5P7lT9V5qF3P5B6/5A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:insert="layouts/header :: header">
+<div th:insert="layouts/header :: header"></div>
 
+<div class="container my-5">
+    <h1 class="cart-title" th:text="${ title }">Кошик</h1>
+    <div class="row">
+        <div class="col-lg-8 d-none d-lg-flex cart-header-row">
+            <div class="col-5">Продукти</div>
+            <div class="col-2 text-center">Ціна</div>
+            <div class="col-3 text-center">Кількість</div>
+            <div class="col-2 text-center">Всього</div>
+        </div>
+        <div class="col-lg-8 cart-items-container">
+            <div class="cart-item row align-items-center py-3" th:each="item : ${cart}"
+                 th:if="${item != null and item.product != null}"
+                 th:data-price="${item.product.price}"
+                 th:data-product-id="${item.product.id}">
+
+                <div class="col-12 col-md-5 d-flex align-items-center">
+                    <img th:src="@{/images/{image}(image=${item.product.image})}" alt="Product Image" class="product-image">
+                    <div class="ms-3 product-details">
+                        <div class="product-name" th:text="${item.product.name}"></div>
+                        <div class="product-attrs">
+                            На складі: <span th:text="${item.product.quantity}">50</span> шт.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 col-md-2 text-center product-price" th:text="${item.product.price}">$300.0</div>
+
+                <div class="col-4 col-md-3 text-center product-quantity">
+                    <div class="quantity-control d-flex justify-content-center">
+
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary btn-qty-minus"
+                                th:data-id="${item.product.id}"
+                                onclick="updateQuantity(this.dataset.id, -1)">-</button>
+
+                        <input type="number"
+                               class="form-control text-center qty-input"
+                               th:value="${item.quality}"
+                               min="1"
+                               disabled>
+
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary btn-qty-plus"
+                                th:data-id="${item.product.id}"
+                                onclick="updateQuantity(this.dataset.id, 1)">+</button>
+
+                    </div>
+                </div>
+                <div class="col-3 col-md-1 text-end item-total-price">
+                    <span class="total" th:text="${item.product.price * item.quality}">$1500.00</span>
+                </div>
+                <div class="col-1 col-md-1 text-center product-remove">
+                    <form th:action="@{/cart/remove/{id}(id=${item.product.id})}" method="post">
+                        <button type="submit" class="btn btn-remove-item">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <form th:action="@{/cart/clear}" method="post" class="mt-4">
+                <button class="btn btn-clear-cart">Очистити кошик</button>
+            </form>
+        </div>
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="cart-summary-box">
+                <h4 class="summary-title">Загальна сума в кошику</h4>
+
+                <form th:action="@{/checkout}" method="post" id="checkoutForm">
+                    <div class="summary-line">
+                        <span>Проміжний підсумок</span>
+                        <span id="subtotalDisplay" class="summary-value" th:data-bonus="${user?.bonusPoints}">0.00 грн</span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Вартість доставки</span>
+                        <span class="summary-value delivery-fee">Безкоштовно</span>
+                    </div>
+                    <div class="summary-line discount-line" id="discountLine" style="display:none;">
+                        <span>Знижка (бонуси)</span>
+                        <span id="discountDisplay" class="summary-value discount-value text-success">-0.00 грн</span>
+                    </div>
+                    <hr>
+                    <div class="summary-line grand-total-line">
+                        <span>До сплати</span>
+                        <span id="grandTotalDisplay" class="summary-value grand-total-value">0.00 грн</span>
+                    </div>
+
+                    <div class="bonus-section mt-3" th:if="${user != null}">
+                        <label class="form-check-label d-flex justify-content-between align-items-center">
+                            Використати <span th:text="${user.bonusPoints}"></span> балів
+                            <input type="checkbox" name="useBonus" id="useBonus" class="form-check-input" value="true">
+                        </label>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-proceed-checkout">Перейти до оформлення замовлення</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="row container ">
-    <h1 th:text="${ title }"></h1>
-    <div class="col-8">
-        <table class="table" id="cartTable">
-            <thead>
-            <tr>
-                <th>Назва</th>
-                <th>Кількість</th>
-                <th>Ціна</th>
-                <th>Дія</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${cart}" th:data-price="${item.product.price}">
-                <td th:text="${item.product.name}"></td>
-                <td>
-                    <div >
-                        <button class="btn btn-outline-secondary lef" onclick="updateQty(this,+1)">+</button>
-                        <input type="number" class="form-control text-center qly kol lef" th:value="${item.quality}">
-                        <button class="btn btn-outline-secondary" onclick="updateQty(this,-1)">-</button>
-                    </div>
-                </td>
-                <td>
-                    <div class="price-cell total" th:text="${item.product.price * item.quality} + ' Грн'"></div>
-                </td>
-                <td>
-                    <form th:action="@{/cart/remove/{id}(id=${item.product.id})}" method="post">
-                        <button class="btn btn-danger btn-sm">Видалити</button>
-                    </form>
-                </td>
-
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="3" class="text-end"><strong>Загальна сума:</strong></td>
-                <td colspan="2" id="originalTotal" th:data-bonus="${user.bonusPoints}">
-                    <span id="priceBeforeDiscount">0.00 грн</span>
-                </td>
-            </tr>
-            </tfoot>
-        </table>
-        <form action="/clear" method="post">
-            <button class="btn btn-danger btn-sm">Очистити</button>
-        </form>
-        <form th:action="@{/checkout}" method="post">
-            <div class="bonus-section">
-                <label>
-                    <input type="checkbox" name="useBonus" id="useBonus"
-                           th:if="${user != null}" th:checked="${user.bonusPoints > 0}">
-                    <span th:if="${user != null}">
-    Використати бонус (є <span th:text="${user.bonusPoints}"></span> балів)
-  </span>
-                    <span th:unless="${user != null}">
-    Ввійдіть, щоб використати бонуси
-  </span>
-                </label>
-            </div>
-            <button type="submit" class="btn btn-add">Оформити замовлення</button>
-        </form>
-    </div>
-    <div class="col-4" th:insert="layouts/sidebar :: sidebar">
-    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-<footer th:insert="layouts/footer :: footer">
-</footer>
+<footer th:insert="layouts/footer :: footer"></footer>
 <script>
-    function updateQty(btn, delta) {
-        const row = btn.closest('tr');
-        const qtyInput = row.querySelector('.qly');
-        let qty = parseInt(qtyInput.value) + delta;
-        if (qty < 1) qty = 1;
-        qtyInput.value = qty;
-
-        const price = parseFloat(row.dataset.price);
-        const totalCell = row.querySelector('.total');
-        const itemTotal = qty * price;
-        totalCell.textContent = itemTotal.toFixed(2) + ' Грн';
-
-        updateTotalWithBonus();
-    }
-
-    function updateTotalWithBonus() {
-        const bonus = parseFloat(document.getElementById("originalTotal").dataset.bonus || 0);
-        const useBonus = document.getElementById("useBonus")?.checked ?? false;
-        let currentTotal = 0;
-        document.querySelectorAll('#cartTable tbody tr').forEach(row => {
-            const qtyInput = row.querySelector('.qly');
-            const price = parseFloat(row.dataset.price);
-            const quantity = parseInt(qtyInput.value) || 0;
-            currentTotal += price * quantity;
+    function updateCartTotals() {
+        let currentSubtotal = 0;
+        document.querySelectorAll('.cart-item').forEach(itemRow => {
+            const totalCell = itemRow.querySelector('.item-total-price .total');
+            currentSubtotal += parseFloat(totalCell.textContent.replace('$', '').replace(' грн', '')) || 0;
         });
 
-        const priceBefore = document.getElementById("priceBeforeDiscount");
-        const bonusText = document.getElementById("bonusUsed");
-        const finalPrice = document.getElementById("finalPrice");
+        const subtotalDisplay = document.getElementById("subtotalDisplay");
+        const grandTotalDisplay = document.getElementById("grandTotalDisplay");
+        const bonusElement = document.getElementById("subtotalDisplay");
+        const discountLine = document.getElementById("discountLine");
+        const discountDisplay = document.getElementById("discountDisplay");
+        const useBonusCheckbox = document.getElementById("useBonus");
 
-        if (priceBefore) priceBefore.textContent = currentTotal.toFixed(2) + " Грн.";
+        if (subtotalDisplay) subtotalDisplay.textContent = currentSubtotal.toFixed(2) + " грн";
 
-        let discounted = currentTotal;
+        let finalTotal = currentSubtotal;
+        let bonusDiscount = 0;
+
+
+        const bonus = parseFloat(bonusElement?.dataset.bonus || 0);
+        const useBonus = useBonusCheckbox?.checked ?? false;
+
         if (useBonus && bonus > 0) {
-            const discount = Math.min(bonus, currentTotal);
-            discounted = currentTotal - discount;
+            bonusDiscount = Math.min(bonus, currentSubtotal);
+            finalTotal = currentSubtotal - bonusDiscount;
 
-            if (bonusText) {
-                bonusText.style.display = "inline";
-                bonusText.textContent = "- " + discount.toFixed(2) + " Грн. ";
+            if (discountLine && discountDisplay) {
+                discountLine.style.display = "flex";
+                discountDisplay.textContent = "-" + bonusDiscount.toFixed(2) + " грн";
             }
         } else {
-            if (bonusText) {
-                bonusText.style.display = "none";
-                bonusText.textContent = "";
+            if (discountLine) {
+                discountLine.style.display = "none";
             }
         }
 
-        if (finalPrice) finalPrice.textContent = discounted.toFixed(2) + " Грн.";
+        if (grandTotalDisplay) {
+            grandTotalDisplay.textContent = finalTotal.toFixed(2) + " грн";
+        }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
         const useBonusCheckbox = document.getElementById('useBonus');
         if (useBonusCheckbox) {
-            useBonusCheckbox.addEventListener('change', updateTotalWithBonus);
+            useBonusCheckbox.addEventListener('change', updateCartTotals);
         }
 
-        updateTotalWithBonus();
+
+        updateCartTotals();
     });
 
+
+    function updateQuantity(productId, delta) {
+        const itemRow = document.querySelector(`.cart-item[data-product-id="${productId}"]`);
+
+        if (!itemRow) {
+            console.error("Елемент кошика не знайдено для ID:", productId);
+            return;
+        }
+
+        const qtyInput = itemRow.querySelector('.qty-input');
+        let currentQuantity = parseInt(qtyInput.value);
+        let newQuantity = currentQuantity + delta;
+
+        if (newQuantity < 1) {
+            return;
+        }
+
+        fetch('/cart/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${productId}&delta=${delta}`
+        })
+            .then(response => {
+                if (!response.ok) {
+                    alert('Помилка сервера при оновленні кошика. Перевірте консоль.');
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    qtyInput.value = data.newQuantity;
+
+                    const itemTotalElement = itemRow.querySelector('.item-total-price .total');
+                    if (itemTotalElement) {
+                        itemTotalElement.textContent = data.itemTotal.toFixed(2) + " грн";
+                    }
+
+
+                    updateTotalsUI(data.cartTotal);
+
+                } else if (data.error) {
+                    alert("Помилка: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Помилка AJAX-запиту:', error);
+            });
+    }
+
+
+    function updateTotalsUI(newCartTotal) {
+        updateCartTotals();
+    }
 </script>
 
 </body>

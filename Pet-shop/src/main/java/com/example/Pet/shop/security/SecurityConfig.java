@@ -1,4 +1,5 @@
 package com.example.Pet.shop.security;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,20 +11,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private AppUserDetailsService UserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/register", "/login","/about","/shop", "/css/","/images/").permitAll()
+                        .requestMatchers("/", "/register", "/login", "/about", "/shop", "/css/**", "/images/**").permitAll()
                         .requestMatchers("/shop/add-category", "/shop/product/add").permitAll()
+                        .requestMatchers("/profile").authenticated()
+                        .requestMatchers("/inventory").authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")           // шлях до логін-сторінки
-                        .defaultSuccessUrl("/", true)  // перенаправлення після успішного входу
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -31,8 +33,8 @@ public class SecurityConfig {
                         .permitAll()
                 );
         return http.build();
-
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

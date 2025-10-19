@@ -16,6 +16,7 @@ public class Product {
     private String short_description;
     private String full_description;
     private boolean recommended;
+    private int quantity;
 
     //all to 1
     @ManyToOne
@@ -149,5 +150,13 @@ public class Product {
     }
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

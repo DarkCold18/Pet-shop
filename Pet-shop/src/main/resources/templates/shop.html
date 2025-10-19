@@ -2,57 +2,47 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <title th:text="${ title }"></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" xintegrity="sha512-z3gLpd7yknf1YoNbCzqN7z0t9e/QJ9Xz4vA24tY2l3y3c5/j6t5V/E/wA5R/K1a4uP5P7lT9V5qF3P5B6/5A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:insert="layouts/header :: header">
 
-</div>
-<div class="row ">
-    <h1 th:text="#{ shop }"></h1>
-    <div>
-        <form>
+<div th:insert="layouts/header :: header"></div>
 
-        </form>
-        <a th:href="@{/shop/add-category}" class="btn btn-add"> Додати</a>
-    </div>
-    <div class="col-8">
-        <div class="row wrapper">
-        <div class="col-3 lef cat card1 " th:each="category : ${categories}">
-            <a th:href="'/shop/category/'+${ category.id }" >
-            <h2 th:text="${category.name}" class="cen"></h2>
-            </a>
-            <a th:href="'/shop/category/'+${ category.id }" >
-            <div th:if="${category.image != null and category.image != ''}" class="cen">
-                <img th:src="'/images/'+${category.image}" alt="Катег" width="70%" height="100px">
-            </div>
-            </a>
-            <a th:href="'/shop/category/'+${ category.id }" >
-            <div th:unless="${category.image != null and category.image != ''}" class="cen">
-                <img src="/images/noimage.png" alt="Катег" width="70%" height="100px">
-            </div>
-            </a>
-            <div th:text="${category.description}" class="desc">
-            </div>
-            <div class="card-buttons">
-            <a th:href="'/shop/'+${ category.id }" class="btn btn-add ">Товари</a>
-            <a th:href="'/shop/category/'+${ category.id }" class="btn btn-info lef ">Перегляд</a>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-4" th:insert="layouts/sidebar :: sidebar"></div>
+        <div class="col-lg-8">
+            <h1 class="mb-4" th:text="#{ shop }">Категорії товарів</h1>
+
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4" th:each="category : ${categories}">
+
+                    <a th:href="'/shop/category/'+${ category.id }" class="category-card">
+
+                        <div class="category-card__image">
+                            <img th:if="${category.image != null and category.image != ''}" th:src="'/images/'+${category.image}" alt="Category Image">
+                            <img th:unless="${category.image != null and category.image != ''}" src="/images/noimage.png" alt="No Image">
+                        </div>
+
+                        <div class="category-card__title">
+                            <h5 th:text="${category.name}">Назва категорії</h5>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
-        </div>
-    </div>
-    <div class="col-4" th:insert="layouts/sidebar :: sidebar">
+
+
 
     </div>
 </div>
 
+<footer th:insert="layouts/footer :: footer"></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-<footer th:insert="layouts/footer :: footer">
-
-</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

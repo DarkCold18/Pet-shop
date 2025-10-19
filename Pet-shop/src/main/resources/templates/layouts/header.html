@@ -1,48 +1,68 @@
 <div th:fragment="header">
-    <header class="p-3 mb-3 border-bottom">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"> <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg> </a>
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a th:href="@{/}" class="nav-link px-2 link-secondary">Головна</a></li>
-                    <li><a th:href="@{/shop}" class="nav-link px-2 link-body-emphasis">Магазин</a></li>
-                    <div class="mydropdown">
-                        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> </a>
-                        <ul class="dropdown-menu text-small">
-                            <li><a th:href="@{/shop/product}" class="dropdown-item">Всі товари</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Налаштування</a></li>
-                            <li><a class="dropdown-item" href="#">Профіль</a></li>
-                            <li><a class="dropdown-item" href="#">Вийти</a></li>
-                        </ul>
-                    </div>
-                    <li><a th:href="@{/about}" class="nav-link px-2 link-body-emphasis">Про нас</a></li>
-                    <li><a th:href="@{/contact}" class="nav-link px-2 link-body-emphasis">Контакти</a></li>
-                    <div class="lang-switcher">
-                    <div class="flag-uk">
-                    <li><a href="?lang=uk" class="nav-link px-2 link-body-emphasis">UA</a></li>
-                    <img src="/images/Ukraine.png" alt="flag">
-                    </div>
-                    <div class="flag-en">
-                    <li><a href="?lang=en" class="nav-link px-2 link-body-emphasis">EN</a></li>
-                    <img src="/images/United%20Kingdom.png" alt="flag">
-                    </div>
-                    </div>
+    <header class="main-header">
+        <div class="container-fluid">
+            <a href="/" class="logo-link me-4">
+                <img th:src="@{/images/logo-maga1.png}" alt="Логотип компанії" class="header-logo-img">
+            </a>
+            <div class="central-nav-wrapper d-none d-lg-flex">
+                <ul class="nav central-nav">
+                    <li>
+                        <a th:href="@{/}"
+                           class="nav-link px-3 nav-tile-link"
+                           th:classappend="${#ctx.requestUri != null and #ctx.requestUri == '/' ? 'active' : ''}">
+                            Головна
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/shop}"
+                           class="nav-link px-3 nav-tile-link"
+                           th:classappend="${#ctx.requestUri != null and #strings.startsWith(#ctx.requestUri, '/shop') ? 'active' : ''}">
+                            Магазин
+                        </a>
+                    </li>
                 </ul>
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                <form class="search-form" role="search">
+                    <input type="search" class="form-control" placeholder="Пошук товарів..." aria-label="Search">
                 </form>
-                <div class="dropdown text-end">
-                    <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle"> </a>
-                    <ul class="dropdown-menu text-small">
+
+            </div>
+            <div class="d-flex align-items-center controls-group">
+                <div class="lang-switcher d-flex me-3">
+                    <a href="?lang=uk" class="lang-link active" title="Українська">
+                        <span class="flag-circle">🇺🇦</span>
+                    </a>
+                    <a href="?lang=en" class="lang-link ms-2" title="English">
+                        <span class="flag-circle">🇬🇧</span>
+                    </a>
+                </div>
+                <a th:href="@{/cart}" class="control-icon me-3" title="Кошик">
+                    <i class="fas fa-shopping-cart fa-lg"></i>
+                </a>
+                <div class="dropdown text-end profile-dropdown me-3">
+                    <a href="#" class="d-block link-body-emphasis text-decoration-none control-icon" data-bs-toggle="dropdown" aria-expanded="false" title="Профіль">
+                        <i class="fas fa-user-circle fa-lg"></i>
+                    </a>
+                    <ul class="dropdown-menu text-small dropdown-menu-end">
+                        <li><a class="dropdown-item" th:href="@{/profile}">Мій профіль</a></li>
                         <li><a class="dropdown-item" href="#">Історія покупок</a></li>
                         <li><a class="dropdown-item" href="#">Налаштування</a></li>
-                        <li><a class="dropdown-item" href="/profile">Профіль</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/login">Увійти</a></li>
-                        <li><a class="dropdown-item" href="/login?logout">Вийти</a></li>
+                        <li><a class="dropdown-item" th:href="@{/login?logout}">Вийти</a></li>
                     </ul>
                 </div>
+                <div class="dropdown text-end hamburger-dropdown">
+                    <a href="#" class="d-block link-body-emphasis text-decoration-none control-icon" data-bs-toggle="dropdown" aria-expanded="false" title="Меню">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </a>
+                    <ul class="dropdown-menu text-small dropdown-menu-end hamburger-menu">
+                        <li><a class="dropdown-item" th:href="@{/about}">Про нас</a></li>
+                        <li><a class="dropdown-item" th:href="@{/contact}">Контакти</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li class="d-lg-none"><a class="dropdown-item" th:href="@{/}">Головна</a></li>
+                        <li class="d-lg-none"><a class="dropdown-item" th:href="@{/shop}">Магазин</a></li>
+                    </ul>
+                </div>
+
             </div>
         </div>
     </header>

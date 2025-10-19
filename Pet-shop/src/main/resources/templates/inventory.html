@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${ title }"></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" xintegrity="sha512-z3gLpd7yknf1YoNbCzqN7z0t9e/QJ9Xz4vA24tY2l3y3c5/j6t5V/E/wA5R/K1a4uP5P7lT9V5qF3P5B6/5A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:insert="layouts/header :: header"></div>
+<div class="personal-section content-wrapper">
+    <div class="main-layout">
+        <div class="sidebar">
+            <div>
+                <div class="sidebar-header">
+                    Обліковий запис
+                    <div style="font-size: 0.9rem; color: #888; font-weight: normal; margin-top: 5px;">Керуйте інформацією свого облікового запису.</div>
+                </div>
+                <div class="sidebar-menu">
+                    <a th:href="@{/profile}"><i class="fas fa-user"></i> Профіль</a>
+                    <a th:href="@{/orders}"><i class="fas fa-history"></i> Історія</a>
+                    <div sec:authorize="hasRole('ADMIN')" class="menu-item">
+                        <a href="#" class="active"><i class="fas fa-shield-alt"></i> Управління запасами</a>
+                        <div class="submenu">
+                            <a th:href="@{/shop/add-category}" class="submenu-item">Додати категорію</a>
+                            <a th:href="@{/shop/product/add}" class="submenu-item">Додати продукт</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="main-content-header">
+                <h2>Управління запасами</h2>
+                <a th:href="@{/inventory/export/excel}" class="btn btn-success mb-3" target="_blank">
+                    <i class="fas fa-file-excel"></i> Згенерувати Excel-звіт
+                </a>
+            </div>
+            <div sec:authorize="hasRole('ADMIN')">
+                <div class="search-container">
+                    <div class="group">
+                        <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><g><path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path></g></svg>
+                        <input placeholder="Пошук товару..." type="search" class="input" id="productSearchInput">
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="table table-bordered mt-3" id="productTable">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Назва</th>
+                            <th>Ціна</th>
+                            <th>Наявність</th>
+                            <th>Оновити</th>
+                        </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                        <tr th:each="product : ${products}">
+                            <td class="product-name-cell" th:text="${product.name}"></td>
+                            <td th:text="${product.price} + ' грн'"></td>
+                            <td th:text="${product.quantity} + ' шт.'"></td>
+                            <td>
+                                <form th:action="@{/inventory/update/{id}(id=${product.id})}" method="post" class="d-flex">
+                                    <input type="number" name="quantity" th:value="${product.quantity}" class="form-control me-2" style="width: 100px;">
+                                    <button type="submit" class="btn btn-primary btn-sm">Оновити</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div sec:authorize="!hasRole('ADMIN')" class="alert alert-warning mt-3">
+                У вас немає доступу до управління інвентарем.
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('productSearchInput');
+        const tableBody = document.getElementById('productTableBody');
+
+        if (input && tableBody) {
+            function filterTable() {
+                const filter = input.value.toUpperCase();
+                const rows = tableBody.getElementsByTagName('tr');
+
+                for (let i = 0; i < rows.length; i++) {
+                    const productNameCell = rows[i].querySelector('.product-name-cell');
+                    if (productNameCell) {
+                        const textValue = productNameCell.textContent || productNameCell.innerText;
+
+                        if (textValue.toUpperCase().indexOf(filter) > -1) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            input.addEventListener('input', filterTable);
+        }
+    });
+</script>
+
+<script src="/js/profile.js"></script>
+</body>
+</html>
