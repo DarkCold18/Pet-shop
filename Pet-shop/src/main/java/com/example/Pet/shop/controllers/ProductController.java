@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID; // Потрібно для унікальних імен файлів
 
 @Controller
 public class ProductController {
@@ -27,6 +28,7 @@ public class ProductController {
     private CategoryRepository repoCategory;
     @Autowired
     private ProductRepository repoProduct;
+
     public static String UPLOAD_DIRECTORY = "D:/Практика2025/Pet shop/Pet-shop/src/main/resources/static/images";
 
     @GetMapping("/shop/product")
@@ -46,71 +48,112 @@ public class ProductController {
     }
     @GetMapping("/shop/product/{id}")
     public String productDetail(@PathVariable(value = "id") Long id, Model model) {
-        if(!repoProduct.existsById(id)) {
+        Optional<Product> optionalProduct = repoProduct.findById(id);
+        if (optionalProduct.isEmpty()) {
             return "redirect:/shop";
         }
-        Optional<Product> product = repoProduct.findById(id);
-        ArrayList<Product> prod = new ArrayList<>();
-        product.ifPresent(prod::add);
-        model.addAttribute("product", prod);
+        model.addAttribute("product", optionalProduct.get());
         return "product-detail";
     }
+
     @GetMapping("/shop/product/add")
     public String addProduct(Model model) {
         model.addAttribute("categories", repoCategory.findAll());
         return "add-product";
     }
     @PostMapping("/shop/product/add")
-    public String saveProduct(@RequestParam String name, @RequestParam("image") MultipartFile file,
-                               @RequestParam String short_description, @RequestParam String full_description,
-                               @RequestParam double price, @RequestParam Long categoryId , Model model) throws IOException {
-        StringBuilder fileName=new StringBuilder();
-        Path fileNameAndpath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
-        fileName.append(file.getOriginalFilename());
-        Files.write(fileNameAndpath, file.getBytes());
-        String image=fileName.toString();
+    public String saveProduct(@RequestParam String name,
+                              @RequestParam("image") MultipartFile mainImageFile,
+                              @RequestParam("images") List<MultipartFile> additionalImageFiles,
+                              @RequestParam String short_description,
+                              @RequestParam String full_description,
+                              @RequestParam double price,
+                              @RequestParam Long categoryId) throws IOException {
+
         Category category = repoCategory.findById(categoryId).orElseThrow();
-        Product product=new Product(name,price, image, short_description, full_description, category);
+        Product product = new Product(name, price, "", short_description, full_description, category);
+
+        String mainImageName = saveImage(mainImageFile);
+        if (mainImageName != null) {
+            product.setImage(mainImageName);
+        }
+
+        List<String> additionalImageNames = new ArrayList<>();
+        for (MultipartFile file : additionalImageFiles) {
+            String imageName = saveImage(file);
+            if (imageName != null) {
+                additionalImageNames.add(imageName);
+            }
+        }
+        product.setImages(additionalImageNames);
+
         repoProduct.save(product);
         return "redirect:/shop/product";
     }
+
     @GetMapping("/shop/product/{id}/edit")
     public String editProduct(@PathVariable(value = "id") Long id, Model model) {
-        if(!repoProduct.existsById(id)) {
+        Optional<Product> optionalProduct = repoProduct.findById(id);
+        if (optionalProduct.isEmpty()) {
             return "redirect:/shop/product";
         }
-        Optional<Product> product = repoProduct.findById(id);
-        ArrayList<Product> prod = new ArrayList<>();
-        product.ifPresent(prod::add);
-        model.addAttribute("product", prod);
-        List<Category> categories = repoCategory.findAll();
-        model.addAttribute("categories", categories);
+        model.addAttribute("product", optionalProduct.get());
+        model.addAttribute("categories", repoCategory.findAll());
         return "edit-product";
     }
+
     @PostMapping("/shop/product/{id}/edit")
-    public String updateProduct(@PathVariable(value = "id") Long id, @RequestParam String name, @RequestParam("image") MultipartFile file,
-                              @RequestParam String short_description, @RequestParam String full_description,
-                              @RequestParam double price, @RequestParam Long categoryId , Model model) throws IOException {
-        StringBuilder fileName = new StringBuilder();
-        Path fileNameAndpath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
-        fileName.append(file.getOriginalFilename());
-        Files.write(fileNameAndpath, file.getBytes());
-        String image = fileName.toString();
-        Category category = repoCategory.findById(categoryId).orElseThrow();
+    public String updateProduct(@PathVariable(value = "id") Long id,
+                                @RequestParam String name,
+                                @RequestParam("image") MultipartFile mainImageFile,
+                                @RequestParam("images") List<MultipartFile> additionalImageFiles,
+                                @RequestParam String short_description,
+                                @RequestParam String full_description,
+                                @RequestParam double price,
+                                @RequestParam Long categoryId) throws IOException {
+
         Product product = repoProduct.findById(id).orElseThrow();
+        Category category = repoCategory.findById(categoryId).orElseThrow();
+
         product.setName(name);
         product.setCategory(category);
         product.setPrice(price);
-        product.setImage(image);
         product.setShort_description(short_description);
         product.setFull_description(full_description);
+        if (!mainImageFile.isEmpty()) {
+            String mainImageName = saveImage(mainImageFile);
+            product.setImage(mainImageName);
+        }
+        List<String> additionalImageNames = new ArrayList<>();
+        for (MultipartFile file : additionalImageFiles) {
+            if (!file.isEmpty()) {
+                String imageName = saveImage(file);
+                additionalImageNames.add(imageName);
+            }
+        }
+        if (!additionalImageNames.isEmpty()) {
+            product.setImages(additionalImageNames);
+        }
         repoProduct.save(product);
         return "redirect:/shop/product";
     }
-    @GetMapping("/shop/product/{id}/delete")
-    public String deleteProduct(@PathVariable(value = "id") Long id, Model model) {
-        Product product = repoProduct.findById(id).orElseThrow();
+
+    @PostMapping("/shop/product/{id}/delete")
+    public String deleteProduct(@PathVariable(value = "id") Long id) {
+        Product product = repoProduct.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
         repoProduct.delete(product);
         return "redirect:/shop/product";
+    }
+
+    private String saveImage(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            return null;
+        }
+        String originalFilename = file.getOriginalFilename();
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFilename;
+        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, uniqueFileName);
+        Files.write(fileNameAndPath, file.getBytes());
+        return uniqueFileName;
     }
 }

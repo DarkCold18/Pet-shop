@@ -13,12 +13,10 @@
     <div class="row">
         <div class="col-lg-4" th:insert="layouts/sidebar :: sidebar"></div>
         <div class="col-lg-8">
-            <h1 th:text="#{ greeting }">Ласкаво просимо!</h1>
             <h2 class="mb-4" th:text="#{ Featured }">Рекомендовані товари</h2>
             <div class="row g-3">
                 <div class="col-md-4" th:each="product : ${products}">
                     <div class="card">
-
                         <div class="card__image-container">
                             <a th:href="'/shop/product/'+${ product.id }">
                                 <div th:if="${product.image != null and product.image != ''}">
@@ -41,7 +39,6 @@
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div> </div>

@@ -1,6 +1,7 @@
 package com.example.Pet.shop.models;
 
 import jakarta.persistence.*;
+import java.util.List; // ✅ 1. ДОДАНО ІМПОРТ
 
 @Entity
 public class Product {
@@ -17,6 +18,9 @@ public class Product {
     private String full_description;
     private boolean recommended;
     private int quantity;
+
+    @ElementCollection
+    private List<String> images;
 
     //all to 1
     @ManyToOne
@@ -58,7 +62,6 @@ public class Product {
 
     public Product(String name, double price, String image, String short_description, String full_description,Category category) {
         this.name = name;
-
         this.price = price;
         this.image = image;
         this.short_description = short_description;
@@ -158,5 +161,12 @@ public class Product {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }

@@ -2,7 +2,7 @@
     <header class="main-header">
         <div class="container-fluid">
             <a href="/" class="logo-link me-4">
-                <img th:src="@{/images/logo-maga1.png}" alt="Логотип компанії" class="header-logo-img">
+                <img th:src="@{/images/logo12-fon.png}" alt="Логотип компанії" class="header-logo-img">
             </a>
             <div class="central-nav-wrapper d-none d-lg-flex">
                 <ul class="nav central-nav">
@@ -21,26 +21,26 @@
                         </a>
                     </li>
                 </ul>
-                <form class="search-form" role="search">
+                <form class="search-form position-relative" role="search">
                     <input type="search" class="form-control" placeholder="Пошук товарів..." aria-label="Search">
+                    <i class="fas fa-search search-icon"></i>
                 </form>
-
             </div>
             <div class="d-flex align-items-center controls-group">
-                <div class="lang-switcher d-flex me-3">
+                <div class="lang-switcher d-flex align-items-center me-3">
                     <a href="?lang=uk" class="lang-link active" title="Українська">
-                        <span class="flag-circle">🇺🇦</span>
+                        <span class="flag-circle">UA</span>
                     </a>
                     <a href="?lang=en" class="lang-link ms-2" title="English">
-                        <span class="flag-circle">🇬🇧</span>
+                        <span class="flag-circle">EN</span>
                     </a>
                 </div>
                 <a th:href="@{/cart}" class="control-icon me-3" title="Кошик">
-                    <i class="fas fa-shopping-cart fa-lg"></i>
+                    <i class="fas fa-shopping-cart"></i>
                 </a>
                 <div class="dropdown text-end profile-dropdown me-3">
                     <a href="#" class="d-block link-body-emphasis text-decoration-none control-icon" data-bs-toggle="dropdown" aria-expanded="false" title="Профіль">
-                        <i class="fas fa-user-circle fa-lg"></i>
+                        <i class="fas fa-user-circle"></i>
                     </a>
                     <ul class="dropdown-menu text-small dropdown-menu-end">
                         <li><a class="dropdown-item" th:href="@{/profile}">Мій профіль</a></li>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="dropdown text-end hamburger-dropdown">
                     <a href="#" class="d-block link-body-emphasis text-decoration-none control-icon" data-bs-toggle="dropdown" aria-expanded="false" title="Меню">
-                        <i class="fas fa-bars fa-lg"></i>
+                        <i class="fas fa-bars"></i>
                     </a>
                     <ul class="dropdown-menu text-small dropdown-menu-end hamburger-menu">
                         <li><a class="dropdown-item" th:href="@{/about}">Про нас</a></li>
@@ -62,7 +62,6 @@
                         <li class="d-lg-none"><a class="dropdown-item" th:href="@{/shop}">Магазин</a></li>
                     </ul>
                 </div>
-
             </div>
         </div>
     </header>

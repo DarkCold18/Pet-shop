@@ -8,49 +8,75 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:insert="layouts/header :: header">
-
-</div>
-<div class="row ">
-    <h1>Детально про товар</h1>
-    <div>
-        <form action="">
-        </form>
-
-    </div>
-    <div class="col-8 ">
-        <div class="col-8 lef cat-detail" th:each="product : ${product}">
-            <h2 th:text="${product.name}"></h2>
-            <div th:if="${product.image != null and product.image != ''}">
-                <img th:src="'/images/'+${product.image}" alt="Катег" width="70%">
-            </div>
-            <div th:unless="${product.image != null and product.image != ''}">
-                <img src="/images/noimage.png" alt="Катег" width="70%">
-            </div>
-            <div th:text="'Ціна: ' + ${product.price} + ' грн'" class="price"></div>
-            <br>
-            <div th:text="${product.full_description }" class="desc">
-            </div>
-            <div class="card-buttons">
-            <a th:href="'/shop/product/'+${ product.id } + '/edit'" class="btn btn-add">Редагувати</a>
-            <a th:href="'/shop/product/'+${ product.id } + '/delete'" class="btn btn-info lef">Видалити</a>
-                <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post">
-                    <button class="btn btn-info lef ">Купити</button>
-                </form>
-            </div>
+<div th:insert="layouts/header :: header"></div>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12"> <div class="product-detail-container" th:if="${product != null}" th:object="${product}">
+            <div class="row">
+                <div class="col-md-7"> <div class="main-image-wrapper mb-3">
+                    <img th:src="'/images/' + *{image}" alt="Main product image" id="mainProductImage" class="img-fluid">
+                </div>
+                    <div class="thumbnail-gallery" th:if="*{images != null and !images.isEmpty()}">
+                        <img th:src="'/images/' + *{image}" alt="Thumbnail 1" class="thumb-active"
+                             th:onclick="|changeImage(this, '/images/' + *{image})|">
+                        <img th:each="img : *{images}" th:src="'/images/' + ${img}" alt="Thumbnail"
+                             th:onclick="|changeImage(this, '/images/' + ${img})|">
+                    </div>
+                </div>
+                <div class="col-md-5"> <h1 class="product-title" th:text="*{name}">Назва Товару</h1>
+                    <p class="product-short-desc" th:text="*{short_description}">
+                        Короткий опис.
+                    </p>
+                    <div class="col-12">
+                        <h3 class="border-bottom pb-2">Повний опис товару</h3>
+                        <p th:text="*{full_description}" class="product-full-desc"></p>
+                    </div>
+                    <form th:action="@{/cart/add/{id}(id=*{id})}" method="post" class="buy-form">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="quantity-section">
+                                <label for="quantity" class="form-label mb-1">Кількість:</label>
+                                <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control quantity-input">
+                            </div>
+                            <div class="price-section">
+                                <div class="product-price" th:text="*{price} + ' грн'">399.99 грн</div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-buy w-100">
+                            <i class="fas fa-shopping-cart"></i> Додати в кошик
+                        </button>
+                    </form>
+                    <div class="admin-actions mt-4" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                        <h5><i class="fas fa-shield-alt"></i> Панель Адміна</h5>
+                        <div class="admin-buttons">
+                            <a th:href="'/shop/product/'+ *{id} + '/edit'" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-pencil-alt"></i> Редагувати
+                            </a>
+                            <form th:action="'/shop/product/'+ *{id} + '/delete'" method="post">
+                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                        onclick="return confirm('Ви впевнені, що хочете видалити цей товар?');">
+                                    <i class="fas fa-trash-alt"></i> Видалити
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> <div class="row mt-5">
         </div>
-
-    </div>
-    <div class="col-4" th:insert="layouts/sidebar :: sidebar">
-
+        </div>
+        </div>
     </div>
 </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-<footer th:insert="layouts/footer :: footer">
-
-</footer>
-
+<footer th:insert="layouts/footer :: footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function changeImage(thumbnailElement, newImageSrc) {
+        document.getElementById('mainProductImage').src = newImageSrc;
+        var thumbnails = document.querySelectorAll('.thumbnail-gallery img');
+        thumbnails.forEach(function(thumb) {
+            thumb.classList.remove('thumb-active');
+        });
+        thumbnailElement.classList.add('thumb-active');
+    }
+</script>
 </body>
 </html>

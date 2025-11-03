@@ -9,7 +9,6 @@
 </head>
 <body>
 <div th:insert="layouts/header :: header"></div>
-
 <div class="container my-5">
     <h1 class="cart-title" th:text="${ title }">Кошик</h1>
     <div class="row">
@@ -24,7 +23,6 @@
                  th:if="${item != null and item.product != null}"
                  th:data-price="${item.product.price}"
                  th:data-product-id="${item.product.id}">
-
                 <div class="col-12 col-md-5 d-flex align-items-center">
                     <img th:src="@{/images/{image}(image=${item.product.image})}" alt="Product Image" class="product-image">
                     <div class="ms-3 product-details">
@@ -34,28 +32,12 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-4 col-md-2 text-center product-price" th:text="${item.product.price}">$300.0</div>
-
                 <div class="col-4 col-md-3 text-center product-quantity">
                     <div class="quantity-control d-flex justify-content-center">
-
-                        <button type="button"
-                                class="btn btn-sm btn-outline-secondary btn-qty-minus"
-                                th:data-id="${item.product.id}"
-                                onclick="updateQuantity(this.dataset.id, -1)">-</button>
-
-                        <input type="number"
-                               class="form-control text-center qty-input"
-                               th:value="${item.quality}"
-                               min="1"
-                               disabled>
-
-                        <button type="button"
-                                class="btn btn-sm btn-outline-secondary btn-qty-plus"
-                                th:data-id="${item.product.id}"
-                                onclick="updateQuantity(this.dataset.id, 1)">+</button>
-
+                        <button type="button"  class="btn btn-sm btn-outline-secondary btn-qty-minus" th:data-id="${item.product.id}" onclick="updateQuantity(this.dataset.id, -1)">-</button>
+                        <input type="number" class="form-control text-center qty-input" th:value="${item.quality}" min="1" disabled>
+                        <button type="button" class="btn btn-sm btn-outline-secondary btn-qty-plus" th:data-id="${item.product.id}" onclick="updateQuantity(this.dataset.id, 1)">+</button>
                     </div>
                 </div>
                 <div class="col-3 col-md-1 text-end item-total-price">
@@ -76,7 +58,6 @@
         <div class="col-lg-4 mt-4 mt-lg-0">
             <div class="cart-summary-box">
                 <h4 class="summary-title">Загальна сума в кошику</h4>
-
                 <form th:action="@{/checkout}" method="post" id="checkoutForm">
                     <div class="summary-line">
                         <span>Проміжний підсумок</span>
@@ -95,14 +76,12 @@
                         <span>До сплати</span>
                         <span id="grandTotalDisplay" class="summary-value grand-total-value">0.00 грн</span>
                     </div>
-
                     <div class="bonus-section mt-3" th:if="${user != null}">
                         <label class="form-check-label d-flex justify-content-between align-items-center">
                             Використати <span th:text="${user.bonusPoints}"></span> балів
                             <input type="checkbox" name="useBonus" id="useBonus" class="form-check-input" value="true">
                         </label>
                     </div>
-
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-proceed-checkout">Перейти до оформлення замовлення</button>
                     </div>
@@ -131,18 +110,13 @@
         const useBonusCheckbox = document.getElementById("useBonus");
 
         if (subtotalDisplay) subtotalDisplay.textContent = currentSubtotal.toFixed(2) + " грн";
-
         let finalTotal = currentSubtotal;
         let bonusDiscount = 0;
-
-
         const bonus = parseFloat(bonusElement?.dataset.bonus || 0);
         const useBonus = useBonusCheckbox?.checked ?? false;
-
         if (useBonus && bonus > 0) {
             bonusDiscount = Math.min(bonus, currentSubtotal);
             finalTotal = currentSubtotal - bonusDiscount;
-
             if (discountLine && discountDisplay) {
                 discountLine.style.display = "flex";
                 discountDisplay.textContent = "-" + bonusDiscount.toFixed(2) + " грн";
@@ -152,23 +126,17 @@
                 discountLine.style.display = "none";
             }
         }
-
         if (grandTotalDisplay) {
             grandTotalDisplay.textContent = finalTotal.toFixed(2) + " грн";
         }
     }
-
     document.addEventListener("DOMContentLoaded", function () {
         const useBonusCheckbox = document.getElementById('useBonus');
         if (useBonusCheckbox) {
             useBonusCheckbox.addEventListener('change', updateCartTotals);
         }
-
-
         updateCartTotals();
     });
-
-
     function updateQuantity(productId, delta) {
         const itemRow = document.querySelector(`.cart-item[data-product-id="${productId}"]`);
 
@@ -207,10 +175,7 @@
                     if (itemTotalElement) {
                         itemTotalElement.textContent = data.itemTotal.toFixed(2) + " грн";
                     }
-
-
                     updateTotalsUI(data.cartTotal);
-
                 } else if (data.error) {
                     alert("Помилка: " + data.error);
                 }
@@ -219,12 +184,9 @@
                 console.error('Помилка AJAX-запиту:', error);
             });
     }
-
-
     function updateTotalsUI(newCartTotal) {
         updateCartTotals();
     }
 </script>
-
 </body>
 </html>

@@ -8,25 +8,18 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
 <div th:insert="layouts/header :: header"></div>
-
 <div class="container my-5">
     <div class="row">
         <div class="col-lg-4" th:insert="layouts/sidebar :: sidebar"></div>
         <div class="col-lg-8">
-            <h1 class="mb-4" th:text="#{ shop }">Категорії товарів</h1>
-
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4" th:each="category : ${categories}">
-
                     <a th:href="'/shop/category/'+${ category.id }" class="category-card">
-
                         <div class="category-card__image">
                             <img th:if="${category.image != null and category.image != ''}" th:src="'/images/'+${category.image}" alt="Category Image">
                             <img th:unless="${category.image != null and category.image != ''}" src="/images/noimage.png" alt="No Image">
                         </div>
-
                         <div class="category-card__title">
                             <h5 th:text="${category.name}">Назва категорії</h5>
                         </div>
@@ -34,15 +27,9 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
 </div>
-
 <footer th:insert="layouts/footer :: footer"></footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
