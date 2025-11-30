@@ -1,5 +1,5 @@
 body, html {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/fon12.png');
+    background-image: url('/images/fon41.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -894,18 +894,9 @@ body {
     color: #888;
     margin-top: 2px;
 }
-.quantity-section .form-label {
-    font-size: 0.9rem;
-    color: #ffffff;
-    margin-bottom: 2px !important;
-}
 
-.quantity-section .quantity-input {
-    max-width: 80px;
-    padding: 6px 10px;
-    text-align: center;
-    border-radius: 6px;
-}
+
+
 
 .price-section {
     text-align: right;
@@ -924,19 +915,6 @@ body {
 
 .buy-form {
     margin-top: 20px;
-}
-
-.buy-form .btn-buy {
-    background-color: #a5d6a7;
-    border: none;
-    color: #333;
-    font-weight: 600;
-    transition: background-color 0.2s;
-}
-
-.buy-form .btn-buy:hover {
-    background-color: #81c784;
-    color: #000;
 }
 
 .quantity-control {
@@ -1615,12 +1593,6 @@ header .container {
 .category-card:hover .category-card__title h5 {
     color: #007bff;
 }
-.product-title {
-    font-size: 2.0rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 15px;
-}
 .admin-actions {
     background: #fff8e1;
     border: 1px solid #ffecb3;
@@ -1872,12 +1844,8 @@ header .container {
 .border-bottom{
     color: white;
 }
-.product-full-desc{
-    color: white;
-}
-.product-short-desc{
-    color: white;
-}
+
+
 
 /* orders */
 .main-page-title {
@@ -2002,4 +1970,397 @@ header .container {
 .no-orders-message .btn-primary {
     background-color: cadetblue;
     border-color: cadetblue;
+}
+
+/* --- СТИЛІ ДЛЯ СТОРІНКИ ТОВАРУ (АДАПТАЦІЯ) --- */
+
+.selector-label {
+    font-size: 1.1em;
+    color: #ffffff; /* Адаптуємо під твій темний фон */
+    margin-bottom: 10px;
+}
+
+.size-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.size-button {
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background: #fff; /* Світлі кнопки на темному фоні */
+    color: #333; /* Темний текст */
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s, color 0.2s;
+}
+.size-button:hover {
+    background: #eee;
+}
+/* Стиль для активної (вибраної) кнопки (приклад) */
+.size-button.active {
+    background: #5d9c9c; /* Твій фірмовий колір */
+    color: #fff;
+    border-color: #5d9c9c;
+}
+/* --- СТИЛІ ДЛЯ ГАЛЕРЕЇ НА СТОРІНЦІ ТОВАРУ --- */
+
+/* 1. Стиль для "рамочки" головного фото */
+.main-image-wrapper img {
+    width: 100%;
+    border-radius: 12px; /* Це робить кути заокругленими */
+    border: 1px solid #eee; /* Легка рамка */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Тінь для об'єму */
+
+    /* Додатково: гарантуємо правильні пропорції */
+    max-height: 550px;
+    object-fit: contain; /* 'contain' покаже все фото, 'cover' обріже */
+    background: #fff; /* Білий фон, якщо фото прозоре */
+}
+
+/* 2. Контейнер для маленьких фото внизу */
+.thumbnail-gallery {
+    display: flex; /* Розташовує фото в рядок */
+    flex-wrap: wrap; /* Дозволяє переносити на новий рядок, якщо не вміщаються */
+    gap: 10px; /* Відстань між фото */
+    margin-top: 15px; /* Відступ від головного фото */
+}
+
+/* 3. Стиль для самих маленьких фото */
+.thumbnail-gallery img {
+    width: 80px;  /* Маленький розмір */
+    height: 80px; /* Квадратна форма */
+    object-fit: cover; /* Заповнює квадрат, обрізаючи зайве */
+    border-radius: 8px; /* Також заокруглені кути */
+    cursor: pointer;
+    border: 2px solid #ddd;
+    transition: all 0.2s ease;
+}
+
+/* 4. Ефект при наведенні на маленьке фото */
+.thumbnail-gallery img:hover {
+    border-color: #5d9c9c; /* Твій фірмовий колір */
+    transform: scale(1.05); /* Злегка збільшуємо */
+}
+
+/* 5. Стиль для активного (обраного) фото */
+.thumbnail-gallery img.thumb-active {
+    border-color: #5d9c9c; /* Яскрава рамка */
+    box-shadow: 0 0 8px #5d9c9c; /* І підсвітка */
+}
+
+/* product_detail */
+.main-image-wrapper img {
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.thumbnail-gallery {
+    gap: 10px;
+    margin-top: 15px;
+}
+.thumbnail-gallery img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid #ddd;
+}
+.thumbnail-gallery img:hover {
+    border-color: #5d9c9c;
+    transform: scale(1.05);
+}
+.thumbnail-gallery img.thumb-active {
+    border-color: #5d9c9c;
+    box-shadow: 0 0 8px #5d9c9c;
+}
+
+/* --- Права колонка з новими класами --- */
+.pd-wrapper .pd-subtitle {
+    color: #e0e0e0; /* Світло-сірий */
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+.pd-wrapper .pd-title {
+    color: #ffffff; /* Білий */
+    font-weight: 700;
+    font-size: 2.4rem;
+    margin-bottom: 20px;
+}
+.pd-wrapper .pd-section-header {
+    color: #ffffff;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+    padding-bottom: 10px; /* Додамо відступ */
+    font-size: 1.5rem; /* Зробимо заголовок опису більшим */
+}
+.pd-wrapper .pd-description-text {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* --- Розміри (нові класи) --- */
+.pd-wrapper .pd-option-label {
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+.pd-wrapper .pd-size-btn {
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+.pd-wrapper .pd-size-btn:hover {
+    background: #e0e0e0;
+    border-color: #f0f0f0;
+}
+
+/* --- Кількість + Ціна (нові класи) --- */
+.pd-wrapper .pd-buy-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.pd-wrapper .pd-quantity .form-label {
+    color: #ffffff;
+    font-weight: 600;
+}
+.pd-wrapper .pd-quantity-input {
+    background-color: #ffffff;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    width: 80px;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.1rem;
+}
+.pd-wrapper .pd-price-amount {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 2.2rem;
+}
+
+/* --- Кнопка "Додати в кошик" (новий клас) --- */
+.pd-wrapper .pd-buy-btn {
+    background-color: #b0eec2;
+    border: none;
+    color: #254427;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 12px;
+    border-radius: 8px;
+}
+.pd-wrapper .pd-buy-btn:hover {
+    background-color: #9cdbaf;
+    color: #000;
+    transform: translateY(-2px);
+}
+
+/* --- Панель Адміна (новий клас) --- */
+.pd-admin-box {
+    background: #fff8e1;
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+}
+.pd-admin-box h5 {
+    color: #8a6d3b;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+.pd-admin-box .btn {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    border-radius: 6px;
+}
+.pd-admin-box .btn-outline-danger {
+    background: #fff;
+    color: #d9534f;
+    border-color: #d9534f;
+    border-radius: 6px;
+}
+
+/* --- СТИЛІ ДЛЯ НОВОЇ ГОЛОВНОЇ СТОРІНКИ (Каталог) --- */
+/* 2. Заголовок "КАТАЛОГ" і кнопка "Все товары" */
+.catalog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.catalog-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+.catalog-title-dot {
+    color: #f6d054; /* Жовта крапка, як на скріні */
+    margin-right: 10px;
+    font-size: 0.8em; /* Трохи менша */
+}
+.catalog-all-btn {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+.catalog-all-btn:hover {
+    background-color: #e0e0e0;
+}
+
+/* 3. Нова картка товару */
+.product-card-new {
+    background-color: #ffffff;
+    border-radius: 16px; /* Великі заокруглення */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); /* М'яка тінь */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    overflow: hidden; /* Щоб картинка не вилазила */
+}
+.product-card-new:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+/* 4. Обгортка для зображення (світло-сірий фон) */
+.product-card-image-wrapper {
+    background-color: #f7f7f7; /* Світло-сірий фон */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 250px; /* Фіксована висота */
+    position: relative;
+}
+.product-card-image-wrapper img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain; /* Щоб товар було видно повністю */
+}
+
+/* 5. Кнопка "Сердечко" (Wishlist) */
+.wishlist-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.wishlist-btn:hover {
+    background-color: #f0f0f0;
+    color: #000;
+    transform: scale(1.1);
+}
+.wishlist-btn .fa-heart {
+    font-weight: 400; /* 'far' (regular) icon */
+}
+
+/* 6. Інформація про товар (назва, ціна) */
+.product-card-info {
+    padding: 15px 20px 20px 20px;
+}
+.product-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    /* Обрізка довгого тексту */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.product-card-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+
+/* --- ОНОВЛЕННЯ ДИЗАЙНУ ГОЛОВНОЇ СТОРІНКИ --- */
+
+/* 2. Блок з Відео (Hero) */
+.hero-block {
+    position: relative;
+    width: 100%;
+    height: 60vh; /* Висота 60% екрану */
+    overflow: hidden;
+    background-color: #222; /* На випадок, якщо відео не завантажиться */
+}
+.hero-block video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    z-index: 1;
+}
+
+/* 4. Заголовок "Каталог" (робимо його світлим на темному фоні) */
+body#catalog-page-body .catalog-title {
+    color: #ffffff; /* Білий колір */
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+body#catalog-page-body .catalog-title-dot {
+    color: #f6d054; /* Жовта крапка */
+}
+body#catalog-page-body .catalog-all-btn {
+    background-color: rgba(255, 255, 255, 0.9); /* Напівпрозора кнопка */
+    color: #333;
+}
+body#catalog-page-body .catalog-all-btn:hover {
+    background-color: #ffffff;
+}
+
+/* 5. Картки товару (вони вже стилізовані, просто переконуємось) */
+.product-card-new {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+}
+/* --- ОНОВЛЕННЯ ДЛЯ "ОБГОРТКИ" ВІДЕО --- */
+
+.hero-block {
+    /* Додаємо заокруглені кути, як у каталогу */
+    border-radius: 20px;
+    /* Це ВАЖЛИВО:
+       Ховаємо частини відео, які "вилазять" за заокруглені кути.
+    */
+    overflow: hidden;
 }

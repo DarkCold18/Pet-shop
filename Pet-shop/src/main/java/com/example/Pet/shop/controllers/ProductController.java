@@ -17,10 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID; // Потрібно для унікальних імен файлів
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProductController {
@@ -64,11 +62,12 @@ public class ProductController {
     @PostMapping("/shop/product/add")
     public String saveProduct(@RequestParam String name,
                               @RequestParam("image") MultipartFile mainImageFile,
-                              @RequestParam("images") List<MultipartFile> additionalImageFiles,
+                              @RequestParam(value = "images", required = false) List<MultipartFile> additionalImageFiles, // <-- ТУТ ВИРІШЕННЯ
                               @RequestParam String short_description,
                               @RequestParam String full_description,
                               @RequestParam double price,
-                              @RequestParam Long categoryId) throws IOException {
+                              @RequestParam Long categoryId,
+                              @RequestParam(required = false) String sizes) throws IOException { // <-- 1. ДОДАЛИ 'sizes'
 
         Category category = repoCategory.findById(categoryId).orElseThrow();
         Product product = new Product(name, price, "", short_description, full_description, category);
@@ -86,7 +85,8 @@ public class ProductController {
             }
         }
         product.setImages(additionalImageNames);
-
+        List<String> sizeList = convertSizesStringToList(sizes);
+        product.setAvailableSizes(sizeList);
         repoProduct.save(product);
         return "redirect:/shop/product";
     }
@@ -106,11 +106,12 @@ public class ProductController {
     public String updateProduct(@PathVariable(value = "id") Long id,
                                 @RequestParam String name,
                                 @RequestParam("image") MultipartFile mainImageFile,
-                                @RequestParam("images") List<MultipartFile> additionalImageFiles,
+                                @RequestParam(value = "images", required = false) List<MultipartFile> additionalImageFiles, // <-- ТУТ ВИРІШЕННЯ
                                 @RequestParam String short_description,
                                 @RequestParam String full_description,
                                 @RequestParam double price,
-                                @RequestParam Long categoryId) throws IOException {
+                                @RequestParam Long categoryId,
+                                @RequestParam(required = false) String sizes) throws IOException { // <-- 1. ДОДАЛИ 'sizes'
 
         Product product = repoProduct.findById(id).orElseThrow();
         Category category = repoCategory.findById(categoryId).orElseThrow();
@@ -134,6 +135,8 @@ public class ProductController {
         if (!additionalImageNames.isEmpty()) {
             product.setImages(additionalImageNames);
         }
+        List<String> sizeList = convertSizesStringToList(sizes);
+        product.setAvailableSizes(sizeList);
         repoProduct.save(product);
         return "redirect:/shop/product";
     }
@@ -155,5 +158,15 @@ public class ProductController {
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, uniqueFileName);
         Files.write(fileNameAndPath, file.getBytes());
         return uniqueFileName;
+    }
+    private List<String> convertSizesStringToList(String sizes) {
+        if (sizes == null || sizes.trim().isEmpty()) {
+            return Collections.emptyList(); // Повертаємо порожній список
+        }
+        // Розділяємо по комі, обрізаємо зайві пробіли, видаляємо порожні рядки
+        return Arrays.stream(sizes.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
     }
 }

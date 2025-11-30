@@ -21,6 +21,10 @@ public class Product {
 
     @ElementCollection
     private List<String> images;
+    @ElementCollection
+    @CollectionTable(name="product_sizes", joinColumns=@JoinColumn(name="product_id"))
+    @Column(name="size")
+    private List<String> availableSizes; // Список доступних розмірів
 
     //all to 1
     @ManyToOne
@@ -28,7 +32,14 @@ public class Product {
     private Category category;
 
     public Product() {
+    }
+    // --- ДОДАЙ ГЕТТЕРИ ТА СЕТТЕРИ ТІЛЬКИ ДЛЯ РОЗМІРІВ ---
+    public List<String> getAvailableSizes() {
+        return availableSizes;
+    }
 
+    public void setAvailableSizes(List<String> availableSizes) {
+        this.availableSizes = availableSizes;
     }
 
     public Product(String name, String kilk, double price, Category category) {

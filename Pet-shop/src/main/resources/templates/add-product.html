@@ -23,7 +23,13 @@
             <select class="form-control" id="categoryId" name="categoryId">
                 <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
             </select>
+            <label>Доступні розміри (через кому)</label>
+            <input type="text" name="sizes" class="form-control" placeholder="Напр: 2XS,Small,Medium,Large">
+            <input type="file" name="image" class="form-control" ...>
             <input type="file" name="image" class="form-control" accept="image/png, image/jpeg, image/gif, image/jpg">
+            <br>
+            <label>Доступні розміри (через кому)</label>
+            <input type="text" name="sizes" class="form-control" placeholder="Напр: 2XS,Small,Medium,Large">
             <label>Вибери фото</label>
             <label>Введіть короткий опис</label>
             <textarea name="short_description" class="form-control"></textarea>
