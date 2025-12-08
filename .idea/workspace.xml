@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cb4de548-f236-454d-8b9f-37883d28b1f4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Pet-shop/src/main/java/com/example/Pet/shop/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/java/com/example/Pet/shop/controllers/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/java/com/example/Pet/shop/controllers/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/java/com/example/Pet/shop/models/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/java/com/example/Pet/shop/models/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/add-category.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/add-category.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/cart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/category.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/category.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/layouts/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/layouts/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/order-history.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/order-history.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/product-detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/product-detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/shop.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pet-shop/src/main/resources/templates/shop.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;DarkCold18&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/DarkCold18/Pet-shop.git&quot;,
+    &quot;accountId&quot;: &quot;0c26573c-f1d5-429f-b785-8ab12cfb5deb&quot;
+  }
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="openjdk-23" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="34ITvl92uC7DtUENiOlVtUBwYSQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JavaScript Debug.home.html.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.PetShopApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/KotlinProject&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editing.templates&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.3058104&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="PetShopApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="Pet-shop" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.Pet.shop.PetShopApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cb4de548-f236-454d-8b9f-37883d28b1f4" name="Changes" comment="" />
+      <created>1760900319050</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1760900319050</updated>
+      <workItem from="1760900320128" duration="1131000" />
+      <workItem from="1760958596811" duration="371000" />
+      <workItem from="1760960122707" duration="255000" />
+      <workItem from="1760960384977" duration="329000" />
+      <workItem from="1760966978135" duration="220000" />
+      <workItem from="1760967227704" duration="13000" />
+      <workItem from="1761001591206" duration="188000" />
+      <workItem from="1761055548225" duration="6590000" />
+      <workItem from="1761223806654" duration="97000" />
+      <workItem from="1761234483964" duration="1374000" />
+      <workItem from="1761239084658" duration="19000" />
+      <workItem from="1761239863400" duration="3000" />
+      <workItem from="1761240731380" duration="8147000" />
+      <workItem from="1761305241744" duration="14000" />
+      <workItem from="1761307528591" duration="4000" />
+      <workItem from="1761324482752" duration="4005000" />
+      <workItem from="1761478542001" duration="3982000" />
+      <workItem from="1761611686044" duration="96000" />
+      <workItem from="1761650793030" duration="385000" />
+      <workItem from="1761668763993" duration="1924000" />
+      <workItem from="1761697247671" duration="6000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

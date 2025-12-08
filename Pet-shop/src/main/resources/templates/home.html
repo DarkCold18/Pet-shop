@@ -11,7 +11,6 @@
 
 <div th:insert="layouts/header :: header"></div>
 
-
 <div class="container my-5">
     <div class="row">
         <div class="col-lg-12">
@@ -20,36 +19,55 @@
                     <source th:src="@{/videos/promo.mp4}" type="video/mp4">
                     Твій браузер не підтримує відео.
                 </video>
-                <div class="hero-content">
-                    <h1 class="hero-title">COMPANION</h1>
-                    <p class="hero-subtitle">Dogs Like Bros</p>
-                </div>
             </div>
+
             <div class="catalog-header">
-                <h2 class="catalog-title"><span class="catalog-title-dot">●</span> КАТАЛОГ</h2>
-                <a href="/shop/product" class="catalog-all-btn">Все товари</a>
+                <h2 class="catalog-title"><span class="catalog-title-dot">●</span> РЕКОМЕНДОВАНІ ТОВАРИ</h2>
+                <a href="/shop/product" class="catalog-all-btn">Всі товари</a>
             </div>
 
             <div class="row g-4">
                 <div class="col-lg-3 col-md-4 col-sm-6" th:each="product : ${products}">
-                    <div class="product-card-new">
-                        <a th:href="'/shop/product/'+${ product.id }" class="product-card-link">
 
-                            <div class="product-card-image-wrapper">
-                                <div th:if="${product.image != null and product.image != ''}">
-                                    <img th:src="'/images/'+${product.image}" alt="Product Image">
-                                </div>
-                                <div th:unless="${product.image != null and product.image != ''}">
-                                    <img src="/images/noimage.png" alt="No Image">
-                                </div>
-                                <button class="wishlist-btn"><i class="far fa-heart"></i></button>
-                            </div>
-
-                            <div class="product-card-info">
-                                <h3 class="product-card-title" th:text="${product.name}">Назва товару</h3>
-                                <p class="product-card-price" th:text="${product.price} + ' грн'">2 490 р.</p>
+                    <div class="shop-card h-100">
+                        <a th:href="'/shop/product/'+${ product.id }" class="shop-card-img-link">
+                            <div class="shop-card-image-wrapper">
+                                <img th:if="${product.image != null and product.image != ''}"
+                                     th:src="'/images/'+${product.image}"
+                                     alt="Product Image">
+                                <img th:unless="${product.image != null and product.image != ''}"
+                                     src="/images/noimage.png"
+                                     alt="No Image">
                             </div>
                         </a>
+
+                        <div class="shop-card-body d-flex flex-column">
+                            <a th:href="'/shop/product/'+${ product.id }" class="text-decoration-none">
+                                <h5 class="shop-card-title text-dark" th:text="${product.name}">Назва товару</h5>
+                            </a>
+
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="shop-card-price text-success" th:text="${product.price} + ' грн'">0 грн</span>
+                                </div>
+
+                                <div class="shop-card-actions row g-2">
+                                    <div class="col-6">
+                                        <a th:href="'/shop/product/'+${ product.id }" class="btn btn-outline-secondary btn-sm w-100">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-6">
+                                        <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                                <i class="fas fa-cart-plus"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
