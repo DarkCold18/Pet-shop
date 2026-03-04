@@ -8,21 +8,16 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
 <div th:insert="layouts/header :: header"></div>
-
 <div class="container my-5">
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
                 <h1 class="page-title-main" th:text="#{ allproduct }">Всі товари</h1>
-
             </div>
-
             <div class="row g-4">
                 <div class="col-sm-6 col-md-4 col-lg-3" th:each="product : ${products}">
                     <div class="shop-card">
-
                         <a th:href="'/shop/product/'+${ product.id }" class="shop-card-img-link">
                             <div class="shop-card-image-wrapper">
                                 <img th:if="${product.image != null and product.image != ''}"
@@ -31,23 +26,18 @@
                                 <img th:unless="${product.image != null and product.image != ''}"
                                      src="/images/noimage.png"
                                      alt="No Image">
-
                                 <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2"
                                       th:if="${product.recommended}">TOP</span>
                             </div>
                         </a>
-
                         <div class="shop-card-body">
                             <a th:href="'/shop/product/'+${ product.id }" class="text-decoration-none">
                                 <h5 class="shop-card-title" th:text="${product.name}">Назва товару</h5>
                             </a>
-
                             <p class="shop-card-desc" th:text="${product.short_description}">Короткий опис...</p>
-
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <span class="shop-card-price" th:text="${product.price} + ' грн'">0.00 грн</span>
                             </div>
-
                             <div class="shop-card-actions mt-3">
                                 <a th:href="'/shop/product/'+${ product.id }" class="btn btn-outline-secondary btn-sm w-100 mb-2">
                                     <i class="far fa-eye"></i> Детальніше
@@ -66,13 +56,10 @@
             <h3>Товарів поки немає :(</h3>
             <p>Завітайте пізніше або змініть параметри пошуку.</p>
         </div>
-
         </div>
     </div>
 </div>
-
 <footer th:insert="layouts/footer :: footer"></footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

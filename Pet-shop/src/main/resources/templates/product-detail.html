@@ -9,13 +9,11 @@
 </head>
 <body>
 <div th:insert="layouts/header :: header"></div>
-
 <div class="container my-5">
     <div class="row">
         <div class="col-lg-12">
             <div class="pd-wrapper" th:if="${product != null}" th:object="${product}">
                 <div class="row">
-
                     <div class="col-md-7">
                         <div class="main-image-wrapper mb-3">
                             <img th:src="'/images/' + *{image}" alt="Main product image" id="mainProductImage" class="img-fluid">
@@ -29,20 +27,15 @@
                                  th:onclick="changeImage(this)">
                         </div>
                     </div>
-
                     <div class="col-md-5">
-
                         <p class="pd-subtitle" th:text="*{short_description}">
                             Короткий опис
                         </p>
-
                         <h1 class="pd-title" th:text="*{name}">Назва Товару</h1>
-
                         <div class="col-12 mt-4">
                             <h3 class="pd-section-header">Повний опис товару</h3>
                             <p th:text="*{full_description}" class="pd-description-text"></p>
                         </div>
-
                         <div th:if="*{availableSizes != null and !availableSizes.isEmpty()}" class="my-3">
                             <div class="pd-option-label">Розмір</div>
                             <div class="pd-size-options d-flex flex-wrap gap-2">
@@ -53,9 +46,7 @@
                                 </button>
                             </div>
                         </div>
-
                         <form th:action="@{/cart/add/{id}(id=*{id})}" method="post" class="pd-buy-form mt-4">
-
                             <div class="pd-buy-group">
                                 <div class="pd-quantity">
                                     <label for="quantity" class="form-label mb-1">Кількість:</label>
@@ -65,12 +56,10 @@
                                     <div class="pd-price-amount" th:text="*{price} + ' грн'">399.99 грн</div>
                                 </div>
                             </div>
-
                             <button type="submit" class="btn btn-primary btn-lg pd-buy-btn w-100">
                                 <i class="fas fa-shopping-cart"></i> Додати в кошик
                             </button>
                         </form>
-
                         <div class="pd-admin-box mt-4" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                             <h5><i class="fas fa-shield-alt"></i> Панель Адміна</h5>
                             <div class="pd-admin-btns">
@@ -86,13 +75,11 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <footer th:insert="layouts/footer :: footer"></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 <script>

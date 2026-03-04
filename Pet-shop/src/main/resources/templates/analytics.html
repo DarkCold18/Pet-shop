@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Аналітика магазину</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #0d6efd;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .stat-card h4 { color: #6c757d; font-size: 1rem; }
+        .stat-card .value { font-size: 1.8rem; font-weight: bold; color: #212529; }
+    </style>
+</head>
+<body>
+<div th:insert="layouts/header :: header"></div>
+
+<div class="personal-section content-wrapper">
+    <div class="main-layout">
+        <div class="sidebar">
+            <div>
+                <div class="sidebar-header">
+                    Обліковий запис
+                    <div style="font-size: 0.9rem; color: #888; font-weight: normal; margin-top: 5px;">Керуйте інформацією свого облікового запису.</div>
+                </div>
+                <div class="sidebar-menu">
+                    <a th:href="@{/profile}"><i class="fas fa-user"></i> Профіль</a>
+                    <a th:href="@{/inventory}"><i class="fas fa-shield-alt"></i> Управління запасами</a>
+                    <a th:href="@{/orders}"><i class="fas fa-history"></i> Історія</a>
+                    <a th:href="@{/profile/analytics}" class="active"><i class="fas fa-chart-line"></i> Аналітика</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content flex-grow-1">
+            <div class="main-content-header">
+                <h2>Аналітика та продажі</h2>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <h4>Середній чек</h4>
+                        <div class="value"><span th:text="${averageCheck}">0</span> ₴</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card" style="border-left-color: #198754;">
+                        <h4>Загальний дохід</h4>
+                        <div class="value"><span th:text="${totalRevenue}">0</span> ₴</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card" style="border-left-color: #ffc107;">
+                        <h4>Всього замовлень</h4>
+                        <div class="value"><span th:text="${totalOrders}">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h4 class="mb-3">🔥 Топ-5 товарів</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" th:each="entry : ${topProducts}">
+                            <span th:text="${entry.key.name}">Назва товару</span>
+                            <span class="badge bg-primary rounded-pill" th:text="${entry.value} + ' шт.'">0 шт.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h4 class="mb-3">📈 Дохід по місяцях</h4>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Місяць</th>
+                            <th>Сума</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="entry : ${salesByMonth}">
+                            <td th:text="${entry.key}">2023-10</td>
+                            <td th:text="${entry.value} + ' ₴'">0 ₴</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="notification-sidebar">
+            <div class="notification-header">
+                Прогноз запасів
+                <i class="fas fa-robot text-warning"></i>
+            </div>
+            <div class="notification-content">
+                <p style="font-size: 0.8rem; color: #666;">На основі продажів за останні 30 днів:</p>
+                <hr>
+
+                <div th:if="${forecastWarnings.isEmpty()}">
+                    <p style="color: green;"><i class="fas fa-check-circle"></i> Запасів достатньо. Дефіцит не прогнозується.</p>
+                </div>
+
+                <div th:each="warn : ${forecastWarnings}" style="background: #fff3cd; border: 1px solid #ffe69c; border-radius: 5px; padding: 10px; margin-bottom: 10px;">
+                    <strong style="color: #856404;" th:text="${warn.productName}">Товар</strong><br>
+                    <span style="font-size: 0.85rem; color: #666;">
+                        Продається за місяць: <b th:text="${warn.monthlyDemand}">20</b> шт.<br>
+                        Залишок на складі: <b style="color: red;" th:text="${warn.stock}">10</b> шт.
+                    </span>
+                    <div style="margin-top: 5px; font-size: 0.8rem; font-weight: bold; color: #dc3545;">
+                        <i class="fas fa-exclamation-circle"></i> Замовте постачання!
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

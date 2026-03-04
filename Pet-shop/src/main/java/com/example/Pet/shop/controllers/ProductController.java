@@ -62,12 +62,12 @@ public class ProductController {
     @PostMapping("/shop/product/add")
     public String saveProduct(@RequestParam String name,
                               @RequestParam("image") MultipartFile mainImageFile,
-                              @RequestParam(value = "images", required = false) List<MultipartFile> additionalImageFiles, // <-- ТУТ ВИРІШЕННЯ
+                              @RequestParam(value = "images", required = false) List<MultipartFile> additionalImageFiles,
                               @RequestParam String short_description,
                               @RequestParam String full_description,
                               @RequestParam double price,
                               @RequestParam Long categoryId,
-                              @RequestParam(required = false) String sizes) throws IOException { // <-- 1. ДОДАЛИ 'sizes'
+                              @RequestParam(required = false) String sizes) throws IOException {
 
         Category category = repoCategory.findById(categoryId).orElseThrow();
         Product product = new Product(name, price, "", short_description, full_description, category);
@@ -106,12 +106,12 @@ public class ProductController {
     public String updateProduct(@PathVariable(value = "id") Long id,
                                 @RequestParam String name,
                                 @RequestParam("image") MultipartFile mainImageFile,
-                                @RequestParam(value = "images", required = false) List<MultipartFile> additionalImageFiles, // <-- ТУТ ВИРІШЕННЯ
+                                @RequestParam(value = "images", required = false) List<MultipartFile> additionalImageFiles,
                                 @RequestParam String short_description,
                                 @RequestParam String full_description,
                                 @RequestParam double price,
                                 @RequestParam Long categoryId,
-                                @RequestParam(required = false) String sizes) throws IOException { // <-- 1. ДОДАЛИ 'sizes'
+                                @RequestParam(required = false) String sizes) throws IOException {
 
         Product product = repoProduct.findById(id).orElseThrow();
         Category category = repoCategory.findById(categoryId).orElseThrow();
@@ -161,9 +161,8 @@ public class ProductController {
     }
     private List<String> convertSizesStringToList(String sizes) {
         if (sizes == null || sizes.trim().isEmpty()) {
-            return Collections.emptyList(); // Повертаємо порожній список
+            return Collections.emptyList();
         }
-        // Розділяємо по комі, обрізаємо зайві пробіли, видаляємо порожні рядки
         return Arrays.stream(sizes.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
