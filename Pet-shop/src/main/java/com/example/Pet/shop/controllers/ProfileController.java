@@ -63,25 +63,24 @@ public class ProfileController {
     }
     @GetMapping("/profile/analytics")
     public String analyticsPage(Model model, Principal principal) {
-        // Получаем пользователя (если нужно для отображения имени)
+
         Optional<AppUser> user = userRepository.findByUsername(principal.getName());
         model.addAttribute("user", user);
 
         List<Order> allOrders = orderRepository.findAll();
         List<Product> allProducts = productRepository.findAll();
 
-        // 1. Средний чек
+        // Середній чек
         double totalRevenue = allOrders.stream().mapToDouble(Order::getTotal).sum();
         double averageCheck = allOrders.isEmpty() ? 0 : totalRevenue / allOrders.size();
         model.addAttribute("averageCheck", Math.round(averageCheck * 100.0) / 100.0);
         model.addAttribute("totalRevenue", totalRevenue);
         model.addAttribute("totalOrders", allOrders.size());
 
-        // 2. Топ самых продаваемых товаров
+        // Топ товарів, що найбільше продаються
         Map<Product, Integer> productSales = new HashMap<>();
         for (Order o : allOrders) {
             for (OrderItem item : o.getItems()) {
-                // В твоей модели OrderItem поле называется quality
                 productSales.put(item.getProduct(),
                         productSales.getOrDefault(item.getProduct(), 0) + item.getQuality());
             }
@@ -93,8 +92,8 @@ public class ProfileController {
                 .collect(Collectors.toList());
         model.addAttribute("topProducts", topProducts);
 
-        // 3. Динамика продаж по месяцам
-        Map<String, Double> salesByMonth = new TreeMap<>(); // TreeMap для сортировки по дате
+        // Динаміка продажів за місяцями
+        Map<String, Double> salesByMonth = new TreeMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         for (Order o : allOrders) {
             if (o.getOrderDate() != null) {
@@ -104,8 +103,8 @@ public class ProfileController {
         }
         model.addAttribute("salesByMonth", salesByMonth);
 
-        // 4. Прогноз спроса и умные предупреждения
-        // Считаем продажи за последние 30 дней
+        // Прогноз попиту та розумні попередження
+        // Вважаємо продажі за останні 30 днів
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         Map<Product, Integer> lastMonthSales = new HashMap<>();
         for (Order o : allOrders) {
@@ -117,7 +116,7 @@ public class ProfileController {
             }
         }
 
-        // Логика: если на складе меньше товара, чем мы продали за прошлый месяц - бьем тревогу
+        //якщо на складі менше товару, ніж ми продали за минулий місяць
         List<Map<String, Object>> forecastWarnings = new ArrayList<>();
         for (Product p : allProducts) {
             int soldLastMonth = lastMonthSales.getOrDefault(p, 0);
@@ -131,6 +130,12 @@ public class ProfileController {
         }
         model.addAttribute("forecastWarnings", forecastWarnings);
 
-        return "analytics"; // Создадим новый шаблон или встроим в profile
+        // Отримати останні 5 замовлень для столу
+        List<Order> recentOrders = allOrders.stream()
+                .sorted(Comparator.comparing(Order::getId).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+        model.addAttribute("recentOrders", recentOrders);
+        return "analytics";
     }
 }

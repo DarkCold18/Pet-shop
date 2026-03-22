@@ -1,67 +1,61 @@
 <div th:fragment="header">
-    <header class="main-header">
-        <div class="container-fluid">
-            <a href="/" class="logo-link me-4">
-                <img th:src="@{/images/logo12-fon.png}" alt="Логотип компанії" class="header-logo-img">
-            </a>
-            <div class="central-nav-wrapper d-none d-lg-flex">
-                <ul class="nav central-nav">
-                    <li>
-                        <a th:href="@{/}"
-                           class="nav-link px-3 nav-tile-link"
-                           th:classappend="${#ctx.requestUri != null and #ctx.requestUri == '/' ? 'active' : ''}">
-                            Головна
-                        </a>
-                    </li>
-                    <li>
-                        <a th:href="@{/shop}"
-                           class="nav-link px-3 nav-tile-link"
-                           th:classappend="${#ctx.requestUri != null and #strings.startsWith(#ctx.requestUri, '/shop') ? 'active' : ''}">
-                            Магазин
-                        </a>
-                    </li>
-                </ul>
-                <form class="search-form position-relative" role="search">
-                    <input type="search" class="form-control" placeholder="Пошук товарів..." aria-label="Search">
+    <header class="modern-header">
+        <div class="container-fluid header-container">
+
+            <div class="header-left">
+                <a th:href="@{/}" class="header-logo">
+                    <img th:src="@{/images/logo12-fon.png}" alt="PawCo" onerror="this.src='/images/logo12.png'">
+                </a>
+
+                <nav class="header-nav d-none d-lg-flex">
+                    <a th:href="@{/}" class="nav-link" th:classappend="${#ctx.requestUri != null and #ctx.requestUri == '/' ? 'active' : ''}">Головна</a>
+                    <a th:href="@{/shop}" class="nav-link" th:classappend="${#ctx.requestUri != null and #strings.startsWith(#ctx.requestUri, '/shop') ? 'active' : ''}">Магазин</a>
+                </nav>
+            </div>
+
+            <div class="header-search d-none d-md-flex">
+                <form class="search-form" role="search" th:action="@{/shop}" method="get">
                     <i class="fas fa-search search-icon"></i>
+                    <input type="search" class="form-control" name="keyword" placeholder="Пошук товарів..." aria-label="Search">
                 </form>
             </div>
-            <div class="d-flex align-items-center controls-group">
-                <div class="lang-switcher d-flex align-items-center me-3">
-                    <a href="?lang=uk" class="lang-link active" title="Українська">
-                        <span class="flag-circle">UA</span>
-                    </a>
-                    <a href="?lang=en" class="lang-link ms-2" title="English">
-                        <span class="flag-circle">EN</span>
-                    </a>
+
+            <div class="header-actions">
+
+                <div class="lang-switcher">
+                    <a href="?lang=uk" class="lang-btn active">UA</a>
+                    <a href="?lang=en" class="lang-btn">EN</a>
                 </div>
-                <a th:href="@{/cart}" class="control-icon me-3" title="Кошик">
+
+                <a th:href="@{/cart}" class="action-btn cart-btn" title="Кошик">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
-                <div class="dropdown text-end profile-dropdown me-3">
-                    <a href="#" class="d-block link-body-emphasis text-decoration-none control-icon" data-bs-toggle="dropdown" aria-expanded="false" title="Профіль">
-                        <i class="fas fa-user-circle"></i>
+
+                <div class="dropdown profile-dropdown">
+                    <a href="#" class="action-btn" data-bs-toggle="dropdown" aria-expanded="false" title="Профіль">
+                        <i class="far fa-user"></i>
                     </a>
-                    <ul class="dropdown-menu text-small dropdown-menu-end">
-                        <li><a class="dropdown-item" th:href="@{/profile}">Мій профіль</a></li>
-                        <li><a class="dropdown-item" href="#">Історія покупок</a></li>
-                        <li><a class="dropdown-item" href="#">Налаштування</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
+                        <li><a class="dropdown-item" th:href="@{/profile}"><i class="fas fa-user-circle"></i> Мій профіль</a></li>
+                        <li><a class="dropdown-item" th:href="@{/orders}"><i class="fas fa-box"></i> Історія покупок</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" th:href="@{/login?logout}">Вийти</a></li>
+                        <li><a class="dropdown-item text-danger" th:href="@{/login?logout}"><i class="fas fa-sign-out-alt"></i> Вийти</a></li>
                     </ul>
                 </div>
-                <div class="dropdown text-end hamburger-dropdown">
-                    <a href="#" class="d-block link-body-emphasis text-decoration-none control-icon" data-bs-toggle="dropdown" aria-expanded="false" title="Меню">
+
+                <div class="dropdown d-lg-none">
+                    <button class="action-btn mobile-toggle" data-bs-toggle="dropdown">
                         <i class="fas fa-bars"></i>
-                    </a>
-                    <ul class="dropdown-menu text-small dropdown-menu-end hamburger-menu">
-                        <li><a class="dropdown-item" th:href="@{/about}">Про нас</a></li>
-                        <li><a class="dropdown-item" th:href="@{/contact}">Контакти</a></li>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
+                        <li><a class="dropdown-item" th:href="@{/}"><i class="fas fa-home"></i> Головна</a></li>
+                        <li><a class="dropdown-item" th:href="@{/shop}"><i class="fas fa-store"></i> Магазин</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li class="d-lg-none"><a class="dropdown-item" th:href="@{/}">Головна</a></li>
-                        <li class="d-lg-none"><a class="dropdown-item" th:href="@{/shop}">Магазин</a></li>
+                        <li><a class="dropdown-item" th:href="@{/about}"><i class="fas fa-info-circle"></i> Про нас</a></li>
+                        <li><a class="dropdown-item" th:href="@{/contact}"><i class="fas fa-envelope"></i> Контакти</a></li>
                     </ul>
                 </div>
+
             </div>
         </div>
     </header>
