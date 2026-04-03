@@ -9,14 +9,64 @@
 </head>
 <body id="catalog-page-body">
 <div th:insert="layouts/header :: header"></div>
+
+<div class="hero-block-full container-fluid p-0 mb-4 shadow-sm">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators custom-paws-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1">
+        </button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2">
+        </button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3">
+        </button>
+    </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="/images/Slider1.1.png" class="d-block w-100 hero-img" alt="Кіт у затишному домі">
+                <div class="carousel-caption custom-caption-center">
+                    <div class="container text-container">
+                        <h2 class="slide-title">НОВИНКИ<br>ДЛЯ МУРЛИК!</h2>
+                        <p class="slide-subtitle">Затишні лежанки, стильні кігтеточки та<br>інтерактивні іграшки для ваших котиків. Поспішайте!</p>
+                        <a href="/shop" class="btn btn-hero-action">ПОКУПАТИ ЗАРАЗ!</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/images/Slider2.png" class="d-block w-100 hero-img" alt="Щасливий собака на прогулянці">
+                <div class="carousel-caption custom-caption-center">
+                    <div class="container text-container">
+                        <h2 class="slide-title">РАДІСТЬ<br>ДЛЯ ХВОСТАТИХ!</h2>
+                        <p class="slide-subtitle">Найкращий корм, надійні повідці та<br>багато іншого для ваших улюбленців.</p>
+                        <a href="/shop" class="btn btn-hero-action">ПОКУПАТИ ЗАРАЗ!</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/images/Slider3.png" class="d-block w-100 hero-img" alt="Надійна переноска">
+                <div class="carousel-caption custom-caption-center">
+                    <div class="container text-container">
+                        <h2 class="slide-title">БЕЗПЕКА<br>В ДОРОЗІ</h2>
+                        <p class="slide-subtitle">Зручні та надійні переноски для<br>подорожей з вашим другом.</p>
+                        <a href="/shop" class="btn btn-hero-action">ПОКУПАТИ ЗАРАЗ!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev custom-control-paws" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="control-icon-circle-paws" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
+            <span class="visually-hidden">Попередній</span>
+        </button>
+        <button class="carousel-control-next custom-control-paws" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="control-icon-circle-paws" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+            <span class="visually-hidden">Наступний</span>
+        </button>
+    </div>
+</div>
+
 <div class="container my-5">
     <div class="row">
         <div class="col-lg-12">
-            <div class="hero-block mb-4">
-                <video playsinline autoplay muted loop id="heroVideo">
-                    <source th:src="@{/videos/promo.mp4}" type="video/mp4">
-                </video>
-            </div>
             <div class="catalog-header">
                 <h2 class="catalog-title"><span class="catalog-title-dot">●</span> РЕКОМЕНДОВАНІ ТОВАРИ</h2>
                 <a href="/shop/product" class="catalog-all-btn">Всі товари</a>

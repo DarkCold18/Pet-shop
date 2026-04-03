@@ -3274,3 +3274,84 @@ body:has(.app) {
 .custom-dropdown .dropdown-item:hover i {
     color: inherit;
 }
+
+/* =========================================
+   Стилі для Hero Carousel (Слайдер)
+   ========================================= */
+.hero-block {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: #f7f7f7; /* Фон на випадок завантаження */
+}
+
+.hero-img {
+    height: 60vh;
+    min-height: 450px;
+    object-fit: cover;
+    filter: brightness(0.85); /* Трохи затемнюємо фото для кращого читання тексту */
+}
+
+.custom-caption {
+    position: absolute;
+    top: 50%;
+    right: 15%;
+    left: auto;
+    bottom: auto;
+    transform: translateY(-50%);
+    text-align: left;
+    color: #fff;
+    max-width: 550px;
+}
+
+.slide-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 15px;
+    color: #ffffff;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.slide-subtitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+    line-height: 1.5;
+}
+
+.btn-hero-action {
+    background-color: #ff6b00; /* Оранжевий колір зі скріншоту */
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 35px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+.btn-hero-action:hover {
+    background-color: #e66000;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 107, 0, 0.6);
+}
+
+/* Кнопки перемикання (Стрілки) */
+.custom-control {
+    width: 10%;
+    opacity: 1;
+}
+
+
+
+
+
+
+
+
