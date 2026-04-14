@@ -1,5 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap');
 body, html {
-    background-image: url('/images/fon41.png');
+    background: linear-gradient(180deg, #EFE7DC 0%, #E2D6C6 100%);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -1385,10 +1386,15 @@ header .container {
     background-color: var(--primary-color);
     color: white;
 }
-.header-logo-img {
-    height: 200px;
+.header-logo img {
+    height: 75px;
     width: auto;
     object-fit: contain;
+    transform: scale(2.1); /* Визуально увеличивает картинку на 30% */
+}
+
+.header-logo:hover img {
+    transform: scale(2.1);
 }
 .card {
     border: 1px solid #e9ecef;
@@ -3034,7 +3040,7 @@ body:has(.app) {
     0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
     50% { box-shadow: 0 0 0 5px rgba(76, 175, 80, 0); }
 }
-/* MODERN HEADER */
+/*  HEADER */
 .modern-header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
@@ -3275,29 +3281,27 @@ body:has(.app) {
     color: inherit;
 }
 
-/* =========================================
-   Стилі для Hero Carousel (Слайдер)
-   ========================================= */
+/*    Стилі для слайдера   */
 .hero-block {
     border-radius: 20px;
     overflow: hidden;
     position: relative;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    background-color: #f7f7f7; /* Фон на випадок завантаження */
+    background-color: #f7f7f7;
 }
 
 .hero-img {
     height: 60vh;
     min-height: 450px;
     object-fit: cover;
-    filter: brightness(0.85); /* Трохи затемнюємо фото для кращого читання тексту */
+    filter: brightness(0.85);
 }
 
 .custom-caption {
     position: absolute;
     top: 50%;
-    right: 15%;
-    left: auto;
+    left: 10%; /* ПЕРЕНЕСЛИ НАЛЕВО (отступ 10% от левого края) */
+    right: auto; /* Сбросили привязку к правому краю */
     bottom: auto;
     transform: translateY(-50%);
     text-align: left;
@@ -3306,8 +3310,9 @@ body:has(.app) {
 }
 
 .slide-title {
+    font-family: 'Nunito', sans-serif; /* Применили новый красивый шрифт */
     font-size: 3.5rem;
-    font-weight: 800;
+    font-weight: 800; /* Делаем заголовок массивным и жирным */
     line-height: 1.1;
     margin-bottom: 15px;
     color: #ffffff;
@@ -3315,7 +3320,8 @@ body:has(.app) {
 }
 
 .slide-subtitle {
-    font-size: 1.2rem;
+    font-family: 'Nunito', sans-serif; /* Применили новый красивый шрифт */
+    font-size: 1.3rem; /* Чуть-чуть увеличили подзаголовок */
     font-weight: 500;
     margin-bottom: 30px;
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
@@ -3323,7 +3329,7 @@ body:has(.app) {
 }
 
 .btn-hero-action {
-    background-color: #ff6b00; /* Оранжевий колір зі скріншоту */
+    background-color: #ff6b00;
     color: #fff;
     border: none;
     border-radius: 30px;
@@ -3341,17 +3347,86 @@ body:has(.app) {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(255, 107, 0, 0.6);
 }
-
-/* Кнопки перемикання (Стрілки) */
 .custom-control {
     width: 10%;
     opacity: 1;
 }
 
+/* --- Стили для увеличенных прямоугольных блоков --- */
+.promo-mini-section {
+    width: 100%;
+    padding: 20px 0; /* Немного увеличили отступ сверху и снизу */
+    background-color: transparent;
+}
 
+.promo-mini-blocks {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Сделали разрыв чуть больше для эстетики */
+    max-width: 1200px; /* Ограничиваем ширину по ширине стандартного слайдера/контейнера */
+    margin: 0 auto; /* Центрируем блоки по середине страницы */
+    width: 100%;
+    padding: 0 15px; /* Защитные отступы по краям экрана */
+}
 
+/* Сама карточка (сделали крупнее) */
+.promo-mini-card {
+    flex: 1; /* Заставляет карточки равномерно растягиваться на всё доступное пространство */
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 12px; /* Чуть сильнее закруглили углы для массивных блоков */
+    padding: 20px 25px; /* УВЕЛИЧИЛИ ВНУТРЕННИЕ ОТСТУПЫ: блок станет толще и длиннее */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Тень чуть мягче и шире */
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
+.promo-mini-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
 
+/* Увеличенная картинка */
+.promo-mini-card img {
+    width: 90px; /* Было 60px, сделали 90px */
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 20px; /* Отодвинули текст чуть дальше от картинки */
+    flex-shrink: 0;
+}
 
+/* Контейнер для текста */
+.promo-mini-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
 
+.promo-mini-title {
+    font-size: 1.2rem; /* Увеличили шрифт заголовка */
+    color: #333333;
+    margin: 0 0 8px 0;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 
+.promo-mini-link {
+    font-size: 0.95rem; /* Увеличили шрифт ссылки */
+    color: #ff9800;
+    font-weight: 500;
+}
+
+.promo-mini-card:hover .promo-mini-link {
+    color: #e68a00;
+}
+
+/* Адаптивность для мобильных телефонов */
+@media (max-width: 768px) {
+    .promo-mini-blocks {
+        flex-direction: column;
+    }
+}

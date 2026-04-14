@@ -1,7 +1,7 @@
 package com.example.Pet.shop.models;
 
 import jakarta.persistence.*;
-import java.util.List; // ✅ 1. ДОДАНО ІМПОРТ
+import java.util.List;
 
 @Entity
 public class Product {
@@ -33,7 +33,7 @@ public class Product {
 
     public Product() {
     }
-    // --- ДОДАЙ ГЕТТЕРИ ТА СЕТТЕРИ ТІЛЬКИ ДЛЯ РОЗМІРІВ ---
+
     public List<String> getAvailableSizes() {
         return availableSizes;
     }

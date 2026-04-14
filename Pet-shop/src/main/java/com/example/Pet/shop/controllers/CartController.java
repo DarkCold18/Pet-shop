@@ -34,7 +34,7 @@ public class CartController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public String viewCart(@ModelAttribute("cart") List<CartItem> cart, Model model, Principal principal) {
         double total=cart.stream()
                 .mapToDouble(item ->item.getProduct().getPrice() * item.getQuality())

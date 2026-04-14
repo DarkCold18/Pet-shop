@@ -104,7 +104,7 @@ public class ProfileController {
         model.addAttribute("salesByMonth", salesByMonth);
 
         // Прогноз попиту та розумні попередження
-        // Вважаємо продажі за останні 30 днів
+        //  продажі за останні 30 днів
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         Map<Product, Integer> lastMonthSales = new HashMap<>();
         for (Order o : allOrders) {

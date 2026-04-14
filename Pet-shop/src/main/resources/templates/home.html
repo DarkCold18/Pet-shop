@@ -52,7 +52,34 @@
                 </div>
             </div>
         </div>
-
+        <section class="promo-mini-section">
+            <div class="promo-mini-blocks">
+                <a th:href="@{/shop(category='dogs')}" class="promo-mini-card"
+                   style="background: url('/images/font-block-dog1.png') center/cover no-repeat; overflow: hidden; ">
+                    <img th:src="@{/images/dog1.png}" src="/images/dog1.png" alt="Товари для собак">
+                    <div class="promo-mini-info">
+                        <h3 class="promo-mini-title">Товари для собак</h3>
+                        <span class="promo-mini-link">Дивитись каталог &rarr;</span>
+                    </div>
+                </a>
+                <a th:href="@{/shop}" class="promo-mini-card"
+                   style="background: url('/images/font-block-toy1png.png') center/cover no-repeat; overflow: hidden; ">
+                    <img th:src="@{/images/igrushka-mishka-s-pishhalkoj-veljur-03-800x800-product_popup-Photoroom.png}" src="/images/igrushka-mishka-s-pishhalkoj-veljur-03-800x800-product_popup-Photoroom.png" alt="Аксесуари">
+                    <div class="promo-mini-info">
+                        <h3 class="promo-mini-title">Аксесуари та догляд</h3>
+                        <span class="promo-mini-link">Дивитись каталог &rarr;</span>
+                    </div>
+                </a>
+                <a th:href="@{/shop(category='cats')}" class="promo-mini-card"
+                   style="background: url('/images/font-block-cat1.png') center/cover no-repeat; overflow: hidden; ">
+                    <img th:src="@{/images/purina4.png}" src="/images/purina4.png" alt="Товари для котів">
+                    <div class="promo-mini-info">
+                        <h3 class="promo-mini-title">Товари для котів</h3>
+                        <span class="promo-mini-link">Дивитись каталог &rarr;</span>
+                    </div>
+                </a>
+            </div>
+        </section>
         <button class="carousel-control-prev custom-control-paws" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
             <span class="control-icon-circle-paws" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
             <span class="visually-hidden">Попередній</span>
