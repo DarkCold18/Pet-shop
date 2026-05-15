@@ -130,7 +130,7 @@ public class ProfileController {
         }
         model.addAttribute("forecastWarnings", forecastWarnings);
 
-        // Отримати останні 5 замовлень для столу
+        // Отримати останні 5 замовлень
         List<Order> recentOrders = allOrders.stream()
                 .sorted(Comparator.comparing(Order::getId).reversed())
                 .limit(5)

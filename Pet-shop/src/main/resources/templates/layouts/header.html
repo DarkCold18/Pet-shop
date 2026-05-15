@@ -7,24 +7,62 @@
                     <img th:src="@{/images/logo12-fon.png}" alt="PawCo" onerror="this.src='/images/logo12.png'">
                 </a>
 
-                <nav class="header-nav d-none d-lg-flex">
-                    <a th:href="@{/}" class="nav-link" th:classappend="${#ctx.requestUri != null and #ctx.requestUri == '/' ? 'active' : ''}">Головна</a>
-                    <a th:href="@{/shop}" class="nav-link" th:classappend="${#ctx.requestUri != null and #strings.startsWith(#ctx.requestUri, '/shop') ? 'active' : ''}">Магазин</a>
-                </nav>
+
             </div>
 
-            <div class="header-search d-none d-md-flex">
-                <form class="search-form" role="search" th:action="@{/shop}" method="get">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="search" class="form-control" name="keyword" placeholder="Пошук товарів..." aria-label="Search">
-                </form>
+            <div class="d-flex align-items-center flex-grow-1 catalog-search-wrapper">
+
+                <div class="dropdown me-3">
+                    <button class="btn btn-catalog dropdown-toggle d-flex align-items-center gap-2 shadow-sm"
+                            type="button"
+                            id="catalogDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="fas fa-bars"></i>
+                        <span th:text="#{Category}">Каталог</span>
+                    </button>
+
+                    <ul class="dropdown-menu custom-dropdown" aria-labelledby="catalogDropdown">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/shop/18}">
+                                <i class="fas fa-cat"></i> Товари для котів
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/shop/19}">
+                                <i class="fas fa-dog"></i> Товари для собак
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" th:href="@{/shop/15}">
+                                <i class="fas fa-bone"></i> Аксесуари та догляд
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="header-search w-100">
+                    <form class="search-form" action="/search" method="get">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="form-control" th:placeholder="#{search_placeholder}" name="keyword">
+                    </form>
+                </div>
             </div>
 
             <div class="header-actions">
 
                 <div class="lang-switcher">
-                    <a href="?lang=uk" class="lang-btn active">UA</a>
-                    <a href="?lang=en" class="lang-btn">EN</a>
+                    <a href="?lang=uk"
+                       class="lang-btn"
+                       th:classappend="${#locale.language == 'uk' or #locale.language == 'ua'} ? 'active' : ''">
+                        UA
+                    </a>
+
+                    <a href="?lang=en"
+                       class="lang-btn"
+                       th:classappend="${#locale.language == 'en'} ? 'active' : ''">
+                        EN
+                    </a>
                 </div>
 
                 <a th:href="@{/cart}" class="action-btn cart-btn" title="Кошик">

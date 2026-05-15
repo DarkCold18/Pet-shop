@@ -2057,13 +2057,13 @@ header .container {
 }
 
 .pd-wrapper .pd-subtitle {
-    color: #e0e0e0;
+    color: #333333;
     font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 5px;
 }
 .pd-wrapper .pd-title {
-    color: #ffffff;
+    color: #212529;
     font-weight: 700;
     font-size: 2.4rem;
     margin-bottom: 20px;
@@ -2076,7 +2076,7 @@ header .container {
     font-size: 1.5rem;
 }
 .pd-wrapper .pd-description-text {
-    color: #e0e0e0;
+    color: #333333;
     font-size: 0.95rem;
     line-height: 1.6;
 }
@@ -3352,32 +3352,30 @@ body:has(.app) {
     opacity: 1;
 }
 
-/* --- Стили для увеличенных прямоугольных блоков --- */
 .promo-mini-section {
     width: 100%;
-    padding: 20px 0; /* Немного увеличили отступ сверху и снизу */
+    padding: 20px 0;
     background-color: transparent;
 }
 
 .promo-mini-blocks {
     display: flex;
     justify-content: space-between;
-    gap: 20px; /* Сделали разрыв чуть больше для эстетики */
-    max-width: 1200px; /* Ограничиваем ширину по ширине стандартного слайдера/контейнера */
-    margin: 0 auto; /* Центрируем блоки по середине страницы */
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
     width: 100%;
-    padding: 0 15px; /* Защитные отступы по краям экрана */
+    padding: 0 15px;
 }
 
-/* Сама карточка (сделали крупнее) */
 .promo-mini-card {
-    flex: 1; /* Заставляет карточки равномерно растягиваться на всё доступное пространство */
+    flex: 1; /
     display: flex;
     align-items: center;
     background: #ffffff;
-    border-radius: 12px; /* Чуть сильнее закруглили углы для массивных блоков */
-    padding: 20px 25px; /* УВЕЛИЧИЛИ ВНУТРЕННИЕ ОТСТУПЫ: блок станет толще и длиннее */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Тень чуть мягче и шире */
+    border-radius: 12px;
+    padding: 20px 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -3387,17 +3385,15 @@ body:has(.app) {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Увеличенная картинка */
 .promo-mini-card img {
-    width: 90px; /* Было 60px, сделали 90px */
+    width: 90px;
     height: 90px;
     object-fit: cover;
     border-radius: 8px;
-    margin-right: 20px; /* Отодвинули текст чуть дальше от картинки */
+    margin-right: 20px;
     flex-shrink: 0;
 }
 
-/* Контейнер для текста */
 .promo-mini-info {
     display: flex;
     flex-direction: column;
@@ -3405,7 +3401,7 @@ body:has(.app) {
 }
 
 .promo-mini-title {
-    font-size: 1.2rem; /* Увеличили шрифт заголовка */
+    font-size: 1.2rem;
     color: #333333;
     margin: 0 0 8px 0;
     font-weight: 600;
@@ -3415,7 +3411,7 @@ body:has(.app) {
 }
 
 .promo-mini-link {
-    font-size: 0.95rem; /* Увеличили шрифт ссылки */
+    font-size: 0.95rem;
     color: #ff9800;
     font-weight: 500;
 }
@@ -3424,9 +3420,93 @@ body:has(.app) {
     color: #e68a00;
 }
 
-/* Адаптивность для мобильных телефонов */
 @media (max-width: 768px) {
     .promo-mini-blocks {
         flex-direction: column;
     }
+}
+
+.carousel-caption.custom-caption-left {
+    right: auto;
+    left: 8%;
+    text-align: left;
+    max-width: 50%;
+}
+
+@media (max-width: 768px) {
+    .carousel-caption.custom-caption-left {
+        left: 5%;
+        max-width: 90%;
+    }
+}
+
+.control-icon-circle-paws {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 22px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-control-paws:hover .control-icon-circle-paws {
+    background-color: #ff9800;
+    transform: scale(1.1);
+}
+
+.custom-paws-indicators {
+    bottom: 3px;
+}
+
+.custom-paws-indicators button {
+    width: 14px !important;
+    height: 14px !important;
+    border-radius: 50% !important;
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border: 2px solid transparent !important;
+    margin: 0 6px !important;
+    transition: all 0.3s ease;
+}
+
+.custom-paws-indicators button.active {
+    background-color: #ff9800 !important;
+    transform: scale(1.3);
+}
+
+.carousel-item:nth-child(1) .carousel-caption,
+.carousel-item:nth-child(2) .carousel-caption,
+.carousel-item:nth-child(3) .carousel-caption {
+    bottom: 20%;
+}
+
+.catalog-search-wrapper {
+    max-width: 650px;
+    margin: 0 20px;
+}
+
+.btn-catalog {
+    background-color: #6ab5a7;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    border: none;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.btn-catalog:hover,
+.btn-catalog:focus,
+.btn-catalog[aria-expanded="true"] {
+    background-color: #55968a;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(106, 181, 167, 0.3);
+}
+.catalog-search-wrapper .header-search {
+    margin: 0;
 }
