@@ -1,28 +1,281 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${ title }"></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" xintegrity="sha512-z3gLpd7yknf1YoNbCzqN7z0t9e/QJ9Xz4vA24tY2l3y3c5/j6t5V/E/wA5R/K1a4uP5P7lT9V5qF3P5B6/5A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title != null ? title : 'Оформлення замовлення'} + ' | Зоомагазин'">Оформлення замовлення</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:insert="layouts/header :: header">
 
-</div>
-<div class="row confirmation-box">
-    <div class="success-icon">✔</div>
-    <h1>Замовлення успішне!</h1>
-    <p th:text="${message}">Ваше замовлення було оформлено. Дякуємо за покупку!</p>
-    <a class="button" th:href="@{/}">На головну</a>
-</div>
+<div th:insert="~{layouts/header :: header}"></div>
 
+<main class="checkout-container">
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-<footer th:insert="layouts/footer :: footer">
+    <div th:if="${message == null}">
 
-</footer>
+        <div class="checkout-header">
+            <h1 class="checkout-title">Оформлення замовлення</h1>
+            <p class="checkout-subtitle">Будь ласка, заповніть дані для доставки вашої посилки</p>
+        </div>
 
+        <form id="payment-form" th:action="@{/checkout/process}" method="post" class="checkout-layout">
+
+            <div class="checkout-form-column">
+
+                <div class="checkout-card">
+                    <h3 class="checkout-card-title">
+                        <span class="step-number step-blue">1</span>
+                        Контактні дані
+                    </h3>
+
+                    <div class="checkout-grid-2">
+                        <div class="checkout-field-wrapper">
+                            <label class="checkout-label">ПІБ</label>
+                            <input type="text" name="name" required placeholder="Коваленко Антон" class="checkout-input">
+                        </div>
+                        <div class="checkout-field-wrapper">
+                            <label class="checkout-label">Телефон</label>
+                            <input type="tel" name="phone" required placeholder="+380..." class="checkout-input">
+                        </div>
+                    </div>
+
+                    <div class="checkout-field-wrapper" style="margin-top: 1.5rem;">
+                        <label class="checkout-label">Email (для чеку та відстеження)</label>
+                        <input type="email" name="email" required placeholder="example@gmail.com" class="checkout-input">
+                    </div>
+                </div>
+
+                <div class="checkout-card">
+                    <h3 class="checkout-card-title">
+                        <span class="step-number step-green">2</span>
+                        Адреса доставки
+                    </h3>
+                    <div class="checkout-field-wrapper">
+                        <label class="checkout-label">Місто та відділення / Адреса</label>
+                        <textarea name="address" required rows="3" placeholder="м. Київ, Відділення №1 або вул. Центральна, 1..." class="checkout-input checkout-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="checkout-card">
+                    <h3 class="checkout-card-title">
+                        <span class="step-number step-peach">3</span>
+                        Спосіб оплати
+                    </h3>
+                    <div class="checkout-grid-2">
+
+                        <label class="payment-option-label">
+                            <input type="radio" name="paymentMethod" value="card" checked>
+                            <div class="payment-icon-wrapper">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <span class="payment-text">Карткою онлайн</span>
+                            <i class="fas fa-check-circle payment-check-icon"></i>
+                        </label>
+
+                        <label class="payment-option-label">
+                            <input type="radio" name="paymentMethod" value="cod">
+                            <div class="payment-icon-wrapper">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <span class="payment-text">При отриманні</span>
+                            <i class="fas fa-check-circle payment-check-icon"></i>
+                        </label>
+
+                    </div>
+                    <div id="stripe-card-container" style="margin-top: 1.5rem;">
+                        <label class="checkout-label">Дані картки</label>
+                        <div id="card-element" style="padding: 14px 15px; border: 1px solid #E2E8F0; border-radius: 12px; background: #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"></div>
+
+                        <div id="card-errors" role="alert" style="color: #EF4444; margin-top: 8px; font-size: 0.85rem; font-weight: 500;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-summary-column">
+                <div class="summary-card">
+                    <h3 class="summary-title">Ваше замовлення</h3>
+
+                    <div class="summary-items-list">
+                        <div th:each="item : ${cartItems}" class="summary-item">
+                            <div class="summary-item-left">
+                                <div class="summary-item-img">
+                                    <img th:src="@{'/images/' + ${item.product.image}}" alt="Товар">
+                                </div>
+                                <span class="summary-item-name" th:text="${item.product.name}">Назва Товару</span>
+                            </div>
+                            <span class="summary-item-price" th:text="${item.quality} + ' × ' + ${item.product.price} + ' ₴'">0 ₴</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-total-row">
+                        <span class="summary-total-label">До сплати</span>
+                        <span class="summary-total-val" th:text="${cartTotal} + ' ₴'">0 ₴</span>
+                    </div>
+
+                    <input type="hidden" name="amount" th:value="${cartTotal}">
+
+                    <button type="submit" class="btn-submit-order">
+                        ПІДТВЕРДИТИ ЗАМОВЛЕННЯ
+                        <i class="fas fa-check-double"></i>
+                    </button>
+
+                    <p class="summary-terms">
+                        Натискаючи кнопку, ви погоджуєтесь з умовами надання послуг та обробки персональних даних.
+                    </p>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div th:if="${message != null}" class="success-container">
+        <div class="success-card">
+
+            <div class="success-icon-wrap">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h1 class="success-title">Успішно оформлено!</h1>
+
+            <p class="success-message" th:text="${message}">Повідомлення про замовлення</p>
+
+            <div class="success-actions">
+                <a th:href="@{/shop}" class="btn-success-primary">
+                    <i class="fas fa-shopping-bag"></i> ПРОДОВЖИТИ ПОКУПКИ
+                </a>
+
+                <a th:href="@{/orders}" class="btn-success-secondary">
+                    <i class="fas fa-history"></i> Мої замовлення
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<footer th:insert="~{layouts/footer :: footer}"></footer>
+<script>
+    // 1. ІНІЦІАЛІЗАЦІЯ STRIPE (Вставте свій Publishable Key)
+    const stripe = Stripe('pk_test_51TbeExABzC4adpNWalCP6PcaSlkgfewYM6pfDaWwktCGNX6zTIgYoAGZ1Dne06F07zhOllmw5xcaCREUgfgvPdxy007ozXIPIx');
+    const elements = stripe.elements();
+
+    // Стилізація поля картки, щоб воно підходило під ваш дизайн
+    const style = {
+        base: {
+            color: '#1E293B',
+            fontFamily: '"Inter", sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': { color: '#94A3B8' }
+        },
+        invalid: {
+            color: '#EF4444',
+            iconColor: '#EF4444'
+        }
+    };
+
+    // Створюємо елемент (hidePostalCode прибирає поле індексу, щоб форма була мінімалістичною)
+    const card = elements.create('card', {style: style, hidePostalCode: true});
+    card.mount('#card-element');
+
+    // Вивід помилок при введенні (наприклад, завелика кількість цифр)
+    card.on('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    // 2. ПЕРЕМИКАННЯ МЕТОДІВ ОПЛАТИ (Приховуємо поле картки, якщо обрано COD)
+    const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+    const stripeContainer = document.getElementById('stripe-card-container');
+
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'card') {
+                stripeContainer.style.display = 'block';
+            } else {
+                stripeContainer.style.display = 'none';
+            }
+        });
+    });
+
+    // 3. ОБРОБКА ВІДПРАВКИ ФОРМИ
+    const form = document.getElementById('payment-form');
+    const submitBtn = document.querySelector('.btn-submit-order');
+
+    form.addEventListener('submit', async function(event) {
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+        // Якщо обрано "При отриманні" - не блокуємо форму, вона йде на бекенд як завжди
+        if (paymentMethod === 'cod') {
+            return true;
+        }
+
+        // === ЯКЩО ОБРАНО КАРТКУ ===
+        event.preventDefault(); // Зупиняємо стандартну відправку форми
+        submitBtn.disabled = true; // Блокуємо кнопку від подвійного кліку
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Обробка платежу...';
+
+        // Беремо суму з прихованого інпуту
+        const amountVal = document.querySelector('input[name="amount"]').value;
+
+        try {
+            // Крок А: Просимо у нашого Spring Boot (PaymentController) дозвіл на платіж
+            const response = await fetch('/create-payment-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: amountVal })
+            });
+            const data = await response.json();
+
+            // Крок Б: Відправляємо дані картки напряму в Stripe
+            const result = await stripe.confirmCardPayment(data.clientSecret, {
+                payment_method: {
+                    card: card,
+                    billing_details: {
+                        name: document.querySelector('input[name="name"]').value,
+                        email: document.querySelector('input[name="email"]').value,
+                        phone: document.querySelector('input[name="phone"]').value
+                    }
+                }
+            });
+
+            if (result.error) {
+                // Помилка платежу (напр. відмова банку)
+                document.getElementById('card-errors').textContent = result.error.message;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'ПІДТВЕРДИТИ ЗАМОВЛЕННЯ <i class="fas fa-check-double"></i>';
+            } else {
+                // Платіж УСПІШНИЙ!
+                if (result.paymentIntent.status === 'succeeded') {
+                    // НОВЕ: Створюємо прихований інпут і передаємо ID платежу
+                    const stripeInput = document.createElement('input');
+                    stripeInput.setAttribute('type', 'hidden');
+                    stripeInput.setAttribute('name', 'stripePaymentId');
+                    stripeInput.setAttribute('value', result.paymentIntent.id); // ID транзакції Stripe
+                    form.appendChild(stripeInput);
+
+                    // Тепер відправляємо форму на бекенд
+                    form.submit();
+                }
+            }
+        } catch (error) {
+            document.getElementById('card-errors').textContent = "Сталася помилка з'єднання з сервером.";
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'ПІДТВЕРДИТИ ЗАМОВЛЕННЯ <i class="fas fa-check-double"></i>';
+        }
+    });
+</script>
 </body>
 </html>

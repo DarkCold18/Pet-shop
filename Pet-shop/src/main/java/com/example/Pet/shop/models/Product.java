@@ -16,8 +16,15 @@ public class Product {
     private String image;
     private String short_description;
     private String full_description;
+    private String brand;
+    private String registrationCountry;
+    private String manufacturerCountry;
+    private String guarantee;
     private boolean recommended;
     private int quantity;
+    private boolean cryo = false;    // Требует заморозки
+    private boolean liquid = false;  // Жидкость
+    private boolean fragile = false;
 
     @ElementCollection
     private List<String> images;
@@ -179,5 +186,87 @@ public class Product {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+    public boolean isCryo() { return cryo; }
+    public void setCryo(boolean cryo) { this.cryo = cryo; }
+
+    public boolean isLiquid() { return liquid; }
+    public void setLiquid(boolean liquid) { this.liquid = liquid; }
+
+    public boolean isFragile() { return fragile; }
+    public void setFragile(boolean fragile) { this.fragile = fragile; }
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getRegistrationCountry() {
+        return registrationCountry;
+    }
+
+    public void setRegistrationCountry(String registrationCountry) {
+        this.registrationCountry = registrationCountry;
+    }
+
+    public String getManufacturerCountry() {
+        return manufacturerCountry;
+    }
+
+    public void setManufacturerCountry(String manufacturerCountry) {
+        this.manufacturerCountry = manufacturerCountry;
+    }
+
+    public String getGuarantee() {
+        return guarantee;
+    }
+
+    public void setGuarantee(String guarantee) {
+        this.guarantee = guarantee;
+    }
+    // РОЗУМНЕ АВТОЗАПОВНЕННЯ БАЗУЮЧИСЬ НА НАЗВІ ТОВАРУ
+    public void generateSmartInfoIfEmpty() {
+        if (this.name == null) return;
+
+        String lowerName = this.name.toLowerCase();
+
+        if (this.brand == null || this.brand.isEmpty()) {
+            if (lowerName.contains("royal canin") || lowerName.contains("роял")) {
+                this.brand = "Royal Canin";
+                this.registrationCountry = "Франція";
+                this.manufacturerCountry = "Польща";
+            }
+            else if (lowerName.contains("optimeal") || lowerName.contains("оптіміл")) {
+                this.brand = "OptiMeal";
+                this.registrationCountry = "Україна";
+                this.manufacturerCountry = "Україна";
+            }
+            else if (lowerName.contains("acana") || lowerName.contains("акана")) {
+                this.brand = "Acana";
+                this.registrationCountry = "Канада";
+                this.manufacturerCountry = "Канада";
+            }
+            else if (lowerName.contains("purina") || lowerName.contains("pro plan")) {
+                this.brand = "Purina";
+                this.registrationCountry = "США";
+                this.manufacturerCountry = "Франція";
+            }
+            else if (lowerName.contains("club 4 paws") || lowerName.contains("клуб 4 лапи")) {
+                this.brand = "Club 4 Paws";
+                this.registrationCountry = "Україна";
+                this.manufacturerCountry = "Україна";
+            }
+            else {
+                this.brand = "Інший виробник";
+                this.registrationCountry = "Не вказано";
+                this.manufacturerCountry = "Не вказано";
+            }
+        }
+
+        if (this.guarantee == null || this.guarantee.isEmpty()) {
+            this.guarantee = "14 днів згідно із Законом України";
+        }
     }
 }

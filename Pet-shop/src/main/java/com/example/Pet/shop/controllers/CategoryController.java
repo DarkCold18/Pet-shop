@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.example.Pet.shop.models.Product;
+import com.example.Pet.shop.repo.ProductRepository;
+import java.util.List;
 import java.awt.font.MultipleMaster;
 import java.io.File;
 import java.io.IOException;
@@ -26,17 +28,10 @@ import java.util.UUID;
 public class CategoryController {
     @Autowired
     private CategoryRepository repoCategory;
+    @Autowired
+    private ProductRepository repoProduct;
     public static String UPLOAD_DIRECTORY = "D:/Практика2025/Pet shop/Pet-shop/src/main/resources/static/images";
 
-
-    @GetMapping("/shop")
-    public String categoryList(Model model) {
-        Iterable<Category> categories;
-        categories = repoCategory.findAll();
-        model.addAttribute("categories", categories);
-        model.addAttribute("title", "Зоомагазин");
-        return "shop";
-    }
     @GetMapping("/shop/add-category")
     public String addCategory(Model model) {
         model.addAttribute("title", "Додати категорію");
@@ -49,6 +44,7 @@ public class CategoryController {
         StringBuilder fileName=new StringBuilder();
         Path fileNameAndpath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
         fileName.append(file.getOriginalFilename());
+        // Збереження завантаженого зображення на сервері
         Files.write(fileNameAndpath, file.getBytes());
         String image=fileName.toString();
         Category category=new Category(name,image,description);
@@ -77,6 +73,7 @@ public class CategoryController {
     }
     @GetMapping("/shop/category/{id}/edit")
     public String editCategory(@PathVariable(value = "id") Long id, Model model) {
+        // Перевірка існування категорії перед редагуванням
         if(!repoCategory.existsById(id)) {
             return "redirect:/shop";
         }
@@ -92,6 +89,7 @@ public class CategoryController {
                                @RequestParam String description,  Model model) throws IOException {
         Category category = repoCategory.findById(id).orElseThrow();
         category.setName(name);
+        // Перевірка наявності нового зображення
         if (file != null && !file.isEmpty()) {
             StringBuilder fileName = new StringBuilder();
             Path fileNameAndpath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());

@@ -1,7 +1,9 @@
 package com.example.Pet.shop.controllers;
 
 import com.example.Pet.shop.models.AppUser;
+import com.example.Pet.shop.models.Pet;
 import com.example.Pet.shop.models.Product;
+import com.example.Pet.shop.repo.PetRepository;
 import com.example.Pet.shop.repo.ProductRepository;
 import com.example.Pet.shop.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
 public class AuthController {
+
+    // Репозиторії для роботи з товарами/користувачами/паролі
     @Autowired
     private ProductRepository productRepository;
 
@@ -27,6 +30,11 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // ДОДАНО: Репозиторій для тваринок
+    @Autowired
+    private PetRepository petRepository;
+
+    // Відображення сторінки реєстрації
     @GetMapping("/register")
     public String ShowRegForm(){
         return "register";
@@ -36,6 +44,7 @@ public class AuthController {
     public String processRegister(@RequestParam String username,
                                   @RequestParam String password,
                                   Model model) {
+        // Перевірка чи існує користувач з таким логіном
         if(userRepository.findByUsername(username).isPresent()) {
             model.addAttribute("error","користувач вже існує");
             return "register";
@@ -48,25 +57,35 @@ public class AuthController {
         return "redirect:/login";
     }
 
+    // Відображення сторінки авторизації
     @GetMapping("/login")
     public String login() {
         return "login";
     }
+
     @GetMapping("/profile")
     public String profilePage(Authentication authentication, Model model) {
+        // Перевірка чи користувач авторизований
         if (authentication == null || !authentication.isAuthenticated()
                 || authentication.getPrincipal().equals("anonymousUser")) {
             return "redirect:/login";
         }
 
+        // 1. Спочатку знаходимо користувача
         String username = authentication.getName();
         AppUser user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         model.addAttribute("user", user);
 
+        // 2. Тільки ПІСЛЯ ЦЬОГО шукаємо його тваринок і додаємо в модель
+        List<Pet> pets = petRepository.findByUser(user);
+        model.addAttribute("pets", pets);
+
+        // 3. Завантажуємо продукти для панелі адміністратора
         List<Product> products = productRepository.findAll();
         model.addAttribute("products", products);
 
+        // Формування списку товарів із низьким залишком на складі
         List<Product> lowStockProducts = products.stream()
                 .filter(p -> p.getQuantity() < 5)
                 .toList();

@@ -16,6 +16,8 @@ public class Order {
     public Long id;
     private LocalDateTime orderDate;
     private  double total;
+    private String stripePaymentId;
+    private String status = "NEW";
 
     @ManyToOne
     private AppUser user;
@@ -23,7 +25,12 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 
     private List<OrderItem> items=new ArrayList<>();
-
+    public String getStripePaymentId() {
+        return stripePaymentId;
+    }
+    public void setStripePaymentId(String stripePaymentId) {
+        this.stripePaymentId = stripePaymentId;
+    }
     public Long getId() {
         return id;
     }
@@ -63,4 +70,6 @@ public class Order {
     public void setItems(List<OrderItem> items) {
         this.items = items;
     }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

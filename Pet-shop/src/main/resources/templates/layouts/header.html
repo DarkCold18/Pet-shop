@@ -1,100 +1,43 @@
 <div th:fragment="header">
-    <header class="modern-header">
-        <div class="container-fluid header-container">
-
-            <div class="header-left">
-                <a th:href="@{/}" class="header-logo">
-                    <img th:src="@{/images/logo12-fon.png}" alt="PawCo" onerror="this.src='/images/logo12.png'">
-                </a>
-
-
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <header id="app-header">
+        <div class="header-left-group">
+            <a href="/" class="logo">
+                <div class="logo-icon">🐾</div>
+                <span>Pawfect</span>
+            </a>
+            <a href="/shop" class="header-shop-link-btn">
+                <i class="fas fa-shopping-cart"></i> Магазин
+            </a>
+            <form action="/shop" method="get" class="header-search-container" id="header-search-box">
+                <span class="header-search-icon"><i class="fas fa-search"></i></span>
+                <input type="text" name="query" id="header-search-input" placeholder="Пошук товарів...">
+                <button type="submit" class="header-search-btn">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+        <div class="header-right-group">
+            <div class="lang-switcher-capsule">
+                <a href="?lang=uk" class="lang-pill " th:classappend="${#locale.language == 'uk' or #locale.language == 'ua'} ? 'active' : ''">UA</a>
+                <a href="?lang=en" class="lang-pill" th:classappend="${#locale.language == 'en'} ? 'active' : ''">EN</a>
             </div>
-
-            <div class="d-flex align-items-center flex-grow-1 catalog-search-wrapper">
-
-                <div class="dropdown me-3">
-                    <button class="btn btn-catalog dropdown-toggle d-flex align-items-center gap-2 shadow-sm"
-                            type="button"
-                            id="catalogDropdown"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        <i class="fas fa-bars"></i>
-                        <span th:text="#{Category}">Каталог</span>
-                    </button>
-
-                    <ul class="dropdown-menu custom-dropdown" aria-labelledby="catalogDropdown">
-                        <li>
-                            <a class="dropdown-item" th:href="@{/shop/18}">
-                                <i class="fas fa-cat"></i> Товари для котів
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" th:href="@{/shop/19}">
-                                <i class="fas fa-dog"></i> Товари для собак
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" th:href="@{/shop/15}">
-                                <i class="fas fa-bone"></i> Аксесуари та догляд
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="header-search w-100">
-                    <form class="search-form" action="/search" method="get">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" class="form-control" th:placeholder="#{search_placeholder}" name="keyword">
-                    </form>
-                </div>
-            </div>
-
-            <div class="header-actions">
-
-                <div class="lang-switcher">
-                    <a href="?lang=uk"
-                       class="lang-btn"
-                       th:classappend="${#locale.language == 'uk' or #locale.language == 'ua'} ? 'active' : ''">
-                        UA
-                    </a>
-
-                    <a href="?lang=en"
-                       class="lang-btn"
-                       th:classappend="${#locale.language == 'en'} ? 'active' : ''">
-                        EN
-                    </a>
-                </div>
-
-                <a th:href="@{/cart}" class="action-btn cart-btn" title="Кошик">
-                    <i class="fas fa-shopping-cart"></i>
-                </a>
-
-                <div class="dropdown profile-dropdown">
-                    <a href="#" class="action-btn" data-bs-toggle="dropdown" aria-expanded="false" title="Профіль">
-                        <i class="far fa-user"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
-                        <li><a class="dropdown-item" th:href="@{/profile}"><i class="fas fa-user-circle"></i> Мій профіль</a></li>
-                        <li><a class="dropdown-item" th:href="@{/orders}"><i class="fas fa-box"></i> Історія покупок</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" th:href="@{/login?logout}"><i class="fas fa-sign-out-alt"></i> Вийти</a></li>
-                    </ul>
-                </div>
-
-                <div class="dropdown d-lg-none">
-                    <button class="action-btn mobile-toggle" data-bs-toggle="dropdown">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
-                        <li><a class="dropdown-item" th:href="@{/}"><i class="fas fa-home"></i> Головна</a></li>
-                        <li><a class="dropdown-item" th:href="@{/shop}"><i class="fas fa-store"></i> Магазин</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" th:href="@{/about}"><i class="fas fa-info-circle"></i> Про нас</a></li>
-                        <li><a class="dropdown-item" th:href="@{/contact}"><i class="fas fa-envelope"></i> Контакти</a></li>
-                    </ul>
-                </div>
-
-            </div>
+            <a th:href="@{/profile}" class="header-profile-btn" title="Особистий кабінет">
+                <i class="far fa-user"></i>
+            </a>
+            <button id="nav-cart-btn" class="header-cart-icon-btn">
+                <i class="fas fa-shopping-basket"></i>
+                <span id="cart-count-badge" class="cart-badge hidden">0</span>
+            </button>
         </div>
     </header>
+    <div style="background: white; border-bottom: 1px solid #E2E8F0; padding: 0.6rem 2rem; display: flex; gap: 1rem; font-weight: 600; font-size: 0.9rem; margin-top: 70px; position: relative; z-index: 9990;">
+        <a href="/" style="color: #FF7A59; text-decoration: none; font-weight: 700;">Головна</a>
+        <span style="color: #E2E8F0;">|</span>
+        <a href="/shop" class="subnav-link-item">Каталог товарів</a>
+        <span style="color: #E2E8F0;">|</span>
+        <a href="/profile/pet/add" class="subnav-link-item">Підбір раціону (Квіз)</a>
+        <span style="color: #E2E8F0;">|</span>
+        <a href="/profile" class="subnav-link-item">Мій профіль</a>
+    </div>
 </div>

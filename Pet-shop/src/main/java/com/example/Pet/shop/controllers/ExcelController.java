@@ -25,7 +25,7 @@ public class ExcelController {
         this.productRepository = productRepository;
         this.excelExportService = excelExportService;
     }
-
+    // Формування та завантаження Excel-звіту з товарами
     @GetMapping("/export/excel")
     public ResponseEntity<byte[]> exportToExcel() {
         try {
@@ -33,6 +33,7 @@ public class ExcelController {
             byte[] excelContent = excelExportService.generateProductsExcel(products);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            // Встановлення назви Excel-файлу для завантаження
             headers.setContentDispositionFormData("attachment", "products_report.xlsx");
             headers.setContentLength(excelContent.length);
 

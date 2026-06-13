@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редагування профілю | Зоомагазин</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body style="display: flex; flex-direction: column; min-height: 100vh;">
+
+<div th:insert="~{layouts/header :: header}"></div>
+
+<main class="form-page-container">
+
+    <div class="form-header">
+        <a href="/profile" class="btn-back-circle">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="form-title">Редагування: <span th:text="${pet.name}" style="color: var(--bento-accent);">Ім'я</span></h1>
+    </div>
+
+    <div class="form-card">
+        <form th:action="@{/profile/pet/edit/{id}(id=${pet.id})}" method="post" class="custom-form">
+
+            <div class="form-group">
+                <label class="bento-label">Вид тварини</label>
+                <select name="type" class="bento-input" style="cursor: pointer;" required>
+                    <option value="DOG" th:selected="${pet.type == 'DOG'}">🐶 Собака</option>
+                    <option value="CAT" th:selected="${pet.type == 'CAT'}">🐱 Кіт</option>
+                    <option value="BIRD" th:selected="${pet.type == 'BIRD'}">🦜 Птах</option>
+                    <option value="RODENT" th:selected="${pet.type == 'RODENT'}">🐹 Гризун</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="bento-label">Кличка вихованця</label>
+                <input type="text" name="name" th:value="${pet.name}" required class="bento-input">
+            </div>
+
+            <div class="form-group">
+                <label class="bento-label">Порода (необов'язково)</label>
+                <input type="text" name="breed" th:value="${pet.breed}" class="bento-input">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="bento-label">Вік (років)</label>
+                    <input type="number" name="age" th:value="${pet.age}" min="0" step="0.1" required class="bento-input">
+                </div>
+                <div class="form-group">
+                    <label class="bento-label">Вага (кг)</label>
+                    <input type="number" name="weight" th:value="${pet.weight}" min="0" step="0.1" required class="bento-input">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="bento-label">Основний фокус здоров'я</label>
+                <select name="healthFocus" class="bento-input" style="cursor: pointer;" required>
+                    <option value="ACTIVE" th:selected="${pet.healthFocus == 'ACTIVE'}">Активні ігри та енергія</option>
+                    <option value="DIGESTION" th:selected="${pet.healthFocus == 'DIGESTION'}">Чутливе травлення</option>
+                    <option value="SKIN" th:selected="${pet.healthFocus == 'SKIN'}">Здорова шерсть та шкіра</option>
+                    <option value="TEETH" th:selected="${pet.healthFocus == 'TEETH'}">Гігієна зубів</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit-form" style="background-color: var(--bento-accent); margin-top: 2rem;">
+                Зберегти зміни <i class="fas fa-save" style="margin-left: 8px;"></i>
+            </button>
+
+        </form>
+    </div>
+</main>
+
+<footer th:insert="~{layouts/footer :: footer}" style="margin-top: auto;"></footer>
+
+</body>
+</html>

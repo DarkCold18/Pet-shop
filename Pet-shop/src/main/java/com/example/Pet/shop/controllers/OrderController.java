@@ -11,7 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -28,20 +31,61 @@ public class OrderController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/checkout")
-    public String processCheckout(HttpSession session, Principal principal,
-                                  Model model,
-                                  @RequestParam(value = "useBonus", required = false) String useBonus) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
+    @RequestMapping(value = "/checkout", method = {RequestMethod.GET, RequestMethod.POST})
+    public String showCheckoutPage(HttpSession session, Principal principal, Model model,
+                                   @RequestParam(value = "useBonus", required = false) String useBonus) {
         if (principal == null) {
-            model.addAttribute("error", "Будь ласка, авторизуйтесь для оформлення замовлення.");
             return "redirect:/login";
         }
 
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart == null || cart.isEmpty()) {
-            model.addAttribute("error", "Кошик порожній");
-            return "cart";
+            return "redirect:/cart/";
+        }
+
+        AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        // Якщо користувач поставив галочку "Використати бонуси" в кошику
+        if (useBonus != null) {
+            session.setAttribute("useBonus", true);
+        }
+
+        // Передаємо товари в HTML
+        model.addAttribute("cartItems", cart);
+
+        // Рахуємо суму
+        double total = cart.stream()
+                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuality())
+                .sum();
+
+        // Якщо бонуси активовані, одразу показуємо суму зі знижкою праворуч
+        if (Boolean.TRUE.equals(session.getAttribute("useBonus"))) {
+            double bonusValue = Math.min(total, user.getBonusPoints());
+            total -= bonusValue;
+        }
+
+        model.addAttribute("cartTotal", total);
+
+        return "order-configuration";
+    }
+
+
+    @PostMapping("/orders/place")
+    public String placeOrder(HttpSession session, Principal principal,
+                             @RequestParam String fullName,
+                             @RequestParam String phone,
+                             @RequestParam String address,
+                             @RequestParam String paymentMethod,
+                             Model model) {
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if (cart == null || cart.isEmpty()) {
+            return "redirect:/cart/";
         }
 
         AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
@@ -54,20 +98,15 @@ public class OrderController {
         int currentBonus = user.getBonusPoints();
         int bonusUsed = 0;
 
-        boolean useBonusFlag = useBonus != null;
-
-        if (useBonusFlag && currentBonus > 0) {
+        if (Boolean.TRUE.equals(session.getAttribute("useBonus")) && currentBonus > 0) {
             double bonusValue = Math.min(totalAfterDiscount, currentBonus);
             totalAfterDiscount -= bonusValue;
             bonusUsed = (int) bonusValue;
+            session.removeAttribute("useBonus");
         }
 
         int newBonusEarned = (int) (totalAfterDiscount * 0.05);
-
-
-        int finalBonusBalance = currentBonus - bonusUsed + newBonusEarned;
-        user.setBonusPoints(finalBonusBalance);
-
+        user.setBonusPoints(currentBonus - bonusUsed + newBonusEarned);
 
         Order order = new Order();
         order.setUser(user);
@@ -87,29 +126,32 @@ public class OrderController {
 
         orderRepository.save(order);
         userRepository.save(user);
-        session.removeAttribute("cart");
 
-        model.addAttribute("message", "Замовлення успішно оформлено! Бали оновлено.");
+        cart.clear();
 
+        // Формуємо повідомлення
+        String msg = "Замовлення успішно оформлено!";
+        if (bonusUsed > 0) {
+            msg += " Списано " + bonusUsed + " бонусів.";
+        }
+        msg += " Нараховано " + newBonusEarned + " нових бонусів.";
+
+        // Передаємо повідомлення напряму в поточний шаблон
+        model.addAttribute("message", msg);
+        model.addAttribute("title", "Замовлення оформлено");
         return "order-configuration";
     }
 
     @GetMapping("/orders")
     public String userOrders(Principal principal ,Model model) {
-
         if (principal == null) {
             return "redirect:/login";
         }
-
         AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
-
-
         List<Order> orders = orderRepository.findByUser(user);
-
 
         model.addAttribute("orders", orders);
         model.addAttribute("title", "Історія покупок");
-
         return "order-history";
     }
 }

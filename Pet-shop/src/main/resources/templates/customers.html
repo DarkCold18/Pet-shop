@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' | CRM Pawfect'">База клієнтів</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body style="background-color: #F8FAFC; display: flex; flex-direction: column; min-height: 100vh;">
+
+<div th:insert="~{layouts/header :: header}"></div>
+
+<main class="crm-container" style="flex: 1;">
+
+    <div class="crm-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 15px;">
+
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="icon-box-modern icon-box-lg">
+                <i class="fas fa-users"></i>
+            </div>
+            <h2 class="crm-title" style="margin: 0; font-size: 2rem; font-weight: 800; color: #1E293B;">База клієнтів</h2>
+        </div>
+
+    </div>
+
+    <div class="crm-card">
+        <table class="crm-table">
+            <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th style="width: 15%;">Користувач</th>
+                <th style="width: 20%;">Контакти</th>
+                <th style="width: 20%;">Улюбленці</th>
+                <th style="width: 10%; text-align: center;">Замовлень</th>
+                <th style="width: 15%; text-align: right;">Всього витрачено</th>
+                <th style="width: 10%; text-align: center;">Роль</th>
+                <th style="text-align: center; width: 5%;">Дії</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="customer, iterStat : ${customers}">
+                <td th:text="${iterStat.count}">1</td>
+
+                <td>
+                    <div class="td-flex-col">
+                        <strong th:text="${customer.username}" style="font-size: 1.05rem;">Логін</strong>
+                        <span style="color: #94A3B8; font-size: 0.85rem;">Зареєстрований</span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="td-flex-col" style="gap: 6px;">
+                        <div class="td-flex" style="gap: 6px;">
+                            <i class="fas fa-envelope" style="color: #CBD5E1; font-size: 0.9rem; width: 14px;"></i>
+                            <span th:text="${customer.email != null ? customer.email : 'Не вказано'}" style="font-size: 0.85rem; color: #64748B;">email</span>
+                        </div>
+                        <div class="td-flex" style="gap: 6px;">
+                            <i class="fas fa-phone-alt" style="color: #CBD5E1; font-size: 0.9rem; width: 14px;"></i>
+                            <strong th:text="${customer.phone != null ? customer.phone : 'Не вказано'}" style="font-size: 0.9rem; color: #1E293B;">phone</strong>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div style="display: flex; flex-wrap: wrap;">
+                        <th:block th:if="${customer.pets != null and !customer.pets.isEmpty()}">
+                                <span th:each="pet : ${customer.pets}"
+                                      class="pet-mini-badge"
+                                      title="Відкрити профіль"
+                                      onclick="openPetDrawer(this)"
+                                      th:data-name="${pet.name}"
+                                      th:data-breed="${pet.breed != null ? pet.breed : 'Без породи'}"
+                                      th:data-age="${pet.age}"
+                                      th:data-weight="${pet.weight}"
+                                      th:data-type="${pet.type}">
+                                    <i class="fas fa-paw"></i> <span th:text="${pet.name}">Бобик</span>
+                                </span>
+                        </th:block>
+                        <span th:if="${customer.pets == null or customer.pets.isEmpty()}" style="color: #94A3B8; font-size: 0.85rem; padding: 4px 0;">
+                                Немає тварин
+                            </span>
+                    </div>
+                </td>
+
+                <td style="text-align: center;">
+                        <span style="background: #F1F5F9; color: #475569; font-weight: 700; padding: 5px 12px; border-radius: 8px; font-size: 0.95rem;"
+                              th:text="${customer.totalOrdersCount}">0</span>
+                </td>
+
+                <td style="text-align: right; font-weight: 700; color: #1E293B; font-size: 1.05rem;">
+                    <span th:text="${#numbers.formatDecimal(customer.totalSpentAmount, 1, 'COMMA', 2, 'POINT')} + ' ₴'">0.00 ₴</span>
+                </td>
+
+                <td>
+                        <span th:if="${customer.roles != null and (customer.roles.contains('ROLE_ADMIN') or customer.roles.contains('ADMIN'))}" class="badge-role badge-admin">
+                            <i class="fas fa-shield-alt" style="margin-right: 4px;"></i> АДМІН
+                        </span>
+                    <span th:unless="${customer.roles != null and (customer.roles.contains('ROLE_ADMIN') or customer.roles.contains('ADMIN'))}" class="badge-role badge-user">
+                            <i class="fas fa-user" style="margin-right: 4px;"></i> КЛІЄНТ
+                        </span>
+                </td>
+
+                <td style="text-align: center;">
+                    <div style="display: flex; justify-content: center; gap: 8px;">
+                        <a href="javascript:void(0)" class="btn-table-action" title="Переглянути профіль"
+                           onclick="openProfileDrawer(this)"
+                           th:data-fullname="${customer.fullName != null ? customer.fullName : 'Не вказано'}"
+                           th:data-phone="${customer.phone != null ? customer.phone : 'Не вказано'}"
+                           th:data-address="${customer.address != null ? customer.address : 'Не вказано'}"
+                           th:data-email="${customer.email != null ? customer.email : 'Не вказано'}">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn-table-action" title="Історія замовлень"
+                           onclick="openOrderDrawer(this)"
+                           th:data-username="${customer.username}">
+                            <i class="fas fa-shopping-bag"></i>
+                        </a>
+                    </div>
+
+                    <div th:id="'orders-data-' + ${customer.username}" style="display: none;">
+                        <div th:if="${customer.orders == null or customer.orders.isEmpty()}" style="padding: 2rem; text-align: center; color: #94A3B8;">
+                            У цього клієнта ще немає замовлень.
+                        </div>
+                        <div th:each="order : ${customer.orders}" th:if="${order != null}" class="order-history-card">
+                            <div class="order-top" style="align-items: flex-start;">
+                                <div style="max-width: 60%; text-align: left;">
+                                    <div class="order-id" th:text="'#ORD-' + ${order?.id}">#ORD-0</div>
+                                    <div th:if="${order?.stripePaymentId != null}"
+                                         style="font-size: 0.7rem; background: #F1F5F9; color: #64748B; padding: 3px 8px; border-radius: 6px; margin-top: 6px; display: inline-block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                         th:title="${order.stripePaymentId}">
+                                        <i class="fas fa-shield-alt" style="margin-right: 3px;"></i> <span th:text="${order.stripePaymentId}"></span>
+                                    </div>
+                                </div>
+                                <span th:if="${order?.stripePaymentId != null}" class="order-status" style="background: #E0F2FE; color: #0284C7;">
+                                        <i class="fas fa-check-circle" style="margin-right: 4px;"></i> Карткою
+                                    </span>
+                                <span th:unless="${order?.stripePaymentId != null}" class="order-status" style="background: #FEF3C7; color: #D97706;">
+                                        <i class="fas fa-box" style="margin-right: 4px;"></i> При отриманні
+                                    </span>
+                            </div>
+                            <div class="order-date" th:text="${order?.orderDate != null ? #temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm') : 'Дата невідома'}" style="text-align: left;">Дата</div>
+                            <div style="font-size: 0.9rem; color: #64748B; margin-bottom: 12px; padding-top: 8px; border-top: 1px dashed #E2E8F0; text-align: left;">
+                                <div style="margin-bottom: 4px; font-weight: 600; color: #475569;">Товари:</div>
+                                <ul style="margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 4px;">
+                                    <li th:each="item : ${order?.items}" th:if="${item?.product != null}">
+                                        <span th:text="${item.product.name}">Назва товару</span>
+                                        <span style="color: #94A3B8; font-size: 0.8rem;" th:text="'(x' + ${item.quality} + ')'">(x1)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="order-total" th:text="${order?.total} + ' ₴'">0 ₴</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr th:if="${customers.isEmpty()}">
+                <td colspan="8" style="text-align: center; padding: 3rem; color: #94A3B8;">
+                    <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; color: #E2E8F0;"></i>
+                    <br>База клієнтів поки що порожня
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeAllDrawers()"></div>
+
+<div class="side-drawer" id="petModalDrawer">
+    <div class="drawer-header">
+        <div class="drawer-title">
+            <i class="fas fa-paw" style="color: #FF8B3D;"></i> Профіль улюбленця
+        </div>
+        <button class="drawer-close" onclick="closeAllDrawers()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="pet-modal-card">
+        <div class="pet-modal-avatar" id="drawerPetIcon">
+            <i class="fas fa-paw"></i>
+        </div>
+        <div class="pet-modal-info">
+            <h3 id="drawerPetName">Ім'я</h3>
+            <p id="drawerPetDetails">Деталі</p>
+        </div>
+    </div>
+</div>
+
+<div class="side-drawer" id="profileModalDrawer">
+    <div class="drawer-header">
+        <div class="drawer-title">
+            <i class="fas fa-user-circle" style="color: #0284C7;"></i> Дані клієнта
+        </div>
+        <button class="drawer-close" onclick="closeAllDrawers()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="pet-modal-card" style="flex-direction: column; align-items: flex-start; gap: 0.8rem;">
+        <h3 id="drawerFullName" style="font-size: 1.3rem; color: #1E293B; margin: 0 0 10px 0;">ПІБ</h3>
+        <p style="margin: 0; color: #64748B; font-size: 0.95rem;">
+            <i class="fas fa-phone-alt" style="width: 20px; color: #94A3B8;"></i>
+            <strong style="color: #1E293B;">Телефон:</strong> <span id="drawerPhone"></span>
+        </p>
+        <p style="margin: 0; color: #64748B; font-size: 0.95rem;">
+            <i class="fas fa-map-marker-alt" style="width: 20px; color: #94A3B8;"></i>
+            <strong style="color: #1E293B;">Адреса:</strong> <span id="drawerAddress"></span>
+        </p>
+        <p style="margin: 0; color: #64748B; font-size: 0.95rem;">
+            <i class="fas fa-map-marker-alt" style="width: 20px; color: #94A3B8;"></i>
+            <strong style="color: #1E293B;">Електронна пошта:</strong> <span id="drawerEmail"></span>
+        </p>
+    </div>
+</div>
+
+<div class="side-drawer" id="orderModalDrawer">
+    <div class="drawer-header">
+        <div class="drawer-title">
+            <i class="fas fa-shopping-bag" style="color: #6366F1;"></i> Замовлення
+        </div>
+        <button class="drawer-close" onclick="closeAllDrawers()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <p style="color: #64748B; margin-top: -10px; margin-bottom: 20px;">
+        Клієнт: <strong id="drawerCustomerName" style="color: #1E293B;">Ім'я</strong>
+    </p>
+
+    <div id="drawerOrderList"></div>
+</div>
+
+<script>
+    // Відкриття шторки тваринки (Без змін)
+    function openPetDrawer(element) {
+        document.getElementById('drawerPetName').innerText = element.getAttribute('data-name');
+        document.getElementById('drawerPetDetails').innerText = `${element.getAttribute('data-breed')}, ${element.getAttribute('data-age')} років, ${element.getAttribute('data-weight')} кг`;
+
+        let type = element.getAttribute('data-type');
+        let iconClass = type === 'CAT' ? 'fa-cat' : type === 'DOG' ? 'fa-dog' : type === 'BIRD' ? 'fa-dove' : 'fa-paw';
+        document.getElementById('drawerPetIcon').innerHTML = `<i class="fas ${iconClass}"></i>`;
+
+        document.getElementById('drawerOverlay').classList.add('active');
+        document.getElementById('petModalDrawer').classList.add('active');
+    }
+
+    // НОВЕ: Відкриття шторки профілю (Дані з Checkout)
+    function openProfileDrawer(element) {
+        document.getElementById('drawerFullName').innerText = element.getAttribute('data-fullname');
+        document.getElementById('drawerPhone').innerText = element.getAttribute('data-phone');
+        document.getElementById('drawerAddress').innerText = element.getAttribute('data-address');
+        document.getElementById('drawerEmail').innerText = element.getAttribute('data-email');
+
+        document.getElementById('drawerOverlay').classList.add('active');
+        document.getElementById('profileModalDrawer').classList.add('active');
+    }
+
+    // ОНОВЛЕНО: Відкриття шторки замовлень
+    function openOrderDrawer(element) {
+        const username = element.getAttribute('data-username');
+        document.getElementById('drawerCustomerName').innerText = username;
+
+        // Магія: беремо реальні замовлення клієнта з прихованого блоку і вставляємо у шторку!
+        const ordersHtml = document.getElementById('orders-data-' + username).innerHTML;
+        document.getElementById('drawerOrderList').innerHTML = ordersHtml;
+
+        document.getElementById('drawerOverlay').classList.add('active');
+        document.getElementById('orderModalDrawer').classList.add('active');
+    }
+
+    // Закриття всіх шторок
+    function closeAllDrawers() {
+        document.getElementById('drawerOverlay').classList.remove('active');
+        document.getElementById('petModalDrawer').classList.remove('active');
+        document.getElementById('orderModalDrawer').classList.remove('active');
+        document.getElementById('profileModalDrawer').classList.remove('active');
+    }
+</script>
+<footer th:insert="~{layouts/footer :: footer}" style="margin-top: auto;"></footer>
+
+</body>
+</html>

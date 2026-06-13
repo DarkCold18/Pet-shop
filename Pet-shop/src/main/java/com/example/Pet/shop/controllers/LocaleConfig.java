@@ -10,7 +10,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
-
+// Клас конфігурації локалізації застосунку
 @Configuration
 public class LocaleConfig implements WebMvcConfigurer {
     @Bean
@@ -19,7 +19,7 @@ public class LocaleConfig implements WebMvcConfigurer {
         slr.setDefaultLocale(new Locale("uk"));
         return slr;
     }
-
+    // Створення перехоплювача для зміни мови інтерфейсу
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();

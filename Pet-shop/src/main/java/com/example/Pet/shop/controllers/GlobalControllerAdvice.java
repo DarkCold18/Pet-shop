@@ -13,6 +13,7 @@ public class GlobalControllerAdvice {
     public GlobalControllerAdvice(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
+    // Автоматичне додавання списку категорій до всіх сторінок застосунку
     @ModelAttribute("categs")
     public List<Category> categs(){
         return categoryRepository.findAll();

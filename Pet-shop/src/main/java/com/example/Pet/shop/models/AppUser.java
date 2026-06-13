@@ -12,12 +12,20 @@ public class AppUser {
     private Long id;
     @Column(unique = true, nullable = false)
     private String username;
-    private String password;
+    private String password;private String fullName;
+    private String phone;
+    private String address;
+    private String email;
     private int bonusPoints=0;
 
+
+    public Long getId() {
+        return id;
+    }
     public AppUser() {
 
     }
+
     public AppUser(String username, String password, List<String> roles) {
         this.username = username;
         this.password = password;
@@ -36,7 +44,13 @@ public class AppUser {
     public int getBonusPoints() {
         return bonusPoints;
     }
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public void setBonusPoints(int bonusPoints) {
         this.bonusPoints = bonusPoints;
     }
@@ -61,9 +75,47 @@ public class AppUser {
         this.roles = roles;
     }
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public List<Order> getOrders() { return orders; }
+    public void setOrders(List<Order> orders) { this.orders = orders; }
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "app_user_roles",
             joinColumns = @JoinColumn(name = "app_user_id"))
     @Column(name = "role")
     private List<String> roles = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Pet> pets = new ArrayList<>();
+
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
+    }
+    // 1. Автоматический подсчет общего количества замовлень
+    public int getTotalOrdersCount() {
+        return orders != null ? orders.size() : 0;
+    }
+
+    // 2. Автоматический подсчет всей потраченной суммы
+    public double getTotalSpentAmount() {
+        if (orders == null || orders.isEmpty()) {
+            return 0.0;
+        }
+        return orders.stream()
+                .mapToDouble(Order::getTotal)
+                .sum();
+    }
 }

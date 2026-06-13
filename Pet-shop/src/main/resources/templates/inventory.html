@@ -1,113 +1,184 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${ title }"></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" xintegrity="sha512-z3gLpd7yknf1YoNbCzqN7z0t9e/QJ9Xz4vA24tY2l3y3c5/j6t5V/E/wA5R/K1a4uP5P7lT9V5qF3P5B6/5A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управління складом | Pawfect CRM</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<div th:insert="layouts/header :: header"></div>
-<div class="personal-section content-wrapper">
-    <div class="main-layout">
-        <div class="sidebar">
+<body style="display: flex; flex-direction: column; min-height: 100vh;">
+
+<div th:insert="~{layouts/header :: header}"></div>
+
+<main class="inventory-container" style="margin-top: 90px; flex: 1;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 40px;">
+        <div class="inventory-title-block">
+            <h1>Склад товарів</h1>
+            <p>Контроль залишків та вартості продукції</p>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="/inventory/export/excel" class="btn btn-secondary" style="border-radius: 16px; padding: 12px 24px; font-weight: 700; background: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #2D2926; border: 1px solid #E8E4DE;">
+                <i class="fas fa-file-excel text-success" style="margin-right: 6px;"></i> Експорт
+            </a>
+            <a href="/shop/product/add" class="btn btn-primary" style="background: #2D2926; color: #ffffff; border-radius: 16px; padding: 12px 24px; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none;" onmouseover="this.style.background='#FF8B3D'" onmouseout="this.style.background='#2D2926'">
+                <i class="fas fa-plus" style="margin-right: 4px;"></i> Додати товар
+            </a>
+        </div>
+    </div>
+
+    <div class="stats-bento-grid">
+        <div class="stat-bento-box stat-blue">
+            <div class="stat-bento-icon icon-blue"><i class="fas fa-boxes"></i></div>
             <div>
-                <div class="sidebar-header">
-                    Обліковий запис
-                    <div style="font-size: 0.9rem; color: #888; font-weight: normal; margin-top: 5px;">Керуйте інформацією свого облікового запису.</div>
-                </div>
-                <div class="sidebar-menu">
-                    <a th:href="@{/profile}"><i class="fas fa-user"></i> Профіль</a>
-                    <a th:href="@{/orders}"><i class="fas fa-history"></i> Історія</a>
-                    <a th:href="@{/profile/analytics}"><i class="fas fa-chart-line"></i> Аналітіка</a>
-                    <div sec:authorize="hasRole('ADMIN')" class="menu-item">
-                        <a href="#" class="active"><i class="fas fa-shield-alt"></i> Управління запасами</a>
-                        <div class="submenu">
-                            <a th:href="@{/shop/add-category}" class="submenu-item">Додати категорію</a>
-                            <a th:href="@{/shop/product/add}" class="submenu-item">Додати продукт</a>
-                        </div>
-                    </div>
-                </div>
+                <div class="stat-bento-label">Всього товарів</div>
+                <div class="stat-bento-value" th:text="${products != null ? products.size() : 0}">0</div>
             </div>
         </div>
-        <div class="main-content">
-            <div class="main-content-header">
-                <h2>Управління запасами</h2>
-                <a th:href="@{/inventory/export/excel}" class="btn btn-success mb-3" target="_blank">
-                    <i class="fas fa-file-excel"></i> Згенерувати Excel-звіт
-                </a>
+        <div class="stat-bento-box stat-red">
+            <div class="stat-bento-icon icon-peach"><i class="fas fa-exclamation-triangle"></i></div>
+            <div>
+                <div class="stat-bento-label">Критичний залишок</div>
+                <div class="stat-bento-value" style="color: #EF4444;" th:text="${lowStockProducts != null ? lowStockProducts.size() : 0}">0</div>
             </div>
-            <div sec:authorize="hasRole('ADMIN')">
-                <div class="search-container">
-                    <div class="group">
-                        <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><g><path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path></g></svg>
-                        <input placeholder="Пошук товару..." type="search" class="input" id="productSearchInput">
-                    </div>
-                </div>
-                <div class="table-container">
-                    <table class="table table-bordered mt-3" id="productTable">
-                        <thead class="table-light">
-                        <tr>
-                            <th>Назва</th>
-                            <th>Ціна</th>
-                            <th>Наявність</th>
-                            <th>Оновити</th>
-                        </tr>
-                        </thead>
-                        <tbody id="productTableBody">
-                        <tr th:each="product : ${products}">
-                            <td class="product-name-cell" th:text="${product.name}"></td>
-                            <td th:text="${product.price} + ' грн'"></td>
-                            <td th:text="${product.quantity} + ' шт.'"></td>
-                            <td>
-                                <form th:action="@{/inventory/update/{id}(id=${product.id})}" method="post" class="d-flex">
-                                    <input type="number" name="quantity" th:value="${product.quantity}" class="form-control me-2" style="width: 100px;">
-                                    <button type="submit" class="btn btn-primary btn-sm">Оновити</button>
-                                </form>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div sec:authorize="!hasRole('ADMIN')" class="alert alert-warning mt-3">
-                У вас немає доступу до управління інвентарем.
+        </div>
+        <div class="stat-bento-box stat-green" style="background-color: rgba(225, 235, 201, 0.4); border-color: #D1DBB9;">
+            <div class="stat-bento-icon icon-green" style="background-color: #ffffff;"><i class="fas fa-tags"></i></div>
+            <div>
+                <div class="stat-bento-label" style="color: #4B5563;">Категорій</div>
+                <div class="stat-bento-value" th:text="${categories != null ? categories.size() : 0}">0</div>
             </div>
         </div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
+    <div class="grid-bento-layout">
+
+        <div class="bento-card-wrapper">
+            <div style="padding: 24px 32px; border-bottom: 1px solid #E8E4DE; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; background: #ffffff;">
+                <h3 style="font-size: 1.3rem; font-weight: 900; color: #2D2926; margin: 0;">Список продукції</h3>
+                <div style="position: relative;">
+                    <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9CA3AF;"></i>
+                    <input type="text" id="warehouse-search-field" placeholder="Швидкий пошук..." style="background-color: #F7F5F2; border: 1px solid transparent; padding: 10px 16px 10px 42px; border-radius: 14px; font-size: 0.85rem; font-weight: 500; outline: none; width: 260px;">
+                </div>
+            </div>
+
+            <div class="inventory-cards-grid">
+                <div th:each="product : ${products}" class="inventory-item-card bento-product-row" th:attr="data-category=${product.category != null ? product.category.name : ''}">
+
+                    <div class="card-product-visual">
+                        <img th:if="${product.image != null and product.image != ''}" th:src="@{'/images/' + ${product.image}}" style="max-width: 85%; max-height: 85%; object-fit: contain;" alt="">
+                        <img th:unless="${product.image != null and product.image != ''}" src="/images/noimage.png" style="max-width: 85%; max-height: 85%; object-fit: contain; opacity: 0.3;" alt="">
+                    </div>
+
+                    <div class="card-product-info">
+                        <span class="card-product-tag" th:text="${product.category != null ? product.category.name : 'Без категорії'}">Категорія</span>
+                        <div class="card-product-title product-name-cell" th:text="${product.name}">Назва продукту</div>
+                    </div>
+
+                    <div style="font-weight: 900; color: #2D2926; font-size: 1.15rem; margin-top: 4px;">
+                        <span th:text="${product.price != null ? product.price : '0'}">0</span> <span style="font-weight: 400; font-size: 0.85rem; color: #9CA3AF;">₴ / шт</span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">
+                        <span style="color: #9CA3AF;">В наявності</span>
+                        <span th:text="${product.quantity != null ? product.quantity : 0} + ' шт'"
+                              th:style="${product.quantity != null and product.quantity <= 5} ? 'color: #EF4444;' : 'color: #16A34A;'">0 шт</span>
+                    </div>
+
+                    <div style="width: 100%; height: 6px; border-radius: 5px; background-color: #F7F5F2; overflow: hidden; margin-top: 2px;">
+                        <div th:classappend="${product.quantity != null and product.quantity <= 5} ? 'bg-danger' : 'bg-success'"
+                             th:style="'width: ' + ${product.quantity != null ? (product.quantity * 100 / 150 > 100 ? 100 : product.quantity * 100 / 150) : 0} + '%; height: 100%; border-radius: 5px; transition: width 0.3s;'"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 6px;">
+                        <form th:action="@{/shop/product/adjust/{id}(id=${product.id})}" method="post" style="margin: 0; flex: 1;">
+                            <input type="hidden" name="amount" value="5">
+                            <button type="submit" class="warehouse-card-adjust-btn" style="width: 100%;">+5 шт</button>
+                        </form>
+                        <form th:action="@{/shop/product/adjust/{id}(id=${product.id})}" method="post" style="margin: 0; flex: 1;">
+                            <input type="hidden" name="amount" value="20">
+                            <button type="submit" class="warehouse-card-adjust-btn" style="width: 100%;">+20 шт</button>
+                        </form>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #F7F5F2; padding-top: 10px; margin-top: 4px;">
+                        <a th:href="@{/shop/product/{id}/edit(id=${product.id})}" class="action-btn-bento" title="Редагувати">
+                            <i class="fas fa-pen" style="font-size: 0.75rem;"></i>
+                        </a>
+                        <form th:action="@{/shop/product/{id}/delete(id=${product.id})}" method="post" style="margin: 0;" onsubmit="return confirm('Видалити цей товар?')">
+                            <button type="submit" class="action-btn-bento delete" title="Видалити">
+                                <i class="fas fa-trash-alt" style="font-size: 0.75rem;"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bento-card-wrapper sidebar-bento">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <h3 style="font-size: 1.2rem; font-weight: 800; color: #2D2926; margin: 0;">Категорії</h3>
+
+                <a th:href="@{/shop/add-category}" class="action-btn-bento" style="background-color: #FFF2EA; color: #FF8B3D;" title="Додати категорію">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </div>
+
+            <div th:if="${categories != null}" style="display: flex; flex-direction: column; gap: 8px;">
+                <div th:each="category : ${categories}" class="category-bento-row">
+                    <span style="font-weight: 700; font-size: 0.9rem; color: #2D2926;" th:text="${category.name}">Категорія</span>
+
+                    <div style="display: flex; gap: 6px;">
+                        <a th:href="'/shop/category/'+${category.id}+'/edit'" class="action-btn-bento" title="Редагувати">
+                            <i class="fas fa-pen" style="font-size: 0.75rem;"></i>
+                        </a>
+                        <a th:href="@{'/shop/category/' + ${category.id} + '/delete'}" class="action-btn-bento delete" title="Видалити" onclick="return confirm('Ви впевнені, що хочете видалити категорію?');">
+                            <i class="fas fa-trash-alt" style="font-size: 0.75rem;"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${categories == null or categories.isEmpty()}" style="text-align: center; color: var(--gray-400); font-size: 0.85rem; padding: 1rem;">
+                Натисніть "+", щоб створити першу категорію
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<div th:insert="~{layouts/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const input = document.getElementById('productSearchInput');
-        const tableBody = document.getElementById('productTableBody');
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('warehouse-search-field');
+        const productCards = document.querySelectorAll('.bento-product-row');
 
-        if (input && tableBody) {
-            function filterTable() {
-                const filter = input.value.toUpperCase();
-                const rows = tableBody.getElementsByTagName('tr');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
 
-                for (let i = 0; i < rows.length; i++) {
-                    const productNameCell = rows[i].querySelector('.product-name-cell');
-                    if (productNameCell) {
-                        const textValue = productNameCell.textContent || productNameCell.innerText;
-
-                        if (textValue.toUpperCase().indexOf(filter) > -1) {
-                            rows[i].style.display = "";
+                productCards.forEach(card => {
+                    const titleElement = card.querySelector('.product-name-cell');
+                    if (titleElement) {
+                        const cardText = titleElement.textContent.toLowerCase();
+                        if (cardText.includes(searchTerm)) {
+                            card.style.setProperty('display', 'flex', 'important');
                         } else {
-                            rows[i].style.display = "none";
+                            card.style.setProperty('display', 'none', 'important');
                         }
                     }
-                }
-            }
-            input.addEventListener('input', filterTable);
+                });
+            });
         }
     });
 </script>
-
-<script src="/js/profile.js"></script>
 </body>
 </html>

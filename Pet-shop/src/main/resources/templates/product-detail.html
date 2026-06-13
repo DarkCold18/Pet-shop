@@ -1,97 +1,187 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${ title }"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name} + ' | Зоомагазин'">Деталі товару</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:insert="layouts/header :: header"></div>
-<div class="container my-5">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="pd-wrapper" th:if="${product != null}" th:object="${product}">
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="main-image-wrapper mb-3">
-                            <img th:src="'/images/' + *{image}" alt="Main product image" id="mainProductImage" class="img-fluid">
+
+<div th:insert="~{layouts/header :: header}"></div>
+
+<main class="product-container">
+
+    <div class="mb-8">
+        <a href="/shop" class="back-link">
+            <i class="fas fa-chevron-left text-xs"></i> Назад до магазину
+        </a>
+    </div>
+
+    <div class="product-grid">
+
+        <div class="image-gallery-section">
+            <div class="main-image-card group">
+                <div class="main-image-gradient"></div>
+
+                <img id="main-product-image"
+                     th:if="${product.image != null and product.image != ''}"
+                     th:src="'/images/'+${product.image}"
+                     alt="Product Image">
+
+                <img id="main-product-image-fallback"
+                     th:unless="${product.image != null and product.image != ''}"
+                     src="/images/noimage.png"
+                     alt="No Image">
+            </div>
+
+            <div class="thumbnails-grid">
+                <button type="button" class="product-thumb-btn active"
+                        th:if="${product.image != null and product.image != ''}"
+                        th:attr="data-image=@{'/images/' + ${product.image}}">
+                    <img th:src="'/images/'+${product.image}" alt="Thumbnail 1">
+                </button>
+
+                <button type="button" class="product-thumb-btn"
+                        th:if="${product.image != null and product.image != ''}"
+                        th:attr="data-image=@{'/images/' + ${product.image}}">
+                    <img th:src="'/images/'+${product.image}" style="opacity: 0.9;" alt="Thumbnail 2">
+                </button>
+
+                <button type="button" class="product-thumb-btn"
+                        th:if="${product.image != null and product.image != ''}"
+                        th:attr="data-image=@{'/images/' + ${product.image}}">
+                    <img th:src="'/images/'+${product.image}" style="opacity: 0.8;" alt="Thumbnail 3">
+                </button>
+
+                <button type="button" class="product-thumb-btn"
+                        th:if="${product.image != null and product.image != ''}"
+                        th:attr="data-image=@{'/images/' + ${product.image}}">
+                    <img th:src="'/images/'+${product.image}" style="opacity: 0.7;" alt="Thumbnail 4">
+                </button>
+
+                <button type="button" class="product-thumb-btn"
+                        th:unless="${product.image != null and product.image != ''}">
+                    <img src="/images/noimage.png" style="opacity: 0.4;" alt="No image">
+                </button>
+            </div>
+        </div>
+
+        <div class="product-info-section">
+            <div>
+                <span class="category-badge" th:text="${product.category.name}">Категорія</span>
+            </div>
+
+            <h1 class="product-title" th:text="${product.name}">Назва продукту</h1>
+
+            <div class="price-row">
+                <span class="price-main" th:text="${product.price} + ' ₴'">0 ₴</span>
+                <span class="price-suffix">/ за од.</span>
+            </div>
+
+            <div class="product-description">
+                <p>Найкращий вибір для вашого улюбленця. Цей товар відповідає високим стандартам якості та забезпечить комфорт вашій тваринці.</p>
+            </div>
+
+            <div class="manufacturer-accordion">
+                <button type="button" id="manufacturer-toggle" class="accordion-toggle">
+                    <span class="accordion-title">
+                        <i class="fas fa-industry"></i> Інформація про виробника
+                    </span>
+                    <i id="manufacturer-chevron" class="fas fa-chevron-down accordion-icon"></i>
+                </button>
+                <div id="manufacturer-content" class="accordion-content hidden">
+                    <div class="manufacturer-grid">
+                        <div class="manufacturer-item">
+                            <div class="manufacturer-label">Бренд</div>
+                            <div class="manufacturer-value" th:text="${product.brand != null and product.brand != '' ? product.brand : 'Не вказано'}">Бренд</div>
                         </div>
-                        <div class="thumbnail-gallery" th:if="*{images != null and !images.isEmpty()}">
-                            <img th:src="'/images/' + *{image}" alt="Thumbnail 1" class="thumb-active"
-                                 th:data-imagesrc="'/images/' + *{image}"
-                                 th:onclick="changeImage(this)">
-                            <img th:each="img : *{images}" th:src="'/images/' + ${img}" alt="Thumbnail"
-                                 th:data-imagesrc="'/images/' + ${img}"
-                                 th:onclick="changeImage(this)">
+                        <div class="manufacturer-item">
+                            <div class="manufacturer-label">Країна реєстрації</div>
+                            <div class="manufacturer-value" th:text="${product.registrationCountry != null and product.registrationCountry != '' ? product.registrationCountry : 'Не вказано'}">Країна</div>
                         </div>
-                    </div>
-                    <div class="col-md-5">
-                        <p class="pd-subtitle" th:text="*{short_description}">
-                            Короткий опис
-                        </p>
-                        <h1 class="pd-title" th:text="*{name}">Назва Товару</h1>
-                        <div class="col-12 mt-4">
-                            <h3 class="pd-section-header">Повний опис товару</h3>
-                            <p th:text="*{full_description}" class="pd-description-text"></p>
+                        <div class="manufacturer-item">
+                            <div class="manufacturer-label">Країна-виробник</div>
+                            <div class="manufacturer-value" th:text="${product.manufacturerCountry != null and product.manufacturerCountry != '' ? product.manufacturerCountry : 'Не вказано'}">Країна</div>
                         </div>
-                        <div th:if="*{availableSizes != null and !availableSizes.isEmpty()}" class="my-3">
-                            <div class="pd-option-label">Розмір</div>
-                            <div class="pd-size-options d-flex flex-wrap gap-2">
-                                <button th:each="size : *{availableSizes}"
-                                        class="pd-size-btn"
-                                        th:text="${size}">
-                                    Size
-                                </button>
-                            </div>
-                        </div>
-                        <form th:action="@{/cart/add/{id}(id=*{id})}" method="post" class="pd-buy-form mt-4">
-                            <div class="pd-buy-group">
-                                <div class="pd-quantity">
-                                    <label for="quantity" class="form-label mb-1">Кількість:</label>
-                                    <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control pd-quantity-input">
-                                </div>
-                                <div class="pd-price">
-                                    <div class="pd-price-amount" th:text="*{price} + ' грн'">399.99 грн</div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-lg pd-buy-btn w-100">
-                                <i class="fas fa-shopping-cart"></i> Додати в кошик
-                            </button>
-                        </form>
-                        <div class="pd-admin-box mt-4" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-                            <h5><i class="fas fa-shield-alt"></i> Панель Адміна</h5>
-                            <div class="pd-admin-btns">
-                                <a th:href="'/shop/product/'+ *{id} + '/edit'" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-pencil-alt"></i> Редагувати
-                                </a>
-                                <form th:action="'/shop/product/'+ *{id} + '/delete'" method="post">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm"
-                                            onclick="return confirm('Ви впевнені, що хочете видалити цей товар?');">
-                                        <i class="fas fa-trash-alt"></i> Видалити
-                                    </button>
-                                </form>
-                            </div>
+                        <div class="manufacturer-item">
+                            <div class="manufacturer-label">Гарантія якості</div>
+                            <div class="manufacturer-value" th:text="${product.guarantee != null and product.guarantee != '' ? product.guarantee : 'Не вказано'}">Гарантія</div>
                         </div>
                     </div>
                 </div>
+            </div> <div class="cart-panel">
+            <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post" class="cart-form-product">
+                <div class="quantity-wrapper">
+                    <button type="button" onclick="this.nextElementSibling.stepDown()" class="quantity-btn">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="number" name="quantity" value="1" min="1" max="99" class="quantity-input">
+                    <button type="button" onclick="this.previousElementSibling.stepUp()" class="quantity-btn">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <button type="submit" class="btn-add-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Додати в кошик
+                </button>
+            </form>
+
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <span style="align-self: center;">Безпечна оплата карткою або при отриманні</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <span style="align-self: center;">Швидка доставка Новою Поштою (1-2 дні)</span>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-<footer th:insert="layouts/footer :: footer"></footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+        </div> </div> </div> </main>
+
+
+<footer th:insert="~{layouts/footer :: footer}"></footer>
+
 <script>
-    function changeImage(thumbnailElement) {
-        var newImageSrc = thumbnailElement.getAttribute('data-imagesrc');
-        document.getElementById('mainProductImage').src = newImageSrc;
-        var thumbnails = document.querySelectorAll('.thumbnail-gallery img');
-        thumbnails.forEach(function(thumb) {
-            thumb.classList.remove('thumb-active');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Галерея зображень
+        const mainImage = document.getElementById('main-product-image');
+        const thumbButtons = document.querySelectorAll('.product-thumb-btn');
+
+        thumbButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const newSrc = this.getAttribute('data-image');
+                if (mainImage && newSrc) {
+                    mainImage.src = newSrc;
+                }
+                thumbButtons.forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
         });
-        thumbnailElement.classList.add('thumb-active');
-    }
+
+        // Акордеон "Інформація про виробника"
+        const toggleBtn = document.getElementById('manufacturer-toggle');
+        const content = document.getElementById('manufacturer-content');
+        const chevron = document.getElementById('manufacturer-chevron');
+
+        if (toggleBtn && content && chevron) {
+            toggleBtn.addEventListener('click', function () {
+                content.classList.toggle('hidden');
+                chevron.classList.toggle('rotate-180');
+            });
+        }
+    });
 </script>
 </body>
 </html>

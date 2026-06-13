@@ -27,21 +27,25 @@ public class CartController {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
-
+    // Ініціалізація нового кошика для користувача
     @ModelAttribute("cart")
     public List<CartItem> Cart() {
         return new ArrayList<>();
     }
 
-
+    // Відображення сторінки кошика
     @GetMapping({"", "/"})
     public String viewCart(@ModelAttribute("cart") List<CartItem> cart, Model model, Principal principal) {
-        double total=cart.stream()
-                .mapToDouble(item ->item.getProduct().getPrice() * item.getQuality())
-                .sum();
+        // Розрахунок загальної вартості товарів у кошику
+        double total = 0;
+        for (CartItem item : cart) {
+            total += item.getProduct().getPrice() * item.getQuality();
+        }
+
         if (principal != null) {
             AppUser appUser = userRepository.findByUsername(principal.getName()).orElseThrow();
             model.addAttribute("user", appUser);
+            // Розрахунок кількості бонусів для використання
             int bonusToUse = (int) Math.min(appUser.getBonusPoints(), total);
             model.addAttribute("bonusToUse", bonusToUse);
             model.addAttribute("discountedTotal", total - bonusToUse);
@@ -49,7 +53,8 @@ public class CartController {
             model.addAttribute("discountedTotal", total);
             model.addAttribute("bonusToUse", 0);
         }
-        model.addAttribute("total", total);
+        model.addAttribute("cartTotal", total);
+        model.addAttribute("cartItems", cart);
         return "cart";
     }
 
@@ -60,19 +65,18 @@ public class CartController {
                             RedirectAttributes redirectAttributes) {
 
         Product product = productRepository.findById(id).orElse(null);
-
+        // Перевірка існування товару
         if (product == null) {
-
             redirectAttributes.addFlashAttribute("error_message", "Товар не знайдено.");
             return "redirect:/";
         }
-
+        // Перевірка наявності необхідної кількості товару на складі
         if (product.getQuantity() < quantity) {
-
             redirectAttributes.addFlashAttribute("error_message",
                     "На складі недостатньо товару. Доступно: " + product.getQuantity() + " шт.");
             return "redirect:/";
         }
+        // Оновлення залишку товару на складі
         product.setQuantity(product.getQuantity() - quantity);
         productRepository.save(product);
         boolean found = false;
@@ -102,6 +106,7 @@ public class CartController {
         if (itemToRemove != null) {
             Product product = itemToRemove.getProduct();
             int quantityToReturn = itemToRemove.getQuality();
+            // Повернення товару на склад після видалення з кошика
             product.setQuantity(product.getQuantity() + quantityToReturn);
             productRepository.save(product);
             cart.remove(itemToRemove);
@@ -110,6 +115,7 @@ public class CartController {
     }
     @PostMapping("/clear")
     public String clearCart(@ModelAttribute("cart") List<CartItem> cart) {
+        // Повернення всіх товарів із кошика на склад
         for (CartItem item : cart) {
             Product product = item.getProduct();
             product.setQuantity(product.getQuantity() + item.getQuality());
@@ -126,6 +132,7 @@ public class CartController {
         Map<String, Object> response = new HashMap<>();
 
         for (CartItem item : cart) {
+            // Пошук товару для оновлення кількості
             if (item.getProduct().getId().equals(id)) {
                 Product product = item.getProduct();
                 int currentCartQuantity = item.getQuality();
@@ -136,6 +143,7 @@ public class CartController {
                     response.put("newQuantity", currentCartQuantity);
                     return response;
                 }
+                // Перевірка наявності товару на складі перед збільшенням кількості
                 if (delta > 0 && stockAfterChange < 0) {
                     response.put("error", "На складі недостатньо товару.");
                     response.put("newQuantity", currentCartQuantity);
@@ -148,7 +156,7 @@ public class CartController {
                 response.put("itemId", id);
                 response.put("newQuantity", newCartQuantity);
                 response.put("itemTotal", newCartQuantity * product.getPrice());
-
+                // Перерахунок загальної вартості кошика
                 double total = cart.stream()
                         .mapToDouble(i -> i.getProduct().getPrice() * i.getQuality())
                         .sum();

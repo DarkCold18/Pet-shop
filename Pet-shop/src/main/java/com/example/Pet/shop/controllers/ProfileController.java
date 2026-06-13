@@ -1,12 +1,7 @@
 package com.example.Pet.shop.controllers;
 
-import com.example.Pet.shop.models.AppUser;
-import com.example.Pet.shop.models.Order;
-import com.example.Pet.shop.models.OrderItem;
-import com.example.Pet.shop.models.Product;
-import com.example.Pet.shop.repo.OrderRepository;
-import com.example.Pet.shop.repo.ProductRepository;
-import com.example.Pet.shop.repo.UserRepository;
+import com.example.Pet.shop.models.*;
+import com.example.Pet.shop.repo.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,17 +20,28 @@ public class ProfileController {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final CategoryRepository categoryRepository;
+    private final PetRepository petRepository;
 
-    public ProfileController(ProductRepository productRepository, UserRepository userRepository, OrderRepository orderRepository) {
+    public ProfileController(ProductRepository productRepository, UserRepository userRepository, OrderRepository orderRepository, CategoryRepository categoryRepository, PetRepository petRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
+        this.categoryRepository = categoryRepository;
+        this.petRepository = petRepository;
     }
 
     @GetMapping("/inventory")
     public String inventoryPage(Model model) {
         List<Product> products = productRepository.findAll();
         model.addAttribute("products", products);
+        List<Category> categories = categoryRepository.findAll();
+        model.addAttribute("categories", categories);
+        // Формування списку товарів із низьким залишком на складі
+        List<Product> lowStockProducts = products.stream()
+                .filter(p -> p.getQuantity() <= 5)
+                .collect(Collectors.toList());
+        model.addAttribute("lowStockProducts", lowStockProducts);
         model.addAttribute("title", "Inventory Management");
         return "inventory";
     }
@@ -43,19 +49,32 @@ public class ProfileController {
     @PostMapping("/inventory/update/{id}")
     public String updateQuantity(@PathVariable Long id,
                                  @RequestParam("quantity") int quantity) {
+        // Пошук товару за ідентифікатором
         Product product = productRepository.findById(id).orElse(null);
         if (product != null) {
+            // Встановлення нової кількості товару
             product.setQuantity(quantity);
             productRepository.save(product);
         }
         return "redirect:/inventory";
     }
-
+    @PostMapping("/shop/product/adjust/{id}")
+    public String adjustProductQuantity(@PathVariable Long id,
+                                        @RequestParam("amount") int amount) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product != null) {
+            // Збільшуємо поточну кількість на (+5 або +20)
+            product.setQuantity(product.getQuantity() + amount);
+            productRepository.save(product);
+        }
+        return "redirect:/inventory";
+    }
     @PostMapping("/shop/product/{id}")
     public String buyProduct(@PathVariable Long id,
                              @RequestParam(defaultValue = "1") int count) {
         Product product = productRepository.findById(id).orElse(null);
         if (product != null && product.getQuantity() >= count) {
+            // Зменшення залишку товару після покупки
             product.setQuantity(product.getQuantity() - count);
             productRepository.save(product);
         }
@@ -138,4 +157,143 @@ public class ProfileController {
         model.addAttribute("recentOrders", recentOrders);
         return "analytics";
     }
+    @GetMapping("/profile/pet/add")
+    public String showPetQuiz(Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("title", "Підбір раціону");
+        model.addAttribute("products", productRepository.findAll());
+        return "pet-quiz";
+    }
+
+    // ОНОВЛЕНИЙ МЕТОД ЗБЕРЕЖЕННЯ В БД
+    @PostMapping("/profile/pet/add")
+    public String savePetProfile(Principal principal,
+                                 @RequestParam String type,
+                                 @RequestParam String name,
+                                 @RequestParam(required = false) String breed,
+                                 @RequestParam Double age,
+                                 @RequestParam Double weight,
+                                 @RequestParam String healthFocus) {
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        // Знаходимо юзера
+        AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
+
+        // Створюємо тваринку
+        Pet pet = new Pet(type, name, breed, age, weight, healthFocus, user);
+
+        // Зберігаємо в БД
+        petRepository.save(pet);
+
+        return "redirect:/profile";
+    }
+    // 1. Сторінка редагування
+    @GetMapping("/profile/pet/edit/{id}")
+    public String editPetForm(@PathVariable Long id, Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        Pet pet = petRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Невірний ID тваринки: " + id));
+
+        // Перевірка по логіну (username), а не по ID
+        if (!pet.getUser().getUsername().equals(user.getUsername())) {
+            return "redirect:/profile";
+        }
+
+        model.addAttribute("pet", pet);
+        model.addAttribute("title", "Редагування профілю");
+        return "pet-edit";
+    }
+
+    // 2. Збереження відредагованих даних
+    @PostMapping("/profile/pet/edit/{id}")
+    public String updatePetProfile(@PathVariable Long id,
+                                   @RequestParam String type,
+                                   @RequestParam String name,
+                                   @RequestParam(required = false) String breed,
+                                   @RequestParam Double age,
+                                   @RequestParam Double weight,
+                                   @RequestParam String healthFocus,
+                                   Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        Pet pet = petRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Невірний ID тваринки: " + id));
+
+        // Оновлюємо тільки якщо тваринка належить користувачу
+        if (pet.getUser().getUsername().equals(user.getUsername())) {
+            pet.setType(type);
+            pet.setName(name);
+            pet.setBreed(breed);
+            pet.setAge(age);
+            pet.setWeight(weight);
+            pet.setHealthFocus(healthFocus);
+
+            petRepository.save(pet);
+        }
+
+        return "redirect:/profile";
+    }
+
+    // 3. Видалення тваринки
+    @PostMapping("/profile/pet/delete/{id}")
+    public String deletePet(@PathVariable Long id, Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        Pet pet = petRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Невірний ID тваринки: " + id));
+
+        // Видаляємо тільки якщо тваринка належить користувачу
+        if (pet.getUser().getUsername().equals(user.getUsername())) {
+            petRepository.delete(pet);
+        }
+
+        return "redirect:/profile";
+    }
+    @GetMapping("/customers")
+    public String showCustomersBase(Model model) {
+        // Отримуємо всіх користувачів з бази даних
+        List<AppUser> customers = userRepository.findAll();
+
+        model.addAttribute("customers", customers);
+        model.addAttribute("title", "База клієнтів");
+
+        return "customers"; // Повертаємо назву HTML-шаблону
+    }
+    @GetMapping("/crm-dashboard")
+    public String showCrmDashboard(Model model) {
+        List<Order> allOrders = orderRepository.findAll();
+        long totalCustomers = userRepository.count();
+
+        model.addAttribute("orders", allOrders);
+        model.addAttribute("totalCustomers", totalCustomers);
+        model.addAttribute("totalOrders", allOrders.size());
+        model.addAttribute("title", "Головна панель CRM");
+
+        return "crm-dashboard";
+    }
+    @PostMapping("/crm-dashboard/order/status")
+    public String updateOrderStatus(@RequestParam Long orderId, @RequestParam String newStatus) {
+        // Знаходимо замовлення за його ID
+        Order order = orderRepository.findById(orderId).orElse(null);
+
+        if (order != null) {
+            order.setStatus(newStatus); // Встановлюємо новий статус
+            orderRepository.save(order); // Зберігаємо в базу
+        }
+
+        return "redirect:/crm-dashboard"; // Оновлюємо сторінку Канбану
+    }
+
 }

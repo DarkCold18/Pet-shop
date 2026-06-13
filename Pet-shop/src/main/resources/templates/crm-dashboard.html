@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' | CRM Pawfect'">Головна CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body style="background-color: #F8FAFC; display: flex; flex-direction: column; min-height: 100vh;">
+
+<div th:insert="~{layouts/header :: header}"></div>
+
+<main style="flex: 1;">
+
+    <div style="max-width: 1400px; margin: 2rem auto 0 auto; padding: 0 2.5rem;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: #1E293B; margin: 0;">Огляд CRM </h1>
+        <p style="color: #64748B; margin-top: 5px;">Управління конвеєром замовлень в реальному часі.</p>
+    </div>
+
+    <div class="bento-dashboard" style="grid-auto-rows: minmax(120px, auto); margin-bottom: 0;">
+        <div class="bento-card bento-col-1 dark-accent">
+            <div class="stat-card-title"><i class="fas fa-users" style="color: #FF8B3D;"></i> База клієнтів</div>
+            <div class="stat-card-value" th:text="${totalCustomers}">0</div>
+        </div>
+        <div class="bento-card bento-col-1">
+            <div class="stat-card-title"><i class="fas fa-box-open" style="color: #0284C7;"></i> Активні замовлення</div>
+            <div class="stat-card-value" th:text="${totalOrders}">0</div>
+        </div>
+        <div class="bento-card bento-col-2">
+            <div class="stat-card-title"><i class="fas fa-bolt" style="color: #16A34A;"></i> Навігація</div>
+            <div style="display: flex; gap: 10px; margin-top: auto;">
+                <a href="/admin/customers" class="bento-quick-link" style="margin: 0; flex: 1; padding: 10px;">База клієнтів</a>
+                <a href="/inventory" class="bento-quick-link" style="margin: 0; flex: 1; padding: 10px;">Склад</a>
+            </div>
+        </div>
+    </div>
+
+    <section class="kanban-section">
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #1E293B; margin-bottom: 1rem;">Конвеєр замовлень (Kanban) </h2>
+
+        <div class="kanban-board">
+
+            <div class="kanban-column" id="col-new">
+                <div class="kanban-column-header">
+                    <h3 class="kanban-column-title">Нові замовлення</h3>
+                </div>
+
+                <div th:each="order : ${orders}" th:if="${order.status == 'NEW'}" class="kanban-card"
+                     style="cursor: pointer;"
+                     th:data-id="${order.id}"
+                     th:data-total="${order.total}"
+                     th:data-buyer="${order.user != null ? order.user.username : 'Гість'}"
+                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : 'Не вказано'}"
+                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : 'Не вказано'}"
+                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : 'Не вказано'}"
+                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : 'Не вказано'}"
+                     th:data-status="${order.status}"
+                     th:data-date="${order.orderDate}"
+                     onclick="openStatusModal(this)">
+
+                    <div class="hidden-k-items" style="display: none;">
+                        <li th:each="item : ${order.items}" th:text="${item.product.name} + ' (x' + ${item.quality} + ')'">Товар</li>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; font-weight: 800; color: #1E293B; font-size: 0.95rem;">
+                        <span th:text="'#ORD-' + ${order.id}">#ORD-125</span>
+                        <span style="color: #FF8B3D;" th:text="${order.total} + ' ₴'">0 ₴</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px;" th:text="${order.user != null ? order.user.username : 'Гість'}">Покупець</div>
+
+                    <div class="product-tags-container">
+                        <th:block th:each="item : ${order.items}">
+                            <span th:if="${item.product.cryo}" class="prod-tag tag-cryo" title="Кріо запуск"><i class="fas fa-snowflake"></i> Кріо</span>
+                            <span th:if="${item.product.liquid}" class="prod-tag tag-liquid" title="Рідина/Вода"><i class="fas fa-droplet"></i> Рідина</span>
+                            <span th:if="${item.product.fragile}" class="prod-tag tag-fragile" title="Крихкий товар"><i class="fas fa-wine-glass-crack"></i> Крихке</span>
+                        </th:block>
+                    </div>
+                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text">Рахуємо...</span></div>
+                </div>
+            </div>
+
+            <div class="kanban-column" id="col-processing">
+                <div class="kanban-column-header"><h3 class="kanban-column-title">В обробці</h3></div>
+
+                <div th:each="order : ${orders}" th:if="${order.status == 'PROCESSING'}" class="kanban-card"
+                     style="cursor: pointer;"
+                     th:data-id="${order.id}"
+                     th:data-total="${order.total}"
+                     th:data-buyer="${order.user != null ? order.user.username : 'Гість'}"
+                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : 'Не вказано'}"
+                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : 'Не вказано'}"
+                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : 'Не вказано'}"
+                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : 'Не вказано'}"
+                     th:data-status="${order.status}"
+                     th:data-date="${order.orderDate}"
+                     onclick="openStatusModal(this)">
+
+                    <div class="hidden-k-items" style="display: none;">
+                        <li th:each="item : ${order.items}" th:text="${item.product.name} + ' (x' + ${item.quality} + ')'">Товар</li>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; font-weight: 800; color: #1E293B; font-size: 0.95rem;">
+                        <span th:text="'#ORD-' + ${order.id}">#ORD-0</span>
+                        <span style="color: #FF8B3D;" th:text="${order.total} + ' ₴'">0 ₴</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px;" th:text="${order.user != null ? order.user.username : 'Гість'}">Покупець</div>
+
+                    <div class="product-tags-container">
+                        <th:block th:each="item : ${order.items}">
+                            <span th:if="${item.product.cryo}" class="prod-tag tag-cryo"><i class="fas fa-snowflake"></i> Кріо</span>
+                            <span th:if="${item.product.liquid}" class="prod-tag tag-liquid"><i class="fas fa-droplet"></i> Рідина</span>
+                            <span th:if="${item.product.fragile}" class="prod-tag tag-fragile"><i class="fas fa-wine-glass-crack"></i> Крихке</span>
+                        </th:block>
+                    </div>
+                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text">Рахуємо...</span></div>
+                </div>
+            </div>
+
+            <div class="kanban-column" id="col-shipped">
+                <div class="kanban-column-header"><h3 class="kanban-column-title">Доставка</h3></div>
+
+                <div th:each="order : ${orders}" th:if="${order.status == 'SHIPPED'}" class="kanban-card"
+                     style="cursor: pointer;"
+                     th:data-id="${order.id}"
+                     th:data-total="${order.total}"
+                     th:data-buyer="${order.user != null ? order.user.username : 'Гість'}"
+                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : 'Не вказано'}"
+                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : 'Не вказано'}"
+                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : 'Не вказано'}"
+                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : 'Не вказано'}"
+                     th:data-status="${order.status}"
+                     th:data-date="${order.orderDate}"
+                     onclick="openStatusModal(this)">
+
+                    <div class="hidden-k-items" style="display: none;">
+                        <li th:each="item : ${order.items}" th:text="${item.product.name} + ' (x' + ${item.quality} + ')'">Товар</li>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; font-weight: 800; color: #1E293B; font-size: 0.95rem;">
+                        <span th:text="'#ORD-' + ${order.id}">#ORD-0</span>
+                        <span style="color: #FF8B3D;" th:text="${order.total} + ' ₴'">0 ₴</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px;" th:text="${order.user != null ? order.user.username : 'Гість'}">Покупець</div>
+
+                    <div class="product-tags-container">
+                        <th:block th:each="item : ${order.items}">
+                            <span th:if="${item.product.cryo}" class="prod-tag tag-cryo"><i class="fas fa-snowflake"></i> Кріо</span>
+                            <span th:if="${item.product.liquid}" class="prod-tag tag-liquid"><i class="fas fa-droplet"></i> Рідина</span>
+                            <span th:if="${item.product.fragile}" class="prod-tag tag-fragile"><i class="fas fa-wine-glass-crack"></i> Крихке</span>
+                        </th:block>
+                    </div>
+                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text">Рахуємо...</span></div>
+                </div>
+            </div>
+
+            <div class="kanban-column" id="col-completed">
+                <div class="kanban-column-header"><h3 class="kanban-column-title">Виконано</h3></div>
+
+                <div th:each="order : ${orders}" th:if="${order.status == 'COMPLETED'}" class="kanban-card"
+                     style="cursor: pointer;"
+                     th:data-id="${order.id}"
+                     th:data-total="${order.total}"
+                     th:data-buyer="${order.user != null ? order.user.username : 'Гість'}"
+                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : 'Не вказано'}"
+                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : 'Не вказано'}"
+                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : 'Не вказано'}"
+                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : 'Не вказано'}"
+                     th:data-status="${order.status}"
+                     th:data-date="${order.orderDate}"
+                     onclick="openStatusModal(this)">
+
+                    <div class="hidden-k-items" style="display: none;">
+                        <li th:each="item : ${order.items}" th:text="${item.product.name} + ' (x' + ${item.quality} + ')'">Товар</li>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; font-weight: 800; color: #1E293B; font-size: 0.95rem;">
+                        <span th:text="'#ORD-' + ${order.id}">#ORD-0</span>
+                        <span style="color: #FF8B3D;" th:text="${order.total} + ' ₴'">0 ₴</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px;" th:text="${order.user != null ? order.user.username : 'Гість'}">Покупець</div>
+
+                    <div class="product-tags-container">
+                        <th:block th:each="item : ${order.items}">
+                            <span th:if="${item.product.cryo}" class="prod-tag tag-cryo"><i class="fas fa-snowflake"></i> Кріо</span>
+                            <span th:if="${item.product.liquid}" class="prod-tag tag-liquid"><i class="fas fa-droplet"></i> Рідина</span>
+                            <span th:if="${item.product.fragile}" class="prod-tag tag-fragile"><i class="fas fa-wine-glass-crack"></i> Крихке</span>
+                        </th:block>
+                    </div>
+                    <div class="order-time-tracker" style="color: #16A34A;"><i class="fas fa-check-circle"></i> Завершено</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<footer th:insert="~{layouts/footer :: footer}" style="margin-top: auto;"></footer>
+
+<div class="kanban-modal-overlay" id="kmOverlay" onclick="closeStatusModal()"></div>
+<div class="kanban-modal" id="kmModal">
+    <div class="k-modal-header">
+        <h3 class="k-modal-title">Деталі <span id="kmOrderId" style="color: #FF8B3D;"></span></h3>
+        <button class="k-modal-close" onclick="closeStatusModal()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div class="k-modal-info">
+        <p style="margin-bottom: 4px;"><strong>Логін акаунта:</strong> <span id="kmBuyer"></span></p>
+
+        <div style="background: #ffffff; border: 1px solid #E2E8F0; padding: 12px; border-radius: 10px; margin: 10px 0;">
+            <div style="font-size: 0.9rem; color: #475569; margin-bottom: 6px;">
+                <i class="fas fa-user" style="color: #94A3B8; width: 20px;"></i> <strong id="kmFullName" style="color: #1E293B;"></strong>
+            </div>
+            <div style="font-size: 0.9rem; color: #475569; margin-bottom: 6px;">
+                <i class="fas fa-phone-alt" style="color: #94A3B8; width: 20px;"></i> <span id="kmPhone"></span>
+            </div>
+            <div style="font-size: 0.9rem; color: #475569; margin-bottom: 6px;">
+                <i class="fas fa-envelope" style="color: #94A3B8; width: 20px;"></i> <span id="kmEmail"></span>
+            </div>
+            <div style="font-size: 0.9rem; color: #475569;">
+                <i class="fas fa-map-marker-alt" style="color: #94A3B8; width: 20px;"></i> <span id="kmAddress"></span>
+            </div>
+        </div>
+
+        <p style="margin-top: 10px;"><strong>Сума:</strong> <span id="kmTotal"></span> ₴</p>
+        <p style="margin-top: 10px;"><strong>Товари:</strong></p>
+        <ul class="k-modal-items" id="kmItemsList"></ul>
+    </div>
+
+    <form class="k-modal-form" th:action="@{/crm-dashboard/order/status}" method="post">
+        <input type="hidden" name="orderId" id="kmInputId">
+
+        <div>
+            <label style="font-weight: 600; color: #475569; display: block; margin-bottom: 6px;">Перемістити на етап:</label>
+            <select name="newStatus" id="kmStatusSelect" class="k-select" style="width: 100%;">
+                <option value="NEW">Нове замовлення</option>
+                <option value="PROCESSING">В обробці (Збирається)</option>
+                <option value="SHIPPED">Доставка (Відправлено)</option>
+                <option value="COMPLETED">Виконано (Успіх)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="k-btn-submit">Оновити статус</button>
+    </form>
+</div>
+
+<script>
+    // --- КОД ДЛЯ МОДАЛЬНОГО ВІКНА ---
+    function openStatusModal(cardElement) {
+        // Отримуємо всі дані
+        const orderId = cardElement.getAttribute('data-id');
+        const total = cardElement.getAttribute('data-total');
+        const buyer = cardElement.getAttribute('data-buyer');
+        const currentStatus = cardElement.getAttribute('data-status');
+
+        const fullname = cardElement.getAttribute('data-fullname');
+        const phone = cardElement.getAttribute('data-phone');
+        const email = cardElement.getAttribute('data-email');
+        const address = cardElement.getAttribute('data-address');
+
+        const itemsHtml = cardElement.querySelector('.hidden-k-items').innerHTML;
+
+        // Вставляємо звичайні дані
+        document.getElementById('kmOrderId').innerText = '#ORD-' + orderId;
+        document.getElementById('kmInputId').value = orderId;
+        document.getElementById('kmTotal').innerText = total;
+        document.getElementById('kmBuyer').innerText = buyer;
+        document.getElementById('kmItemsList').innerHTML = itemsHtml;
+        document.getElementById('kmStatusSelect').value = currentStatus;
+
+        // Вставляємо контакти
+        document.getElementById('kmFullName').innerText = fullname;
+        document.getElementById('kmPhone').innerText = phone;
+        document.getElementById('kmEmail').innerText = email;
+        document.getElementById('kmAddress').innerText = address;
+
+        // Показуємо вікно
+        document.getElementById('kmOverlay').classList.add('active');
+        document.getElementById('kmModal').classList.add('active');
+    }
+
+    function closeStatusModal() {
+        document.getElementById('kmOverlay').classList.remove('active');
+        document.getElementById('kmModal').classList.remove('active');
+    }
+
+    // --- КОД ДЛЯ ТАЙМЕРІВ ---
+    function updateTimers() {
+        const cards = document.querySelectorAll('.kanban-card');
+
+        cards.forEach(card => {
+            const dateStr = card.getAttribute('data-date');
+            if (!dateStr) return;
+
+            const orderDate = new Date(dateStr);
+            const now = new Date();
+
+            const diffMs = now - orderDate;
+            const diffMins = Math.floor(diffMs / 1000 / 60);
+            const diffHours = Math.floor(diffMins / 60);
+
+            let timeText = "";
+            if (diffMins < 1) {
+                timeText = "щойно з'явився";
+            } else if (diffMins < 60) {
+                timeText = `${diffMins} хв. тому`;
+            } else {
+                const remainingMins = diffMins % 60;
+                timeText = `${diffHours} год. ${remainingMins} хв. тому`;
+            }
+
+            const textElement = card.querySelector('.time-elapsed-text');
+            if (textElement) textElement.innerText = timeText;
+
+            // SLA Контроль: ЗМІНЕНО НА 3 ХВИЛИНИ (Замість 120)
+            const isCompleted = card.parentElement.id === 'col-completed';
+            if (diffMins >= 3 && !isCompleted) {
+                card.classList.add('overdue');
+            } else {
+                card.classList.remove('overdue');
+            }
+        });
+    }
+
+    updateTimers();
+    setInterval(updateTimers, 60000); // Оновлюється кожну хвилину
+</script>
+
+</body>
+</html>

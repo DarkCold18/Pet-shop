@@ -1,67 +1,201 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <title>Вхід</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Зоомагазин & CRM - Профіль</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:insert="layouts/header :: header">
-</div>
-<div class="personal-section content-wrapper">
-    <div class="main-layout">
-        <div class="sidebar">
-            <div>
-                <div class="sidebar-header">
-                    Обліковий запис
-                    <div style="font-size: 0.9rem; color: #888; font-weight: normal; margin-top: 5px;">Керуйте інформацією свого облікового запису.</div>
+
+<div th:insert="~{layouts/header :: header}"></div>
+
+<main class="dashboard-wrapper-main" style="margin-top: 70px !important;">
+    <div class="dashboard-grid">
+
+        <!-- ЛІВА КОЛОНКА (Аватар + Бонуси) -->
+        <div class="dashboard-left">
+            <div class="profile-card">
+                <div class="avatar-container">
+                    <i class="fas fa-user-astronaut" style="font-size: 3.5rem; color: #262322;"></i>
                 </div>
-                <div class="sidebar-menu">
-                    <a href="#" class="active"><i class="fas fa-user"></i> Профіль</a>
-                    <a th:href="@{/inventory}"><i class="fas fa-shield-alt"></i> Управління запасами</a>
-                    <a th:href="@{/orders}"><i class="fas fa-history"></i> Історія</a>
-                    <a th:href="@{/profile/analytics}"><i class="fas fa-chart-line"></i> Аналітіка</a>
-                </div>
-            </div>
-        </div>
-        <div class="main-content flex-grow-1">
-            <div class="main-content-header">
-                    <h2>Деталі профілю</h2>
-            </div>
-            <div class="profile-section">
-                <div class="profile-row">
-                    <div class="profile-row-item">
-                        <strong>Ім'я користувача:</strong> <span class="profile-row-label" th:text="${user.username}"></span><br>
-                        <strong>Бонусні очки:</strong> <span th:text="${user.bonusPoints}"></span><br>
-                        <div class="profile-details">
-                            <span class="primary-label" th:text="${user.roles}"></span>
-                        </div>
+                <h2 class="profile-name" id="profile-username" th:text="${user.username}">Anton123</h2>
+                <span class="role-badge" id="profile-role" th:text="${user.roles}">USER</span>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-info-row">
+                    <div class="info-icon-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="info-label">Логін у системі</div>
+                        <div class="info-value" id="profile-login-name" th:text="${user.username}">Anton123</div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="notification-sidebar">
-            <div class="notification-header">
-                Попередження
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <div class="notification-content">
-                <div th:if="${lowStockProducts.isEmpty()}">
-                    <p style="color: green;">Всі товари в достатній кількості ✅</p>
+
+            <div class="bonus-card">
+                <div class="bonus-title">Бонусні бали</div>
+                <div class="bonus-amount-row">
+                    <span class="bonus-amount" id="profile-bonus-value" th:text="${user.bonusPoints}">1158</span>
+                    <svg class="bonus-icon" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
                 </div>
-                <div th:each="prod : ${lowStockProducts}">
-                    <p>
-                        <span th:text="${prod.name}"></span> – лише
-                        <span th:text="${prod.quantity}"></span> шт.
-                    </p>
-                </div>
+                <div class="bonus-desc">Накопичуйте бали з кожної покупки та витрачайте їх на товари.</div>
             </div>
         </div>
+
+        <!-- ПРАВА КОЛОНКА -->
+        <div class="dashboard-right">
+
+
+            <!-- ВЕРХНІЙ БЛОК: 50/50 (Улюбленці + Замовлення) -->
+            <div class="dashboard-split-row">
+
+                <!-- БЛОК: МОЇ УЛЮБЛЕНЦІ -->
+                <div class="menu-card" style="padding: 2rem;">
+                    <h3 class="menu-section-title" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-paw" style="color: var(--bento-accent);"></i> Мої улюбленці
+                    </h3>
+
+                    <!-- Вивід списку тварин -->
+                    <th:block th:if="${pets != null and !pets.isEmpty()}">
+                        <div th:each="pet : ${pets}">
+                            <!-- Тепер це div, а не a (картка не клікабельна цілком) -->
+                            <div class="pet-card">
+
+                                <div class="pet-avatar">
+                                    <i th:if="${pet.type == 'CAT'}" class="fas fa-cat"></i>
+                                    <i th:if="${pet.type == 'DOG'}" class="fas fa-dog"></i>
+                                    <i th:if="${pet.type == 'BIRD'}" class="fas fa-dove"></i>
+                                    <i th:if="${pet.type == 'RODENT'}" class="fas fa-mouse"></i>
+                                </div>
+
+                                <div class="pet-info">
+                                    <div class="pet-name" th:text="${pet.name}">Ім'я</div>
+                                    <div class="pet-details" th:text="${(pet.breed != null and pet.breed != '' ? pet.breed + ', ' : '') + pet.age + ' років, ' + pet.weight + ' кг'}">Деталі</div>
+                                </div>
+
+                                <!-- НОВИЙ БЛОК: Кнопки дій замість стрілочки -->
+                                <div class="pet-actions">
+                                    <!-- Кнопка Редагувати -->
+                                    <a th:href="@{/profile/pet/edit/{id}(id=${pet.id})}" class="btn-pet-action btn-pet-edit" title="Редагувати профіль">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+
+                                    <!-- Кнопка Видалити (через безпечну POST форму) -->
+                                    <form th:action="@{/profile/pet/delete/{id}(id=${pet.id})}" method="post" style="margin: 0;">
+                                        <button type="submit" class="btn-pet-action btn-pet-delete" title="Видалити профіль" onclick="return confirm('Ви дійсно хочете видалити цей профіль тваринки?');">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+
+                <!-- БЛОК: ОСОБИСТИЙ КАБІНЕТ (Меню Користувача) -->
+                <div class="menu-card" style="padding: 2rem; display: flex; flex-direction: column;">
+                    <h3 class="menu-section-title">Особистий кабінет</h3>
+
+                    <!-- Тут робимо 1 колонку, щоб кнопка не стискалась -->
+                    <div class="menu-grid" style="grid-template-columns: 1fr;">
+                        <a th:href="@{/orders}" class="menu-button-item">
+                            <div class="menu-button-content">
+                                <div class="menu-btn-icon-wrap">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <div class="menu-btn-texts">
+                                    <span class="menu-btn-title">Історія замовлень</span>
+                                    <span class="menu-btn-desc">Перейти до перегляду</span>
+                                </div>
+                            </div>
+                            <span class="menu-btn-arrow">›</span>
+                        </a>
+                    </div>
+
+                    <!-- Виштовхуємо кнопку виходу вниз картки -->
+                    <div style="margin-top: auto;">
+                        <div class="menu-divider" style="margin: 20px 0;"></div>
+                        <div class="logout-row">
+                            <a th:href="@{/login?logout}" class="logout-btn">
+                                <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                                <span>Вийти з профілю</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- Кінець 50/50 -->
+
+
+            <!-- НИЖНІЙ БЛОК: ПАНЕЛЬ АДМІНА (На всю ширину) -->
+            <div class="menu-card" sec:authorize="hasRole('ADMIN')">
+                <h3 class="menu-section-title">Панель управління (Адмін)</h3>
+
+                <div class="menu-grid">
+                    <a th:href="@{/customers}" class="menu-button-item">
+                        <div class="menu-button-content">
+                            <div class="menu-btn-icon-wrap"><i class="fas fa-users"></i></div>
+                            <div class="menu-btn-texts">
+                                <span class="menu-btn-title">База клієнтів</span>
+                                <span class="menu-btn-desc">Власники та їх тварини</span>
+                            </div>
+                        </div>
+                        <span class="menu-btn-arrow">›</span>
+                    </a>
+
+                    <a th:href="@{/inventory}" class="menu-button-item">
+                        <div class="menu-button-content">
+                            <div class="menu-btn-icon-wrap"><i class="fas fa-boxes"></i></div>
+                            <div class="menu-btn-texts">
+                                <span class="menu-btn-title">Склад (Інвентар)</span>
+                                <span class="menu-btn-desc">Управління залишками</span>
+                            </div>
+                        </div>
+                        <span class="menu-btn-arrow">›</span>
+                    </a>
+
+                    <a th:href="@{/profile/analytics}" class="menu-button-item">
+                        <div class="menu-button-content">
+                            <div class="menu-btn-icon-wrap"><i class="fas fa-chart-pie"></i></div>
+                            <div class="menu-btn-texts">
+                                <span class="menu-btn-title">Аналітика</span>
+                                <span class="menu-btn-desc">Звіти та статистика</span>
+                            </div>
+                        </div>
+                        <span class="menu-btn-arrow">›</span>
+                    </a>
+
+                    <a th:href="@{/crm-dashboard}" class="menu-button-item">
+                        <div class="menu-button-content">
+                            <div class="menu-btn-icon-wrap"><i class="fas fa-stream"></i></div>
+                            <div class="menu-btn-texts">
+                                <span class="menu-btn-title">Керування (CRM)</span>
+                                <span class="menu-btn-desc">Обробка замовлень</span>
+                            </div>
+                        </div>
+                        <span class="menu-btn-arrow">›</span>
+                    </a>
+                </div>
+            </div>
+
+        </div> <!-- Кінець правої колонки -->
     </div>
+</main>
+
+<div class="footer-wrapper-fixed">
+    <div th:insert="~{layouts/footer :: footer}"></div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-<script src="/js/profile.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Підбір раціону (Квіз) | Зоомагазин</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body style="display: flex; flex-direction: column; min-height: 100vh;">
+
+<div th:insert="~{layouts/header :: header}"></div>
+
+<main class="quiz-page-container">
+
+    <div class="form-header">
+        <a href="/profile" class="btn-back-circle">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="form-title" style="font-size: 1.5rem;">Особистий кабінет</h1>
+    </div>
+
+    <div class="quiz-card">
+
+        <div class="quiz-progress-wrap">
+            <div class="quiz-progress-bar" id="quiz-progress" style="width: 0%;"></div>
+            <div class="quiz-step-node active" id="node-1">1</div>
+            <div class="quiz-step-node" id="node-2">2</div>
+            <div class="quiz-step-node" id="node-3">3</div>
+            <div class="quiz-step-node" id="node-4">4</div>
+        </div>
+
+        <form th:action="@{/profile/pet/add}" method="post" id="pet-quiz-form">
+
+            <div class="quiz-step-panel active" id="step-1">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 0.5rem;">
+                    <h2 class="quiz-title" style="margin: 0;">Хто ваш улюбленець?</h2>
+                    <div class="icon-box-modern icon-box-sm">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                </div>
+                <p class="quiz-subtitle">Оберіть вид тварини для персоналізованого підбору товарів.</p>
+
+                <div class="pet-type-grid" id="pet-selector-grid">
+
+                    <label class="pet-type-label selected-pet">
+                        <input type="radio" name="type" value="DOG" required checked>
+                        <div class="icon-box-modern icon-box-xl">
+                            <i class="fas fa-dog"></i>
+                        </div>
+                        <span class="pet-type-text">Собака</span>
+                    </label>
+
+                    <label class="pet-type-label">
+                        <input type="radio" name="type" value="CAT" required>
+                        <div class="icon-box-modern icon-box-xl">
+                            <i class="fas fa-cat"></i>
+                        </div>
+                        <span class="pet-type-text">Кіт</span>
+                    </label>
+
+                    <label class="pet-type-label">
+                        <input type="radio" name="type" value="BIRD" required>
+                        <div class="icon-box-modern icon-box-xl">
+                            <i class="fas fa-dove"></i>
+                        </div>
+                        <span class="pet-type-text">Птах</span>
+                    </label>
+
+                    <label class="pet-type-label">
+                        <input type="radio" name="type" value="RODENT" required>
+                        <div class="icon-box-modern icon-box-xl">
+                            <i class="fas fa-mouse"></i>
+                        </div>
+                        <span class="pet-type-text">Гризун</span>
+                    </label>
+
+                    <!-- Додатково: Рибка та Інше (щоб сітка виглядала повнішою) -->
+                    <label class="pet-type-label">
+                        <input type="radio" name="type" value="FISH" required>
+                        <div class="icon-box-modern icon-box-xl">
+                            <i class="fas fa-fish"></i>
+                        </div>
+                        <span class="pet-type-text">Рибка</span>
+                    </label>
+
+                    <label class="pet-type-label">
+                        <input type="radio" name="type" value="OTHER" required>
+                        <div class="icon-box-modern icon-box-xl">
+                            <i class="fas fa-paw"></i>
+                        </div>
+                        <span class="pet-type-text">Інше</span>
+                    </label>
+
+                </div>
+                <div class="quiz-nav-buttons">
+                    <button type="button" class="btn-quiz-next" onclick="goToStep(2)">Далі <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="quiz-step-panel" id="step-2">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 0.5rem;">
+                    <h2 class="quiz-title" style="margin: 0;">Розкажіть про нього</h2>
+                    <div class="icon-box-modern icon-box-sm">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                </div>
+                <p class="quiz-subtitle">Як ми можемо звертатися до вашого друга?</p>
+                <div class="custom-form">
+                    <div class="form-group">
+                        <label class="bento-label">Кличка вихованця</label>
+                        <input type="text" name="name" id="pet-name" placeholder="Наприклад, Арчі" class="bento-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="bento-label">Порода (необов'язково)</label>
+                        <input type="text" name="breed" id="pet-breed" placeholder="Наприклад, Лабрадор" class="bento-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="bento-label">Вік (у роках)</label>
+                        <input type="number" name="age" id="pet-age" placeholder="Наприклад, 2" min="0" step="0.1" class="bento-input">
+                    </div>
+                </div>
+                <div class="quiz-nav-buttons">
+                    <button type="button" class="btn-quiz-prev" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Назад</button>
+                    <button type="button" class="btn-quiz-next" onclick="goToStep(3)">Далі <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="quiz-step-panel" id="step-3">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 0.5rem;">
+                    <h2 class="quiz-title" style="margin: 0;">Параметри здоров'я</h2>
+                    <div class="icon-box-modern icon-box-sm">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                </div>
+                <p class="quiz-subtitle">Ці дані допоможуть вирахувати оптимальний раціон.</p>
+                <div class="custom-form">
+                    <div class="form-group">
+                        <label class="bento-label">Вага тварини (кг)</label>
+                        <input type="number" name="weight" id="pet-weight" placeholder="Наприклад, 12.5" min="0" step="0.1" class="bento-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="bento-label">Основний фокус здоров'я</label>
+                        <select name="healthFocus" class="bento-input" style="cursor: pointer;">
+                            <option value="ACTIVE">Активні ігри та енергія (Іграшки & Корм)</option>
+                            <option value="DIGESTION">Чутливе травлення (Преміум раціони)</option>
+                            <option value="SKIN">Здорова шерсть та шкіра (Вітаміни)</option>
+                            <option value="TEETH">Гігієна зубів (Жувальні іграшки)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="quiz-nav-buttons">
+                    <button type="button" class="btn-quiz-prev" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> Назад</button>
+                    <button type="button" class="btn-quiz-next" onclick="goToStep(4)">Згенерувати підбір <i class="fas fa-magic"></i></button>
+                </div>
+            </div>
+
+            <div class="quiz-step-panel" id="step-4">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 0.5rem;">
+                    <h2 class="quiz-title" style="margin: 0; text-align: left;">Рекомендований підбір знайдено!</h2>
+                    <div class="icon-box-modern icon-box-sm">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <p class="quiz-subtitle" style="text-align: left; margin-bottom: 1rem;" id="dynamic-summary-text">
+                    Рекомендовані товари для вашого вихованця: <strong>Ім'я</strong> (порода), вік <strong>0 р.</strong>, вага <strong>0 кг</strong>.
+                </p>
+
+                <div class="wizard-success-banner">
+                    <div class="icon-box-modern icon-box-lg" style="margin: 0; transform: rotate(0deg); background: #E1F8E8; color: #10B981; box-shadow: none;">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="wizard-success-text">
+                        <strong>Персональний смарт-підбір</strong>
+                        <span>Нижче наведено товари, що відповідають параметрам здоров'я улюбленця.</span>
+                    </div>
+                </div>
+
+                <div class="quiz-products-grid" id="wizard-products-list">
+                    <div th:each="product : ${products}"
+                         class="product-bento-card wizard-item-card"
+                         th:data-category="${product.category != null ? product.category.name : ''}"
+                         style="display: none; padding: 1rem;">
+
+                        <div class="product-image-wrapper" style="height: 140px; margin-bottom: 0.75rem;">
+                            <img th:if="${product.image != null and product.image != ''}" th:src="@{'/images/' + ${product.image}}" alt="">
+                            <img th:unless="${product.image != null and product.image != ''}" src="/images/noimage.png" style="opacity: 0.3;" alt="">
+                        </div>
+
+                        <div class="product-card-body">
+                            <div class="product-card-category" style="color: var(--bento-accent); text-transform: uppercase;">
+                                <i class="fas fa-paw"></i>
+                                <span th:text="${product.category != null ? product.category.name : 'Зоотовари'}">Категорія</span>
+                            </div>
+                            <div class="product-card-title" style="font-size: 1rem; margin-bottom: 0.5rem;" th:text="${product.name}">Назва</div>
+                            <div class="product-card-footer" style="padding-top: 0.5rem; margin-top: auto;">
+                                <div class="product-card-price" style="font-size: 1.1rem;" th:text="${product.price} + ' ₴'">0 ₴</div>
+                                <a th:href="@{/shop/product/{id}(id=${product.id})}" target="_blank" class="btn-add-to-cart-circle" style="width: 2.2rem; height: 2.2rem; background: #F3F2EE; color: #2D2926; box-shadow: none;">
+                                    <i class="fas fa-shopping-cart" style="font-size: 0.8rem;"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-4-buttons">
+                    <button type="button" class="btn-step4-back" onclick="goToStep(3)">Назад</button>
+                    <button type="button" class="btn-step4-reset" onclick="location.reload()">Скинути профіль</button>
+                    <button type="submit" class="btn-step4-submit" style="display: inline-flex; align-items: center; gap: 8px;">
+                        Зберегти профіль & Закрити
+                        <i class="fas fa-save"></i>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</main>
+
+<footer th:insert="~{layouts/footer :: footer}" style="margin-top: auto;"></footer>
+
+<script>
+    // Виділення обраної тваринки
+    document.addEventListener('DOMContentLoaded', function() {
+        const labels = document.querySelectorAll('#pet-selector-grid .pet-type-label');
+        labels.forEach(label => {
+            label.addEventListener('click', function() {
+                labels.forEach(l => l.classList.remove('selected-pet'));
+                this.classList.add('selected-pet');
+            });
+        });
+    });
+
+    // Навігація між кроками
+    function goToStep(stepNumber) {
+
+        // Валідація кроку 2
+        if (stepNumber === 3) {
+            const name = document.getElementById('pet-name').value;
+            const age = document.getElementById('pet-age').value;
+            if (!name || !age) {
+                alert('Будь ласка, введіть кличку та вік улюбленця.');
+                return;
+            }
+        }
+
+        // Валідація кроку 3 та ГЕНЕРАЦІЯ РЕЗУЛЬТАТУ
+        if (stepNumber === 4) {
+            const weight = document.getElementById('pet-weight').value;
+            if (!weight) {
+                alert('Будь ласка, введіть вагу улюбленця.');
+                return;
+            }
+
+            // Отримуємо значення
+            const selectedTypeNode = document.querySelector('input[name="type"]:checked');
+            const type = selectedTypeNode ? selectedTypeNode.value.toUpperCase() : 'DOG';
+            const name = document.getElementById('pet-name').value;
+            const breed = document.getElementById('pet-breed').value || 'без породи';
+            const age = document.getElementById('pet-age').value;
+
+            // 1. Оновлюємо текст підсумку
+            document.getElementById('dynamic-summary-text').innerHTML =
+                `Рекомендовані товари для вашого вихованця: <strong>${name}</strong> (${breed}), вік <strong>${age} р.</strong>, вага <strong>${weight} кг</strong>.`;
+
+            // 2. Смарт-фільтрація товарів (намагаємося знайти ключові слова у назві або категорії)
+            const cards = document.querySelectorAll('.wizard-item-card');
+
+            let keyword = "";
+            if (type === 'DOG') keyword = "соба";
+            if (type === 'CAT') keyword = "кот";
+            if (type === 'BIRD') keyword = "птах";
+            if (type === 'RODENT') keyword = "гризун";
+
+            let shownCount = 0;
+            let found = false;
+
+            cards.forEach(card => {
+                const category = card.getAttribute('data-category').toLowerCase();
+                const title = card.querySelector('.product-card-title').textContent.toLowerCase();
+
+                if (category.includes(keyword) || title.includes(keyword)) {
+                    if (shownCount < 4) { // Показуємо максимум 4 картки, щоб було красиво
+                        card.style.display = 'flex';
+                        found = true;
+                        shownCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Якщо в базі немає товарів з потрібним словом - просто показуємо 4 перших товари
+            if(!found) {
+                cards.forEach((card, idx) => {
+                    if(idx < 4) {
+                        card.style.display = 'flex';
+                    }
+                });
+            }
+        }
+
+        // Перемикання панелей
+        document.querySelectorAll('.quiz-step-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+        document.getElementById('step-' + stepNumber).classList.add('active');
+
+        // Оновлення прогрес-бару
+        const progressPercentage = ((stepNumber - 1) / 3) * 100;
+        document.getElementById('quiz-progress').style.width = progressPercentage + '%';
+
+        // Оновлення кружечків
+        document.querySelectorAll('.quiz-step-node').forEach((node, index) => {
+            node.className = 'quiz-step-node';
+            if (index + 1 === stepNumber) {
+                node.classList.add('active');
+            } else if (index + 1 < stepNumber) {
+                node.classList.add('completed');
+                node.innerHTML = '<i class="fas fa-check"></i>';
+            } else {
+                node.innerHTML = index + 1;
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
