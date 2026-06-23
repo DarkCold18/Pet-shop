@@ -26,7 +26,7 @@ public class PaymentController {
 
     @Autowired
     private OrderRepository orderRepository;
-    private final String stripeSecretKey = "   ";
+    private final String stripeSecretKey = "";
 
 
     @PostMapping("/create-payment-intent")

@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Pawfect - сучасний інтернет-магазин товарів для тварин.">
-    <title th:text="${title != null ? title : 'Pawfect - Магазин для тварин'}"></title>
-    <!-- Підключення шрифтів та іконок -->
+    <title th:text="${title != null ? title : 'Pawfect'}"></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -15,17 +14,15 @@
 <main style="background-color: #F8FAFC !important; min-height: 80vh;">
     <div id="shop-view-container" class="view-container">
         <section id="shop-home" style="display: block !important;">
-            <!-- Головний баннер -->
+
             <section class="hero-banner">
-
                 <div class="hero-content">
-                    <h1 class="hero-title">Здорові улюбленці —<br><span class="text-highlight">щасливі господарі!</span></h1>
-
-                    <p class="hero-subtitle">Преміум корми, корисні ласощі та захоплюючі іграшки для ваших чотирилапих друзів. Скористайтеся нашим інтелектуальним квізом для індивідуального підбору раціону.</p>
+                    <h1 class="hero-title" th:utext="#{hero.title}">Здорові улюбленці — щасливі господарі!</h1>
+                    <p class="hero-subtitle" th:text="#{hero.subtitle}">Опис</p>
 
                     <div class="hero-buttons" style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <a href="/catalog" class="btn-primary">
-                            Перейти в каталог
+                        <a href="/shop" class="btn-primary">
+                            <span th:text="#{hero.btn.catalog}">Перейти в каталог</span>
                             <span class="icon-circle"><i class="fas fa-arrow-right"></i></span>
                         </a>
 
@@ -33,79 +30,67 @@
                             <div class="icon-box-modern icon-box-sm">
                                 <i class="fas fa-plus"></i>
                             </div>
-                            <span>Створити профіль тварини</span>
+                            <span th:text="#{hero.btn.addpet}">Створити профіль</span>
                         </a>
                     </div>
                 </div>
 
                 <div class="hero-image-wrapper">
-
                     <div class="floating-badge badge-natural">
-                        <i class="fas fa-leaf" style="color: #10B981; font-size: 1.2rem;"></i> 100% Натурально
+                        <i class="fas fa-leaf" style="color: #10B981; font-size: 1.2rem;"></i> <span th:text="#{hero.badge.natural}">Натурально</span>
                     </div>
-
                     <div class="floating-badge badge-cat">
-                        <i class="fas fa-paw" style="color: #FF8B3D; font-size: 1.2rem;"></i> Киця рекомендує
+                        <i class="fas fa-paw" style="color: #FF8B3D; font-size: 1.2rem;"></i> <span th:text="#{hero.badge.cat}">Рекомендує</span>
                     </div>
-
-                    <img src="/images/a-detailed-close-up-portrait-of-a-stylized--charmi.png" alt="3D кіт маскот" class="hero-cat-img">
-
+                    <img src="/images/a-detailed-close-up-portrait-of-a-stylized--charmi.png" alt="3D cat mascot" class="hero-cat-img">
                 </div>
-
             </section>
-            <div class="category-container">
 
-                <!-- СОБАКИ (По центру) -->
-                <a href="/catalog/dogs" class="category-banner-link banner-dog">
-                    <img src="/images/wmremove-transformed.png" alt="Товари для собак">
+            <div class="category-container">
+                <a href="shop?category=19" class="category-banner-link banner-dog">
+                    <img src="/images/wmremove-transformed.png" alt="Dog products">
                     <div class="custom-banner-text align-center">
                         <i class="fas fa-paw banner-paw-icon"></i>
-                        <h3>Товари<br>для собак</h3>
-                        <p>Все, що потрібно<br>вашому улюбленцю!</p>
-                        <span class="btn-banner">Переглянути каталог <i class="fas fa-arrow-right"></i></span>
+                        <h3 th:utext="#{category.dogs.title}">Товари для собак</h3>
+                        <p th:utext="#{category.dogs.desc}">Опис</p>
+                        <span class="btn-banner"><span th:text="#{category.btn.view}"></span> <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </a>
 
-                <!-- КОТИ (По центру) -->
-                <a href="/catalog/cats" class="category-banner-link banner-cat">
-                    <img src="/images/wmremove-transformed1.png" alt="Товари для котів">
+                <a href="/shop?category=18" class="category-banner-link banner-cat">
+                    <img src="/images/wmremove-transformed1.png" alt="Cat products">
                     <div class="custom-banner-text align-center">
-
-                        <h3>Товари для котів</h3>
-                        <p>Турбота, комфорт і радість<br>для вашого котика</p>
-                        <span class="btn-banner">Переглянути каталог <i class="fas fa-arrow-right"></i></span>
+                        <h3 th:text="#{category.cats.title}">Товари для котів</h3>
+                        <p th:utext="#{category.cats.desc}">Опис</p>
+                        <span class="btn-banner"><span th:text="#{category.btn.view}"></span> <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </a>
 
-                <!-- АКСЕСУАРИ (По левому краю) -->
-                <a href="/catalog/accessories" class="category-banner-link banner-acc">
-                    <img src="/images/ChatGPT%20Image%2013%20июн.%202026%20г.,%2022_39_46.png" alt="Аксесуари та догляд">
+                <a href="/shop?category=15" class="category-banner-link banner-acc">
+                    <img src="/images/ChatGPT%20Image%2013%20июн.%202026%20г.,%2022_39_46.png" alt="Accessories">
                     <div class="custom-banner-text align-left">
                         <i class="fas fa-paw banner-paw-icon"></i>
-                        <h3>Аксесуари<br>та догляд</h3>
-                        <p>Все для здоров'я,<br>краси та розваг<br>ваших улюбленців</p>
-                        <span class="btn-banner">Переглянути каталог <i class="fas fa-arrow-right"></i></span>
+                        <h3 th:utext="#{category.acc.title}">Аксесуари</h3>
+                        <p th:utext="#{category.acc.desc}">Опис</p>
+                        <span class="btn-banner"><span th:text="#{category.btn.view}"></span> <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </a>
-
             </div>
-            <!-- 3 міні баннера -->
+
             <div class="store-container">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
-
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <div class="icon-box-modern icon-box-lg">
                             <i class="fas fa-fire"></i>
                         </div>
-                        <h2 class="catalog-title" style="margin: 0;">Популярні товари</h2>
+                        <h2 class="catalog-title" style="margin: 0;" th:text="#{popular.title}">Популярні товари</h2>
                     </div>
-
                     <a href="/shop" class="catalog-all-btn" style="display: inline-flex; align-items: center; gap: 8px; background-color: #ffffff; border: 1px solid #E2E8F0;">
-                        Всі товари
+                        <span th:text="#{popular.btn.all}">Всі товари</span>
                         <i class="fas fa-arrow-right" style="font-size: 0.85rem; color: #FF8B3D;"></i>
                     </a>
-
                 </div>
+
                 <div class="products-grid" id="featured-products-grid" style="margin-bottom: var(--spacing-xl);">
                     <div class="product-card" th:each="product : ${products}">
                         <a th:href="'/shop/product/'+${product.id}" style="text-decoration: none; display: block;">
@@ -119,7 +104,7 @@
                                 <h4 class="product-title" th:text="${product.name}" style="color: var(--dark); font-weight: 700; font-size: 1rem; min-height: 40px; margin-bottom: var(--spacing-xs);">Назва товару</h4>
                             </a>
                             <div class="product-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--spacing-md);">
-                                <span class="product-price" th:text="${product.price} + ' грн'" style="font-size: 1.15rem; font-weight: 800; color: var(--secondary);">0 грн</span>
+                                <span class="product-price" th:text="${product.price} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')" style="font-size: 1.15rem; font-weight: 800; color: var(--secondary);">0</span>
                                 <div style="display: flex; gap: var(--spacing-xs);">
                                     <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post" style="margin: 0;">
                                         <input type="hidden" name="quantity" value="1">
@@ -132,54 +117,41 @@
                         </div>
                     </div>
                 </div>
-                <!-- Купон на скидку -->
+
                 <div class="store-promos">
-
-                    <!-- СТАН 1: ЯКЩО НЕМАЄ ТВАРИНОК (Або користувач не авторизований) -->
                     <th:block th:if="${pets == null or pets.isEmpty()}">
-
-                        <!-- Картка 1: Створити профіль -->
                         <div class="promo-card">
                             <div class="promo-left">
-                                <span class="promo-pill pill-innovation">ІННОВАЦІЯ</span>
-                                <h3 class="promo-title">Створіть профіль Вашого улюбленця!</h3>
-                                <p class="promo-desc">Наш інтелектуальний помічник миттєво підбере ідеальний раціон та іграшки спеціально для вашого вихованця.</p>
-                                <a href="/profile/pet/add" class="btn-promo-primary">Створити профіль</a>
+                                <span class="promo-pill pill-innovation" th:text="#{promo.pill.innovation}">ІННОВАЦІЯ</span>
+                                <h3 class="promo-title" th:text="#{promo.create.title}">Створіть профіль</h3>
+                                <p class="promo-desc" th:text="#{promo.create.desc}">Опис</p>
+                                <a href="/profile/pet/add" class="btn-promo-primary" th:text="#{promo.btn.create}">Кнопка</a>
                             </div>
                             <div class="promo-right-avatar" style="background: transparent;">
                                 <i class="fas fa-shield-cat" style="font-size: 5rem; color: #FF7A59; opacity: 0.8;"></i>
                             </div>
                         </div>
-
-                        <!-- Картка 2: Акція тижня -->
                         <div class="promo-card">
                             <div class="promo-left">
-                                <span class="promo-pill pill-promo">АКЦІЯ ТИЖНЯ</span>
-                                <h3 class="promo-title">Веселі розваги для котиків!</h3>
-                                <p class="promo-desc">Отримайте 15% знижки на всі види вудочок-дражнилок та м'ячиків з котячою м'ятою по коду <strong>PETLOVER15</strong>.</p>
-                                <a href="/shop?category=toys" class="btn-promo-secondary">Придбати іграшки</a>
+                                <span class="promo-pill pill-promo" th:text="#{promo.pill.weekly}">АКЦІЯ ТИЖНЯ</span>
+                                <h3 class="promo-title" th:text="#{promo.toys.title}">Розваги</h3>
+                                <p class="promo-desc" th:utext="#{promo.toys.desc}">Опис</p>
+                                <a href="/shop?category=toys" class="btn-promo-secondary" th:text="#{promo.btn.buytoys}">Придбати</a>
                             </div>
                             <div class="promo-right-avatar promo-bg-green">
                                 <i class="fas fa-yarn" style="font-size: 4rem; color: #10B981;"></i>
                             </div>
                         </div>
-
                     </th:block>
 
-                    <!-- СТАН 2: ЯКЩО Є ДОДАНІ ТВАРИНКИ -->
                     <th:block th:unless="${pets == null or pets.isEmpty()}">
-
-                        <!-- Широкий Персональний Банер -->
                         <div class="promo-card full-width personalized-promo">
                             <div class="promo-left">
-                                <!-- Підставляємо ім'я першої тваринки та іконку -->
-                                <span class="promo-pill pill-personal" th:text="${pets[0].type == 'DOG' ? '🐶' : (pets[0].type == 'CAT' ? '🐱' : '🐾')}">ПЕРСОНАЛЬНИЙ ПІДБІР</span>
-
-                                <h3 class="promo-title">Ми знайшли підходящі товари!</h3>
-                                <p class="promo-desc" th:text="'Спеціальні корми та іграшки, підібрані відповідно до віку (' + ${pets[0].age} + ' р.) та ваги (' + ${pets[0].weight} + ' кг).'">Спеціальні корми...</p>
-                                <a th:href="@{/shop(animal=${pets[0].type})}" class="btn-promo-primary">Переглянути підбір</a>
+                                <span class="promo-pill pill-personal" th:text="${pets[0].type == 'DOG' ? '🐶 ' : (pets[0].type == 'CAT' ? '🐱 ' : '🐾 ')} + #{promo.pill.personal}">ПЕРСОНАЛЬНИЙ ПІДБІР</span>
+                                <h3 class="promo-title" th:text="#{promo.personal.title}">Ми знайшли</h3>
+                                <p class="promo-desc" th:text="#{promo.personal.desc(${pets[0].age}, ${pets[0].weight})}">Спеціальні корми...</p>
+                                <a th:href="@{/shop(animal=${pets[0].type})}" class="btn-promo-primary" th:text="#{promo.btn.viewpersonal}">Переглянути підбір</a>
                             </div>
-
                             <div class="promo-right-avatar promo-bg-white">
                                 <i th:if="${pets[0].type == 'CAT'}" class="fas fa-cat" style="font-size: 4rem; color: #2D2926;"></i>
                                 <i th:if="${pets[0].type == 'DOG'}" class="fas fa-dog" style="font-size: 4rem; color: #2D2926;"></i>
@@ -187,119 +159,108 @@
                                 <i th:if="${pets[0].type == 'RODENT'}" class="fas fa-mouse" style="font-size: 4rem; color: #2D2926;"></i>
                             </div>
                         </div>
-
-                        <!-- Картка 2: Акція тижня (Тепер займає половинку під широким банером) -->
                         <div class="promo-card">
                             <div class="promo-left">
-                                <span class="promo-pill pill-promo">АКЦІЯ ТИЖНЯ</span>
-                                <h3 class="promo-title">Веселі розваги для котиків!</h3>
-                                <p class="promo-desc">Отримайте 15% знижки на всі види вудочок-дражнилок та м'ячиків з котячою м'ятою по коду <strong>PETLOVER15</strong>.</p>
-                                <a href="/shop?category=toys" class="btn-promo-secondary">Придбати іграшки</a>
+                                <span class="promo-pill pill-promo" th:text="#{promo.pill.weekly}">АКЦІЯ ТИЖНЯ</span>
+                                <h3 class="promo-title" th:text="#{promo.toys.title}">Розваги</h3>
+                                <p class="promo-desc" th:utext="#{promo.toys.desc}">Опис</p>
+                                <a href="/shop?category=toys" class="btn-promo-secondary" th:text="#{promo.btn.buytoys}">Придбати</a>
                             </div>
                             <div class="promo-right-avatar promo-bg-green">
                                 <i class="fas fa-paw" style="font-size: 3rem; color: #10B981;"></i>
                             </div>
                         </div>
-
                     </th:block>
-
                 </div>
             </div>
         </section>
     </div>
 </main>
-<!-- ================= БЛОК КОНТАКТІВ ================= -->
+
 <section class="contact-section">
     <div class="contact-container">
-        <!-- ОНОВЛЕНИЙ ЗАГОЛОВОК З ІКОНКОЮ ТА ЦЕНТРУВАННЯМ -->
         <div class="contact-header" style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 3rem;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 12px; flex-wrap: wrap;">
-                <h2 class="section-title" style="margin: 0; line-height: 1.2;">Залишилися питання?</h2>
-
-                <!-- Сучасна іконка у стильному квадратику -->
+                <h2 class="section-title" style="margin: 0; line-height: 1.2;" th:text="#{contact.title}">Залишилися питання?</h2>
                 <div style="background: #FFF2EA; color: #FF8B3D; width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(255, 139, 61, 0.2); transform: rotate(8deg); flex-shrink: 0;">
                     <i class="fas fa-comment-dots"></i>
                 </div>
             </div>
-
-            <p class="section-subtitle" style="margin: 0; max-width: 600px; color: #64748B; font-size: 1.1rem; line-height: 1.5;">
-                Зв'яжіться з нами, і ми з радістю допоможемо вам та вашому улюбленцю!
+            <p class="section-subtitle" style="margin: 0; max-width: 600px; color: #64748B; font-size: 1.1rem; line-height: 1.5;" th:text="#{contact.subtitle}">
+                Опис...
             </p>
         </div>
 
         <div class="contact-grid">
-            <!-- Ліва частина: Інформація -->
             <div class="contact-info-card">
-                <h3 class="contact-card-title">Наші контакти</h3>
+                <h3 class="contact-card-title" th:text="#{contact.ourcontacts}">Наші контакти</h3>
                 <ul class="contact-list">
                     <li>
                         <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
                         <div class="contact-text">
-                            <strong>Телефон</strong>
+                            <strong th:text="#{contact.phone}">Телефон</strong>
                             <span>+38 (099) 123-45-67</span>
                         </div>
                     </li>
                     <li>
                         <div class="contact-icon"><i class="fas fa-envelope"></i></div>
                         <div class="contact-text">
-                            <strong>Email</strong>
+                            <strong th:text="#{contact.email}">Email</strong>
                             <span>support@pawfect.com.ua</span>
                         </div>
                     </li>
                     <li>
                         <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="contact-text">
-                            <strong>Адреса магазину</strong>
-                            <span>м. Київ, вул. Хрещатик, 1</span>
+                            <strong th:text="#{contact.address}">Адреса</strong>
+                            <span th:text="#{contact.address.val}">м. Київ</span>
                         </div>
                     </li>
                     <li>
                         <div class="contact-icon"><i class="far fa-clock"></i></div>
                         <div class="contact-text">
-                            <strong>Графік роботи</strong>
-                            <span>Щодня з 09:00 до 20:00</span>
+                            <strong th:text="#{contact.hours}">Графік</strong>
+                            <span th:text="#{contact.hours.val}">Щодня</span>
                         </div>
                     </li>
                 </ul>
             </div>
 
-            <!-- Права частина: Форма Formspree -->
             <div class="contact-form-card">
-                <h3 class="contact-card-title">Напишіть нам</h3>
-
-                <!-- ЗАМІНІТЬ YOUR_FORM_ID НА ВАШ КОД ЗІ FORMSPREE -->
+                <h3 class="contact-card-title" th:text="#{contact.writetous}">Напишіть нам</h3>
                 <form action="https://formspree.io/f/xdalgjww" method="POST" class="custom-form">
-                    <input type="hidden" name="_language" value="ukr">
+                    <input type="hidden" name="_language" th:value="${#locale.language}">
 
                     <div class="form-group">
-                        <label class="bento-label">Ваше ім'я</label>
+                        <label class="bento-label" th:text="#{contact.form.name}">Ім'я</label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-user input-icon-left"></i>
-                            <input type="text" name="name" class="bento-input with-icon-left" placeholder="Олександр" required>
+                            <input type="text" name="name" class="bento-input with-icon-left" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="bento-label">Ваш Email</label>
+                        <label class="bento-label" th:text="#{contact.form.email}">Email</label>
                         <div class="input-icon-wrapper">
                             <i class="fas fa-at input-icon-left"></i>
-                            <input type="email" name="email" class="bento-input with-icon-left" placeholder="email@example.com" required>
+                            <input type="email" name="email" class="bento-input with-icon-left" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="bento-label">Повідомлення</label>
-                        <textarea name="message" class="bento-input" rows="4" placeholder="Чим ми можемо вам допомогти?" required style="resize: none;"></textarea>
+                        <label class="bento-label" th:text="#{contact.form.message}">Повідомлення</label>
+                        <textarea name="message" class="bento-input" rows="4" required style="resize: none;" th:placeholder="#{contact.form.placeholder}"></textarea>
                     </div>
 
                     <button type="submit" class="btn-submit-form">
-                        <i class="fas fa-paper-plane"></i> Відправити повідомлення
+                        <i class="fas fa-paper-plane"></i> <span th:text="#{contact.form.send}">Відправити</span>
                     </button>
                 </form>
             </div>
         </div>
     </div>
 </section>
+
 <div th:insert="layouts/footer :: footer"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>

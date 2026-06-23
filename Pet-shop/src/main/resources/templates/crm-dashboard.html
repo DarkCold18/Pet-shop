@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title} + ' | CRM Pawfect'">Головна CRM</title>
+    <title th:text="#{crm.page.title}">Головна CRM</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -14,47 +14,51 @@
 
 <main style="flex: 1;">
     <div style="max-width: 1400px; margin: 2rem auto 0 auto; padding: 0 2.5rem;">
-        <h1 style="font-size: 2rem; font-weight: 800; color: #1E293B; margin: 0;">Огляд CRM </h1>
-        <p style="color: #64748B; margin-top: 5px;">Управління конвеєром замовлень в реальному часі.</p>
+        <h1 style="font-size: 2rem; font-weight: 800; color: #1E293B; margin: 0;" th:text="#{crm.overview.title}">Огляд CRM </h1>
+        <p style="color: #64748B; margin-top: 5px;" th:text="#{crm.overview.desc}">Управління конвеєром замовлень в реальному часі.</p>
     </div>
 
     <div class="bento-dashboard" style="grid-auto-rows: minmax(120px, auto); margin-bottom: 0;">
         <div class="bento-card bento-col-1 dark-accent">
-            <div class="stat-card-title"><i class="fas fa-users" style="color: #FF8B3D;"></i> База клієнтів</div>
+            <div class="stat-card-title"><i class="fas fa-users" style="color: #FF8B3D;"></i> <span th:text="#{crm.stat.customers}">База клієнтів</span></div>
             <div class="stat-card-value" th:text="${totalCustomers}">0</div>
         </div>
         <div class="bento-card bento-col-1">
-            <div class="stat-card-title"><i class="fas fa-box-open" style="color: #0284C7;"></i> Активні замовлення</div>
+            <div class="stat-card-title"><i class="fas fa-box-open" style="color: #0284C7;"></i> <span th:text="#{crm.stat.orders}">Активні замовлення</span></div>
             <div class="stat-card-value" th:text="${totalOrders}">0</div>
         </div>
         <div class="bento-card bento-col-2">
-            <div class="stat-card-title"><i class="fas fa-bolt" style="color: #16A34A;"></i> Навігація</div>
+            <div class="stat-card-title"><i class="fas fa-bolt" style="color: #16A34A;"></i> <span th:text="#{crm.stat.nav}">Навігація</span></div>
             <div style="display: flex; gap: 10px; margin-top: auto;">
-                <a href="/admin/customers" class="bento-quick-link" style="margin: 0; flex: 1; padding: 10px;">База клієнтів</a>
-                <a href="/inventory" class="bento-quick-link" style="margin: 0; flex: 1; padding: 10px;">Склад</a>
+                <a href="/customers" class="bento-quick-link" style="margin: 0; flex: 1; padding: 10px;" th:text="#{crm.stat.nav.customers}">База клієнтів</a>
+                <a href="/inventory" class="bento-quick-link" style="margin: 0; flex: 1; padding: 10px;" th:text="#{crm.stat.nav.inventory}">Склад</a>
             </div>
         </div>
     </div>
 
     <section class="kanban-section">
-        <h2 style="font-size: 1.4rem; font-weight: 800; color: #1E293B; margin-bottom: 1rem;">Конвеєр замовлень (Kanban) </h2>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #1E293B; margin-bottom: 1rem;" th:text="#{crm.kanban.title}">Конвеєр замовлень (Kanban) </h2>
 
-        <div class="kanban-board">
+        <!-- Тут ми передаємо переклади для JavaScript таймера -->
+        <div class="kanban-board"
+             th:data-just-arrived="#{crm.js.just_arrived}"
+             th:data-mins-ago="#{crm.js.mins_ago}"
+             th:data-hours="#{crm.js.hours}">
 
             <div class="kanban-column" id="col-new">
                 <div class="kanban-column-header">
-                    <h3 class="kanban-column-title">Нові замовлення</h3>
+                    <h3 class="kanban-column-title" th:text="#{crm.kanban.new}">Нові замовлення</h3>
                 </div>
 
                 <div th:each="order : ${orders}" th:if="${order.status == 'NEW'}" class="kanban-card"
                      style="cursor: pointer;"
                      th:data-id="${order.id}"
                      th:data-total="${order.total}"
-                     th:data-buyer="${order.user != null ? order.user.username : 'Гість'}"
-                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : 'Не вказано'}"
-                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : 'Не вказано'}"
-                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : 'Не вказано'}"
-                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : 'Не вказано'}"
+                     th:data-buyer="${order.user != null ? order.user.username : 'Guest'}"
+                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : '-'}"
+                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : '-'}"
+                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : '-'}"
+                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : '-'}"
                      th:data-status="${order.status}"
                      th:data-date="${order.orderDate}"
                      th:data-urgent="${order.urgent}"
@@ -66,39 +70,39 @@
 
                     <div style="display: flex; justify-content: space-between; font-weight: 800; color: #1E293B; font-size: 0.95rem;">
                         <span th:text="'#ORD-' + ${order.id}">#ORD-0</span>
-                        <span style="color: #FF8B3D;" th:text="${order.total} + ' ₴'">0 ₴</span>
+                        <span style="color: #FF8B3D;" th:text="${order.total} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">0 ₴</span>
                     </div>
 
-                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px; margin-bottom: 8px;" th:text="${order.user != null ? order.user.username : 'Гість'}">Покупець</div>
+                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px; margin-bottom: 8px;" th:text="${order.user != null ? order.user.username : 'Guest'}">Покупець</div>
 
                     <div th:if="${order.urgent}" style="margin-bottom: 6px;">
-                        <span class="crm-badge crm-badge-urgent"><i class="fas fa-fire"></i> Термінове</span>
+                        <span class="crm-badge crm-badge-urgent"><i class="fas fa-fire"></i> <span th:text="#{crm.badge.urgent}">Термінове</span></span>
                     </div>
 
                     <div class="crm-badges-inline">
                         <th:block th:each="item : ${order.items}">
-                            <span th:if="${item.product.cryo}" class="crm-badge crm-badge-cryo" title="Потребує заморозки"><i class="fas fa-snowflake"></i> Кріо</span>
-                            <span th:if="${item.product.fragile}" class="crm-badge crm-badge-fragile" title="Крихкий товар"><i class="fas fa-wine-glass-alt"></i> Крихке</span>
-                            <span th:if="${item.product.liquid}" class="crm-badge crm-badge-liquid" title="Рідина"><i class="fas fa-tint"></i> Рідина</span>
+                            <span th:if="${item.product.cryo}" class="crm-badge crm-badge-cryo" th:title="#{crm.badge.cryo.title}"><i class="fas fa-snowflake"></i> <span th:text="#{crm.badge.cryo}">Кріо</span></span>
+                            <span th:if="${item.product.fragile}" class="crm-badge crm-badge-fragile" th:title="#{crm.badge.fragile.title}"><i class="fas fa-wine-glass-alt"></i> <span th:text="#{crm.badge.fragile}">Крихке</span></span>
+                            <span th:if="${item.product.liquid}" class="crm-badge crm-badge-liquid" th:title="#{crm.badge.liquid.title}"><i class="fas fa-tint"></i> <span th:text="#{crm.badge.liquid}">Рідина</span></span>
                         </th:block>
                     </div>
 
-                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text">Рахуємо...</span></div>
+                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text" th:text="#{crm.timer.counting}">Рахуємо...</span></div>
                 </div>
             </div>
 
             <div class="kanban-column" id="col-processing">
-                <div class="kanban-column-header"><h3 class="kanban-column-title">В обробці</h3></div>
+                <div class="kanban-column-header"><h3 class="kanban-column-title" th:text="#{crm.kanban.processing}">В обробці</h3></div>
 
                 <div th:each="order : ${orders}" th:if="${order.status == 'PROCESSING'}" class="kanban-card"
                      style="cursor: pointer;"
                      th:data-id="${order.id}"
                      th:data-total="${order.total}"
-                     th:data-buyer="${order.user != null ? order.user.username : 'Гість'}"
-                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : 'Не вказано'}"
-                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : 'Не вказано'}"
-                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : 'Не вказано'}"
-                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : 'Не вказано'}"
+                     th:data-buyer="${order.user != null ? order.user.username : 'Guest'}"
+                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : '-'}"
+                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : '-'}"
+                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : '-'}"
+                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : '-'}"
                      th:data-status="${order.status}"
                      th:data-date="${order.orderDate}"
                      th:data-urgent="${order.urgent}"
@@ -110,39 +114,39 @@
 
                     <div style="display: flex; justify-content: space-between; font-weight: 800; color: #1E293B; font-size: 0.95rem;">
                         <span th:text="'#ORD-' + ${order.id}">#ORD-0</span>
-                        <span style="color: #FF8B3D;" th:text="${order.total} + ' ₴'">0 ₴</span>
+                        <span style="color: #FF8B3D;" th:text="${order.total} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">0 ₴</span>
                     </div>
 
-                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px; margin-bottom: 8px;" th:text="${order.user != null ? order.user.username : 'Гість'}">Покупець</div>
+                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px; margin-bottom: 8px;" th:text="${order.user != null ? order.user.username : 'Guest'}">Покупець</div>
 
                     <div th:if="${order.urgent}" style="margin-bottom: 6px;">
-                        <span class="crm-badge crm-badge-urgent"><i class="fas fa-fire"></i> Термінове</span>
+                        <span class="crm-badge crm-badge-urgent"><i class="fas fa-fire"></i> <span th:text="#{crm.badge.urgent}">Термінове</span></span>
                     </div>
 
                     <div class="crm-badges-inline">
                         <th:block th:each="item : ${order.items}">
-                            <span th:if="${item.product.cryo}" class="crm-badge crm-badge-cryo"><i class="fas fa-snowflake"></i> Кріо</span>
-                            <span th:if="${item.product.fragile}" class="crm-badge crm-badge-fragile"><i class="fas fa-wine-glass-alt"></i> Крихке</span>
-                            <span th:if="${item.product.liquid}" class="crm-badge crm-badge-liquid"><i class="fas fa-tint"></i> Рідина</span>
+                            <span th:if="${item.product.cryo}" class="crm-badge crm-badge-cryo" th:title="#{crm.badge.cryo.title}"><i class="fas fa-snowflake"></i> <span th:text="#{crm.badge.cryo}">Кріо</span></span>
+                            <span th:if="${item.product.fragile}" class="crm-badge crm-badge-fragile" th:title="#{crm.badge.fragile.title}"><i class="fas fa-wine-glass-alt"></i> <span th:text="#{crm.badge.fragile}">Крихке</span></span>
+                            <span th:if="${item.product.liquid}" class="crm-badge crm-badge-liquid" th:title="#{crm.badge.liquid.title}"><i class="fas fa-tint"></i> <span th:text="#{crm.badge.liquid}">Рідина</span></span>
                         </th:block>
                     </div>
 
-                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text">Рахуємо...</span></div>
+                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text" th:text="#{crm.timer.counting}">Рахуємо...</span></div>
                 </div>
             </div>
 
             <div class="kanban-column" id="col-shipped">
-                <div class="kanban-column-header"><h3 class="kanban-column-title">Доставка</h3></div>
+                <div class="kanban-column-header"><h3 class="kanban-column-title" th:text="#{crm.kanban.shipped}">Доставка</h3></div>
 
                 <div th:each="order : ${orders}" th:if="${order.status == 'SHIPPED'}" class="kanban-card"
                      style="cursor: pointer;"
                      th:data-id="${order.id}"
                      th:data-total="${order.total}"
-                     th:data-buyer="${order.user != null ? order.user.username : 'Гість'}"
-                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : 'Не вказано'}"
-                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : 'Не вказано'}"
-                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : 'Не вказано'}"
-                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : 'Не вказано'}"
+                     th:data-buyer="${order.user != null ? order.user.username : 'Guest'}"
+                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : '-'}"
+                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : '-'}"
+                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : '-'}"
+                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : '-'}"
                      th:data-status="${order.status}"
                      th:data-date="${order.orderDate}"
                      th:data-urgent="${order.urgent}"
@@ -154,39 +158,39 @@
 
                     <div style="display: flex; justify-content: space-between; font-weight: 800; color: #1E293B; font-size: 0.95rem;">
                         <span th:text="'#ORD-' + ${order.id}">#ORD-0</span>
-                        <span style="color: #FF8B3D;" th:text="${order.total} + ' ₴'">0 ₴</span>
+                        <span style="color: #FF8B3D;" th:text="${order.total} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">0 ₴</span>
                     </div>
 
-                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px; margin-bottom: 8px;" th:text="${order.user != null ? order.user.username : 'Гість'}">Покупець</div>
+                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px; margin-bottom: 8px;" th:text="${order.user != null ? order.user.username : 'Guest'}">Покупець</div>
 
                     <div th:if="${order.urgent}" style="margin-bottom: 6px;">
-                        <span class="crm-badge crm-badge-urgent"><i class="fas fa-fire"></i> Термінове</span>
+                        <span class="crm-badge crm-badge-urgent"><i class="fas fa-fire"></i> <span th:text="#{crm.badge.urgent}">Термінове</span></span>
                     </div>
 
                     <div class="crm-badges-inline">
                         <th:block th:each="item : ${order.items}">
-                            <span th:if="${item.product.cryo}" class="crm-badge crm-badge-cryo"><i class="fas fa-snowflake"></i> Кріо</span>
-                            <span th:if="${item.product.fragile}" class="crm-badge crm-badge-fragile"><i class="fas fa-wine-glass-alt"></i> Крихке</span>
-                            <span th:if="${item.product.liquid}" class="crm-badge crm-badge-liquid"><i class="fas fa-tint"></i> Рідина</span>
+                            <span th:if="${item.product.cryo}" class="crm-badge crm-badge-cryo" th:title="#{crm.badge.cryo.title}"><i class="fas fa-snowflake"></i> <span th:text="#{crm.badge.cryo}">Кріо</span></span>
+                            <span th:if="${item.product.fragile}" class="crm-badge crm-badge-fragile" th:title="#{crm.badge.fragile.title}"><i class="fas fa-wine-glass-alt"></i> <span th:text="#{crm.badge.fragile}">Крихке</span></span>
+                            <span th:if="${item.product.liquid}" class="crm-badge crm-badge-liquid" th:title="#{crm.badge.liquid.title}"><i class="fas fa-tint"></i> <span th:text="#{crm.badge.liquid}">Рідина</span></span>
                         </th:block>
                     </div>
 
-                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text">Рахуємо...</span></div>
+                    <div class="order-time-tracker"><i class="far fa-clock"></i> <span class="time-elapsed-text" th:text="#{crm.timer.counting}">Рахуємо...</span></div>
                 </div>
             </div>
 
             <div class="kanban-column" id="col-completed">
-                <div class="kanban-column-header"><h3 class="kanban-column-title">Виконано</h3></div>
+                <div class="kanban-column-header"><h3 class="kanban-column-title" th:text="#{crm.kanban.completed}">Виконано</h3></div>
 
                 <div th:each="order : ${orders}" th:if="${order.status == 'COMPLETED'}" class="kanban-card"
                      style="cursor: pointer;"
                      th:data-id="${order.id}"
                      th:data-total="${order.total}"
-                     th:data-buyer="${order.user != null ? order.user.username : 'Гість'}"
-                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : 'Не вказано'}"
-                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : 'Не вказано'}"
-                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : 'Не вказано'}"
-                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : 'Не вказано'}"
+                     th:data-buyer="${order.user != null ? order.user.username : 'Guest'}"
+                     th:data-fullname="${order.user != null and order.user.fullName != null ? order.user.fullName : '-'}"
+                     th:data-phone="${order.user != null and order.user.phone != null ? order.user.phone : '-'}"
+                     th:data-email="${order.user != null and order.user.email != null ? order.user.email : '-'}"
+                     th:data-address="${order.user != null and order.user.address != null ? order.user.address : '-'}"
                      th:data-status="${order.status}"
                      th:data-date="${order.orderDate}"
                      th:data-urgent="${order.urgent}"
@@ -198,24 +202,24 @@
 
                     <div style="display: flex; justify-content: space-between; font-weight: 800; color: #1E293B; font-size: 0.95rem;">
                         <span th:text="'#ORD-' + ${order.id}">#ORD-0</span>
-                        <span style="color: #FF8B3D;" th:text="${order.total} + ' ₴'">0 ₴</span>
+                        <span style="color: #FF8B3D;" th:text="${order.total} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">0 ₴</span>
                     </div>
 
-                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px; margin-bottom: 8px;" th:text="${order.user != null ? order.user.username : 'Гість'}">Покупець</div>
+                    <div style="font-size: 0.85rem; color: #64748B; margin-top: 4px; margin-bottom: 8px;" th:text="${order.user != null ? order.user.username : 'Guest'}">Покупець</div>
 
                     <div th:if="${order.urgent}" style="margin-bottom: 6px;">
-                        <span class="crm-badge crm-badge-urgent"><i class="fas fa-fire"></i> Термінове</span>
+                        <span class="crm-badge crm-badge-urgent"><i class="fas fa-fire"></i> <span th:text="#{crm.badge.urgent}">Термінове</span></span>
                     </div>
 
                     <div class="crm-badges-inline">
                         <th:block th:each="item : ${order.items}">
-                            <span th:if="${item.product.cryo}" class="crm-badge crm-badge-cryo"><i class="fas fa-snowflake"></i> Кріо</span>
-                            <span th:if="${item.product.fragile}" class="crm-badge crm-badge-fragile"><i class="fas fa-wine-glass-alt"></i> Крихке</span>
-                            <span th:if="${item.product.liquid}" class="crm-badge crm-badge-liquid"><i class="fas fa-tint"></i> Рідина</span>
+                            <span th:if="${item.product.cryo}" class="crm-badge crm-badge-cryo" th:title="#{crm.badge.cryo.title}"><i class="fas fa-snowflake"></i> <span th:text="#{crm.badge.cryo}">Кріо</span></span>
+                            <span th:if="${item.product.fragile}" class="crm-badge crm-badge-fragile" th:title="#{crm.badge.fragile.title}"><i class="fas fa-wine-glass-alt"></i> <span th:text="#{crm.badge.fragile}">Крихке</span></span>
+                            <span th:if="${item.product.liquid}" class="crm-badge crm-badge-liquid" th:title="#{crm.badge.liquid.title}"><i class="fas fa-tint"></i> <span th:text="#{crm.badge.liquid}">Рідина</span></span>
                         </th:block>
                     </div>
 
-                    <div class="order-time-tracker" style="color: #16A34A;"><i class="fas fa-check-circle"></i> Завершено</div>
+                    <div class="order-time-tracker" style="color: #16A34A;"><i class="fas fa-check-circle"></i> <span th:text="#{crm.timer.finished}">Завершено</span></div>
                 </div>
             </div>
 
@@ -228,12 +232,12 @@
 <div class="kanban-modal-overlay" id="kmOverlay" onclick="closeStatusModal()"></div>
 <div class="kanban-modal" id="kmModal">
     <div class="k-modal-header">
-        <h3 class="k-modal-title">Деталі <span id="kmOrderId" style="color: #FF8B3D;"></span></h3>
+        <h3 class="k-modal-title"><span th:text="#{crm.modal.details}">Деталі</span> <span id="kmOrderId" style="color: #FF8B3D;"></span></h3>
         <button class="k-modal-close" onclick="closeStatusModal()"><i class="fas fa-times"></i></button>
     </div>
 
     <div class="k-modal-info">
-        <p style="margin-bottom: 4px;"><strong>Логін акаунта:</strong> <span id="kmBuyer"></span></p>
+        <p style="margin-bottom: 4px;"><strong th:text="#{crm.modal.login}">Логін акаунта:</strong> <span id="kmBuyer"></span></p>
 
         <div style="background: #ffffff; border: 1px solid #E2E8F0; padding: 12px; border-radius: 10px; margin: 10px 0;">
             <div style="font-size: 0.9rem; color: #475569; margin-bottom: 6px;">
@@ -250,8 +254,8 @@
             </div>
         </div>
 
-        <p style="margin-top: 10px;"><strong>Сума:</strong> <span id="kmTotal"></span> ₴</p>
-        <p style="margin-top: 10px;"><strong>Товари:</strong></p>
+        <p style="margin-top: 10px;"><strong th:text="#{crm.modal.total}">Сума:</strong> <span id="kmTotal"></span> <span th:text="${#locale.language == 'en'} ? ' UAH' : ' ₴'">₴</span></p>
+        <p style="margin-top: 10px;"><strong th:text="#{crm.modal.items}">Товари:</strong></p>
         <ul class="k-modal-items" id="kmItemsList"></ul>
     </div>
 
@@ -261,21 +265,21 @@
         <div style="margin-bottom: 15px; padding: 10px; background: #FEF2F2; border-radius: 8px; border: 1px dashed #FECACA;">
             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 700; color: #DC2626; margin: 0;">
                 <input type="checkbox" name="urgent" id="kmUrgentCheck" style="width: 18px; height: 18px; accent-color: #DC2626; cursor: pointer;">
-                <i class="fas fa-fire"></i> Позначити замовлення як ТЕРМІНОВЕ
+                <i class="fas fa-fire"></i> <span th:text="#{crm.modal.urgent.check}">Позначити замовлення як ТЕРМІНОВЕ</span>
             </label>
         </div>
 
         <div>
-            <label style="font-weight: 600; color: #475569; display: block; margin-bottom: 6px;">Перемістити на етап:</label>
+            <label style="font-weight: 600; color: #475569; display: block; margin-bottom: 6px;" th:text="#{crm.modal.move_to}">Перемістити на етап:</label>
             <select name="newStatus" id="kmStatusSelect" class="k-select" style="width: 100%;">
-                <option value="NEW">Нове замовлення</option>
-                <option value="PROCESSING">В обробці (Збирається)</option>
-                <option value="SHIPPED">Доставка (Відправлено)</option>
-                <option value="COMPLETED">Виконано (Успіх)</option>
+                <option value="NEW" th:text="#{crm.status.new}">Нове замовлення</option>
+                <option value="PROCESSING" th:text="#{crm.status.processing}">В обробці (Збирається)</option>
+                <option value="SHIPPED" th:text="#{crm.status.shipped}">Доставка (Відправлено)</option>
+                <option value="COMPLETED" th:text="#{crm.status.completed}">Виконано (Успіх)</option>
             </select>
         </div>
 
-        <button type="submit" class="k-btn-submit">Оновити статус</button>
+        <button type="submit" class="k-btn-submit" th:text="#{crm.modal.btn.update}">Оновити статус</button>
     </form>
 </div>
 
@@ -318,6 +322,12 @@
 
     function updateTimers() {
         const cards = document.querySelectorAll('.kanban-card');
+        const board = document.querySelector('.kanban-board');
+
+        // Зчитуємо локалізовані строки
+        const txtJustArrived = board.getAttribute('data-just-arrived');
+        const txtMinsAgo = board.getAttribute('data-mins-ago');
+        const txtHours = board.getAttribute('data-hours');
 
         cards.forEach(card => {
             const dateStr = card.getAttribute('data-date');
@@ -332,12 +342,12 @@
 
             let timeText = "";
             if (diffMins < 1) {
-                timeText = "щойно з'явився";
+                timeText = txtJustArrived;
             } else if (diffMins < 60) {
-                timeText = `${diffMins} хв. тому`;
+                timeText = `${diffMins} ${txtMinsAgo}`;
             } else {
                 const remainingMins = diffMins % 60;
-                timeText = `${diffHours} год. ${remainingMins} хв. тому`;
+                timeText = `${diffHours} ${txtHours} ${remainingMins} ${txtMinsAgo}`;
             }
 
             const textElement = card.querySelector('.time-elapsed-text');

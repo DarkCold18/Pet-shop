@@ -7,11 +7,11 @@
                 <span>Pawfect</span>
             </a>
             <a href="/shop" class="header-shop-link-btn">
-                <i class="fas fa-shopping-cart"></i> Магазин
+                <i class="fas fa-shopping-cart"></i> <span th:text="#{header.shop}">Магазин</span>
             </a>
             <form action="/shop" method="get" class="header-search-container" id="header-search-box">
                 <span class="header-search-icon"><i class="fas fa-search"></i></span>
-                <input type="text" name="query" id="header-search-input" placeholder="Пошук товарів...">
+                <input type="text" name="query" id="header-search-input" th:placeholder="#{header.search.placeholder}">
                 <button type="submit" class="header-search-btn">
                     <i class="fas fa-arrow-right"></i>
                 </button>
@@ -19,10 +19,10 @@
         </div>
         <div class="header-right-group">
             <div class="lang-switcher-capsule">
-                <a href="?lang=uk" class="lang-pill " th:classappend="${#locale.language == 'uk' or #locale.language == 'ua'} ? 'active' : ''">UA</a>
+                <a href="?lang=uk" class="lang-pill" th:classappend="${#locale.language == 'uk' or #locale.language == 'ua'} ? 'active' : ''">UA</a>
                 <a href="?lang=en" class="lang-pill" th:classappend="${#locale.language == 'en'} ? 'active' : ''">EN</a>
             </div>
-            <a th:href="@{/profile}" class="header-profile-btn" title="Особистий кабінет">
+            <a th:href="@{/profile}" class="header-profile-btn" th:title="#{header.profile.title}">
                 <i class="far fa-user"></i>
             </a>
             <a th:href="@{/cart}" id="nav-cart-btn" class="header-cart-icon-btn" style="text-decoration: none;">
@@ -35,12 +35,12 @@
         </div>
     </header>
     <div style="background: white; border-bottom: 1px solid #E2E8F0; padding: 0.6rem 2rem; display: flex; gap: 1rem; font-weight: 600; font-size: 0.9rem; margin-top: 70px; position: relative; z-index: 9990;">
-        <a href="/" style="color: #FF7A59; text-decoration: none; font-weight: 700;">Головна</a>
+        <a href="/" style="color: #FF7A59; text-decoration: none; font-weight: 700;" th:text="#{header.nav.home}">Головна</a>
         <span style="color: #E2E8F0;">|</span>
-        <a href="/shop" class="subnav-link-item">Каталог товарів</a>
+        <a href="/shop" class="subnav-link-item" th:text="#{header.nav.catalog}">Каталог товарів</a>
         <span style="color: #E2E8F0;">|</span>
-        <a href="/profile/pet/add" class="subnav-link-item">Підбір раціону (Квіз)</a>
+        <a href="/profile/pet/add" class="subnav-link-item" th:text="#{header.nav.quiz}">Підбір раціону (Квіз)</a>
         <span style="color: #E2E8F0;">|</span>
-        <a href="/profile" class="subnav-link-item">Мій профіль</a>
+        <a href="/profile" class="subnav-link-item" th:text="#{header.nav.profile}">Мій профіль</a>
     </div>
 </div>

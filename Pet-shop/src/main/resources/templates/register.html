@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реєстрація | Зоомагазин</title>
+    <title th:text="#{auth.register.title} + ' | Pawfect'">Реєстрація</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -17,11 +17,11 @@
 
     <div class="form-card" style="padding: 2.5rem 2rem;">
 
-        <h1 class="form-title" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.75rem;">Реєстрація</h1>
+        <h1 class="form-title" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.75rem;" th:text="#{auth.register.title}">Реєстрація</h1>
 
         <div class="auth-toggle-box">
-            <a href="/login" class="auth-toggle-btn">Вхід</a>
-            <a href="/register" class="auth-toggle-btn active">Реєстрація</a>
+            <a href="/login" class="auth-toggle-btn" th:text="#{auth.login.tab}">Вхід</a>
+            <a href="/register" class="auth-toggle-btn active" th:text="#{auth.register.tab}">Реєстрація</a>
         </div>
 
         <div th:if="${error}" style="background-color: #fef2f2; color: #ef4444; padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; font-weight: 600; font-size: 0.85rem; text-align: center;" th:text="${error}">
@@ -31,31 +31,31 @@
         <form th:action="@{/register}" method="post" class="custom-form" style="gap: 1.25rem;">
 
             <div class="form-group">
-                <label class="bento-label">Бажаний логін</label>
+                <label class="bento-label" th:text="#{auth.register.username.label}">Бажаний логін</label>
                 <div class="input-icon-wrapper">
                     <i class="fas fa-user input-icon-left"></i>
-                    <input type="text" name="username" required placeholder="Наприклад: anton99" class="bento-input with-icon-left">
+                    <input type="text" name="username" required th:placeholder="#{auth.register.username.placeholder}" class="bento-input with-icon-left">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="bento-label">Придумайте пароль</label>
+                <label class="bento-label" th:text="#{auth.register.password.label}">Придумайте пароль</label>
                 <div class="input-icon-wrapper">
                     <i class="fas fa-lock input-icon-left"></i>
-                    <input type="password" name="password" id="reg-password" required placeholder="Ваш надійний пароль" class="bento-input with-icon-left with-icon-right">
+                    <input type="password" name="password" id="reg-password" required th:placeholder="#{auth.register.password.placeholder}" class="bento-input with-icon-left with-icon-right">
                     <button type="button" class="password-toggle-btn" onclick="togglePassword('reg-password', this)">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit-form" style="margin-top: 1rem;">
+            <button type="submit" class="btn-submit-form" style="margin-top: 1rem;" th:text="#{auth.register.btn}">
                 ЗАРЕЄСТРУВАТИСЯ
             </button>
 
         </form>
 
-        <p style="text-align: center; font-size: 0.75rem; color: var(--gray-400); margin-top: 1.5rem; line-height: 1.5;">
+        <p style="text-align: center; font-size: 0.75rem; color: var(--gray-400); margin-top: 1.5rem; line-height: 1.5;" th:text="#{auth.register.agreement}">
             Натискаючи кнопку, ви погоджуєтесь з правилами обробки персональних даних.
         </p>
     </div>

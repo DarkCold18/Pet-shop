@@ -277,17 +277,13 @@
             let found = false;
 
             cards.forEach(card => {
-                const category = card.getAttribute('data-category').toLowerCase();
-                const title = card.querySelector('.product-card-title').textContent.toLowerCase();
-
-                if (category.includes(keyword) || title.includes(keyword)) {
-                    if (shownCount < 4) { // Показуємо максимум 4 картки, щоб було красиво
-                        card.style.display = 'flex';
-                        found = true;
-                        shownCount++;
-                    } else {
-                        card.style.display = 'none';
-                    }
+                const titleElement = card.querySelector('.product-card-title');
+                const categoryElement = card.querySelector('.product-card-category');
+                const titleText = titleElement ? titleElement.textContent.toLowerCase() : '';
+                const categoryText = categoryElement ? categoryElement.textContent.toLowerCase() : '';
+                if (titleText.includes(selectedPet) || categoryText.includes(selectedPet)) {
+                    card.style.display = 'flex'; // или 'block'
+                    found = true;
                 } else {
                     card.style.display = 'none';
                 }

@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="'Кошик | Зоомагазин'">Кошик</title>
+    <title th:text="#{cart.page.title} + ' | Pawfect'">Кошик</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body style="display: flex; flex-direction: column; min-height: 100vh;">
+<body style="display: flex; flex-direction: column; min-height: 100vh;" th:data-currency="${#locale.language == 'en'} ? ' UAH' : ' ₴'">
 
 <div th:insert="~{layouts/header :: header}"></div>
 
 <main class="cart-container">
 
     <h1 class="cart-header">
-        Мій Кошик
+        <span th:text="#{cart.header}">Мій Кошик</span>
         <span class="cart-count-badge" th:text="${cart != null ? cart.size() : 0}">0</span>
     </h1>
 
@@ -25,9 +25,9 @@
         <div class="empty-cart-icon">
             <i class="fas fa-shopping-basket"></i>
         </div>
-        <h2 class="empty-cart-title">Ваш кошик порожній</h2>
-        <p class="empty-cart-text">Здається, ви ще нічого не додали. Погляньте на наші новинки!</p>
-        <a href="/shop" class="btn-primary-large">
+        <h2 class="empty-cart-title" th:text="#{cart.empty.title}">Ваш кошик порожній</h2>
+        <p class="empty-cart-text" th:text="#{cart.empty.desc}">Здається, ви ще нічого не додали.</p>
+        <a href="/shop" class="btn-primary-large" th:text="#{cart.empty.btn}">
             Перейти до покупок
         </a>
     </div>
@@ -39,7 +39,7 @@
             <div class="cart-clear-wrap">
                 <form th:action="@{/cart/clear}" method="post">
                     <button class="btn-clear-cart">
-                        <i class="fas fa-trash"></i> Очистити кошик
+                        <i class="fas fa-trash"></i> <span th:text="#{cart.btn.clear}">Очистити кошик</span>
                     </button>
                 </form>
             </div>
@@ -56,7 +56,7 @@
 
                 <div class="cart-item-details">
                     <h3 class="cart-item-title" th:text="${item.product.name}">Назва товару</h3>
-                    <p class="cart-item-stock">На складі: <span th:text="${item.product.quantity}"></span> шт.</p>
+                    <p class="cart-item-stock"><span th:text="#{cart.item.stock}">На складі:</span> <span th:text="${item.product.quantity}"></span> <span th:text="#{cart.item.pcs}">шт.</span></p>
 
                     <div class="qty-controls">
                         <button type="button" th:data-id="${item.product.id}" onclick="updateQuantity(this.dataset.id, -1)" class="qty-btn">
@@ -71,11 +71,11 @@
 
                 <div class="cart-item-actions">
                     <div class="item-total-price">
-                        <span class="total" th:text="${item.product.price * item.quality}">0</span> ₴
+                        <span class="total" th:text="${item.product.price * item.quality}">0</span> <span th:text="${#locale.language == 'en'} ? ' UAH' : ' ₴'">₴</span>
                     </div>
                     <form th:action="@{/cart/remove/{id}(id=${item.product.id})}" method="post">
                         <button type="submit" class="btn-remove-item">
-                            <i class="far fa-trash-alt"></i> Видалити
+                            <i class="far fa-trash-alt"></i> <span th:text="#{cart.item.delete}">Видалити</span>
                         </button>
                     </form>
                 </div>
@@ -85,28 +85,28 @@
 
         <div class="cart-summary-column">
             <div class="cart-summary-card">
-                <h3 class="cart-summary-title">Підсумок</h3>
+                <h3 class="cart-summary-title" th:text="#{cart.summary.title}">Підсумок</h3>
 
                 <form th:action="@{/checkout}" method="post" id="checkoutForm">
 
                     <div class="cart-summary-row">
-                        <span>Проміжний підсумок</span>
-                        <span id="subtotalDisplay" class="cart-summary-val-bold" th:data-bonus="${user?.bonusPoints}" th:text="${total != null ? total + ' ₴' : '0.00 ₴'}">0.00 ₴</span>
+                        <span th:text="#{cart.summary.subtotal}">Проміжний підсумок</span>
+                        <span id="subtotalDisplay" class="cart-summary-val-bold" th:data-bonus="${user?.bonusPoints}" th:text="${total != null ? total + (#locale.language == 'en' ? ' UAH' : ' ₴') : '0.00'}">0.00</span>
                     </div>
 
                     <div class="cart-summary-row">
-                        <span>Доставка</span>
-                        <span class="cart-summary-badge">Безкоштовно</span>
+                        <span th:text="#{cart.summary.delivery}">Доставка</span>
+                        <span class="cart-summary-badge" th:text="#{cart.summary.free}">Безкоштовно</span>
                     </div>
 
                     <div class="cart-summary-row" id="discountLine" style="display:none; color: var(--bento-accent);">
-                        <span style="font-weight: 700;">Знижка (бонуси)</span>
-                        <span id="discountDisplay" style="font-weight: 700;">-0.00 ₴</span>
+                        <span style="font-weight: 700;" th:text="#{cart.summary.discount}">Знижка (бонуси)</span>
+                        <span id="discountDisplay" style="font-weight: 700;">-0.00</span>
                     </div>
 
                     <div th:if="${user != null}" class="cart-bonus-box">
                         <label class="cart-bonus-label">
-                            <span>Використати <span th:text="${user.bonusPoints}"></span> балів</span>
+                            <span><span th:text="#{cart.summary.use_bonus}">Використати</span> <span th:text="${user.bonusPoints}"></span> <span th:text="#{cart.summary.points}">балів</span></span>
                             <input type="checkbox" name="useBonus" id="useBonus" value="true" class="cart-bonus-checkbox">
                         </label>
                     </div>
@@ -114,18 +114,18 @@
                     <div style="height: 1px; background-color: var(--bento-border); margin: 0.5rem 0;"></div>
 
                     <div class="cart-grand-total-row">
-                        <span class="cart-grand-total-label">Разом</span>
-                        <span id="grandTotalDisplay" class="cart-grand-total-val" th:text="${total != null ? total + ' ₴' : '0.00 ₴'}">0.00 ₴</span>
+                        <span class="cart-grand-total-label" th:text="#{cart.summary.total}">Разом</span>
+                        <span id="grandTotalDisplay" class="cart-grand-total-val" th:text="${total != null ? total + (#locale.language == 'en' ? ' UAH' : ' ₴') : '0.00'}">0.00</span>
                     </div>
 
                     <button type="submit" class="btn-checkout">
-                        Оформити замовлення
+                        <span th:text="#{cart.btn.checkout}">Оформити замовлення</span>
                         <i class="fas fa-arrow-right"></i>
                     </button>
                 </form>
 
                 <p class="cart-secure-note">
-                    <i class="fas fa-lock"></i> Безпечна оплата та захист даних
+                    <i class="fas fa-lock"></i> <span th:text="#{cart.secure_note}">Безпечна оплата</span>
                 </p>
             </div>
         </div>
@@ -136,6 +136,9 @@
 <footer th:insert="~{layouts/footer :: footer}"></footer>
 
 <script>
+    // Отримуємо валюту з тегу body
+    const currencySymbol = document.body.getAttribute('data-currency') || ' ₴';
+
     function updateCartTotals() {
         let currentSubtotal = 0;
         document.querySelectorAll('.cart-item').forEach(itemRow => {
@@ -149,7 +152,7 @@
         const discountDisplay = document.getElementById("discountDisplay");
         const useBonusCheckbox = document.getElementById("useBonus");
 
-        if (subtotalDisplay) subtotalDisplay.textContent = currentSubtotal.toFixed(2) + " ₴";
+        if (subtotalDisplay) subtotalDisplay.textContent = currentSubtotal.toFixed(2) + currencySymbol;
 
         let finalTotal = currentSubtotal;
         let bonusDiscount = 0;
@@ -161,7 +164,7 @@
             finalTotal = currentSubtotal - bonusDiscount;
             if (discountLine && discountDisplay) {
                 discountLine.style.display = "flex";
-                discountDisplay.textContent = "-" + bonusDiscount.toFixed(2) + " ₴";
+                discountDisplay.textContent = "-" + bonusDiscount.toFixed(2) + currencySymbol;
             }
         } else {
             if (discountLine) {
@@ -169,7 +172,7 @@
             }
         }
         if (grandTotalDisplay) {
-            grandTotalDisplay.textContent = finalTotal.toFixed(2) + " ₴";
+            grandTotalDisplay.textContent = finalTotal.toFixed(2) + currencySymbol;
         }
     }
 

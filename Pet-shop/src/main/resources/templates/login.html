@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авторизація | Зоомагазин</title>
+    <title th:text="#{auth.login.title} + ' | Pawfect'">Авторизація</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -17,33 +17,33 @@
 
     <div class="form-card" style="padding: 2.5rem 2rem;">
 
-        <h1 class="form-title" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.75rem;">Авторизація</h1>
+        <h1 class="form-title" style="text-align: center; margin-bottom: 1.5rem; font-size: 1.75rem;" th:text="#{auth.login.title}">Авторизація</h1>
 
         <div class="auth-toggle-box">
-            <a href="/login" class="auth-toggle-btn active">Вхід</a>
-            <a href="/register" class="auth-toggle-btn">Реєстрація</a>
+            <a href="/login" class="auth-toggle-btn active" th:text="#{auth.login.tab}">Вхід</a>
+            <a href="/register" class="auth-toggle-btn" th:text="#{auth.register.tab}">Реєстрація</a>
         </div>
 
-        <div th:if="${param.error}" style="background-color: #fef2f2; color: #ef4444; padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; font-weight: 600; font-size: 0.85rem; text-align: center;">
+        <div th:if="${param.error}" style="background-color: #fef2f2; color: #ef4444; padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; font-weight: 600; font-size: 0.85rem; text-align: center;" th:text="#{auth.login.error}">
             Невірний логін або пароль. Спробуйте ще раз.
         </div>
 
-        <div th:if="${param.logout}" style="background-color: #f0fdf4; color: #16a34a; padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; font-weight: 600; font-size: 0.85rem; text-align: center;">
+        <div th:if="${param.logout}" style="background-color: #f0fdf4; color: #16a34a; padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; font-weight: 600; font-size: 0.85rem; text-align: center;" th:text="#{auth.login.logout_msg}">
             Ви успішно вийшли з системи.
         </div>
 
         <form th:action="@{/login}" method="post" class="custom-form" style="gap: 1.25rem;">
 
             <div class="form-group">
-                <label class="bento-label">Логін (Ім'я користувача)</label>
+                <label class="bento-label" th:text="#{auth.login.username.label}">Логін (Ім'я користувача)</label>
                 <div class="input-icon-wrapper">
                     <i class="fas fa-user input-icon-left"></i>
-                    <input type="text" name="username" required placeholder="Введіть ваш логін" class="bento-input with-icon-left">
+                    <input type="text" name="username" required th:placeholder="#{auth.login.username.placeholder}" class="bento-input with-icon-left">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="bento-label">Пароль</label>
+                <label class="bento-label" th:text="#{auth.login.password.label}">Пароль</label>
                 <div class="input-icon-wrapper">
                     <i class="fas fa-lock input-icon-left"></i>
                     <input type="password" name="password" id="login-password" required placeholder="••••••••" class="bento-input with-icon-left with-icon-right">
@@ -55,12 +55,12 @@
 
             <div class="auth-options-row">
                 <label class="auth-checkbox-label">
-                    <input type="checkbox" name="remember-me"> Запам'ятати мене
+                    <input type="checkbox" name="remember-me"> <span th:text="#{auth.login.remember}">Запам'ятати мене</span>
                 </label>
-                <a href="#" class="auth-forgot-link">Забули пароль?</a>
+                <a href="#" class="auth-forgot-link" th:text="#{auth.login.forgot}">Забули пароль?</a>
             </div>
 
-            <button type="submit" class="btn-submit-form" style="margin-top: 0.5rem;">
+            <button type="submit" class="btn-submit-form" style="margin-top: 0.5rem;" th:text="#{auth.login.btn}">
                 УВІЙТИ
             </button>
 

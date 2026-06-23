@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${product.name} + ' | Зоомагазин'">Деталі товару</title>
+    <title th:text="${product.name} + ' | Pawfect'">Деталі товару</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -18,7 +18,7 @@
 
     <div class="mb-8">
         <a href="/shop" class="back-link">
-            <i class="fas fa-chevron-left text-xs"></i> Назад до магазину
+            <i class="fas fa-chevron-left text-xs"></i> <span th:text="#{product.back}">Назад до магазину</span>
         </a>
     </div>
 
@@ -73,80 +73,85 @@
 
         <div class="product-info-section">
             <div>
-                <span class="category-badge" th:text="${product.category.name}">Категорія</span>
+                <span class="category-badge" th:text="${product.category != null ? product.category.name : #messages.msg('shop.category.none')}">Категорія</span>
             </div>
 
             <h1 class="product-title" th:text="${product.name}">Назва продукту</h1>
 
             <div class="price-row">
-                <span class="price-main" th:text="${product.price} + ' ₴'">0 ₴</span>
-                <span class="price-suffix">/ за од.</span>
+                <span class="price-main" th:text="${product.price} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">0 ₴</span>
+                <span class="price-suffix" th:text="#{product.price.suffix}">/ за од.</span>
             </div>
 
             <div class="product-description">
-                <p>Найкращий вибір для вашого улюбленця. Цей товар відповідає високим стандартам якості та забезпечить комфорт вашій тваринці.</p>
+                <p th:text="#{product.desc}">Найкращий вибір для вашого улюбленця.</p>
             </div>
 
             <div class="manufacturer-accordion">
                 <button type="button" id="manufacturer-toggle" class="accordion-toggle">
                     <span class="accordion-title">
-                        <i class="fas fa-industry"></i> Інформація про виробника
+                        <i class="fas fa-industry"></i> <span th:text="#{product.accordion.manufacturer}">Інформація про виробника</span>
                     </span>
                     <i id="manufacturer-chevron" class="fas fa-chevron-down accordion-icon"></i>
                 </button>
                 <div id="manufacturer-content" class="accordion-content hidden">
                     <div class="manufacturer-grid">
                         <div class="manufacturer-item">
-                            <div class="manufacturer-label">Бренд</div>
-                            <div class="manufacturer-value" th:text="${product.brand != null and product.brand != '' ? product.brand : 'Не вказано'}">Бренд</div>
+                            <div class="manufacturer-label" th:text="#{product.attr.brand}">Бренд</div>
+                            <div class="manufacturer-value" th:text="${product.brand != null and product.brand != '' ? product.brand : #messages.msg('product.attr.not_specified')}">Бренд</div>
                         </div>
                         <div class="manufacturer-item">
-                            <div class="manufacturer-label">Країна реєстрації</div>
-                            <div class="manufacturer-value" th:text="${product.registrationCountry != null and product.registrationCountry != '' ? product.registrationCountry : 'Не вказано'}">Країна</div>
+                            <div class="manufacturer-label" th:text="#{product.attr.reg_country}">Країна реєстрації</div>
+                            <div class="manufacturer-value" th:text="${product.registrationCountry != null and product.registrationCountry != '' ? product.registrationCountry : #messages.msg('product.attr.not_specified')}">Країна</div>
                         </div>
                         <div class="manufacturer-item">
-                            <div class="manufacturer-label">Країна-виробник</div>
-                            <div class="manufacturer-value" th:text="${product.manufacturerCountry != null and product.manufacturerCountry != '' ? product.manufacturerCountry : 'Не вказано'}">Країна</div>
+                            <div class="manufacturer-label" th:text="#{product.attr.man_country}">Країна-виробник</div>
+                            <div class="manufacturer-value" th:text="${product.manufacturerCountry != null and product.manufacturerCountry != '' ? product.manufacturerCountry : #messages.msg('product.attr.not_specified')}">Країна</div>
                         </div>
                         <div class="manufacturer-item">
-                            <div class="manufacturer-label">Гарантія якості</div>
-                            <div class="manufacturer-value" th:text="${product.guarantee != null and product.guarantee != '' ? product.guarantee : 'Не вказано'}">Гарантія</div>
+                            <div class="manufacturer-label" th:text="#{product.attr.guarantee}">Гарантія якості</div>
+                            <div class="manufacturer-value" th:text="${product.guarantee != null and product.guarantee != '' ? product.guarantee : #messages.msg('product.attr.not_specified')}">Гарантія</div>
                         </div>
                     </div>
-                </div>
-            </div> <div class="cart-panel">
-            <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post" class="cart-form-product">
-                <div class="quantity-wrapper">
-                    <button type="button" onclick="this.nextElementSibling.stepDown()" class="quantity-btn">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <input type="number" name="quantity" value="1" min="1" max="99" class="quantity-input">
-                    <button type="button" onclick="this.previousElementSibling.stepUp()" class="quantity-btn">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-
-                <button type="submit" class="btn-add-cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    Додати в кошик
-                </button>
-            </form>
-
-            <div class="features-list">
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-credit-card"></i>
-                    </div>
-                    <span style="align-self: center;">Безпечна оплата карткою або при отриманні</span>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                    <span style="align-self: center;">Швидка доставка Новою Поштою (1-2 дні)</span>
                 </div>
             </div>
-        </div> </div> </div> </main>
+
+            <div class="cart-panel">
+                <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post" class="cart-form-product">
+                    <div class="quantity-wrapper">
+                        <button type="button" onclick="this.nextElementSibling.stepDown()" class="quantity-btn">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" name="quantity" value="1" min="1" max="99" class="quantity-input">
+                        <button type="button" onclick="this.previousElementSibling.stepUp()" class="quantity-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <button type="submit" class="btn-add-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span th:text="#{product.btn.add_to_cart}">Додати в кошик</span>
+                    </button>
+                </form>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <span style="align-self: center;" th:text="#{product.feature.payment}">Безпечна оплата карткою або при отриманні</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <span style="align-self: center;" th:text="#{product.feature.delivery}">Швидка доставка Новою Поштою (1-2 дні)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
 
 <footer th:insert="~{layouts/footer :: footer}"></footer>

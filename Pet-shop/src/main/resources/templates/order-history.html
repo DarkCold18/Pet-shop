@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title != null ? title : 'Мої замовлення'} + ' | Pawfect'"></title>
+    <title th:text="${title != null ? title : #messages.msg('orders.page.title')} + ' | Pawfect'"></title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -18,14 +18,14 @@
 
     <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 12px;">
         <i class="fas fa-history" style="font-size: 2rem; color: #FF8B3D;"></i>
-        <h1 style="margin: 0; font-size: 2rem; font-weight: 800; color: #1E293B;">Історія покупок</h1>
+        <h1 style="margin: 0; font-size: 2rem; font-weight: 800; color: #1E293B;" th:text="#{orders.title}">Історія покупок</h1>
     </div>
 
     <div th:if="${orders == null or orders.isEmpty()}" class="empty-orders-card">
         <i class="fas fa-box-open"></i>
-        <h2 style="font-weight: 800; color: #1E293B; margin-bottom: 10px;">Тут поки порожньо</h2>
-        <p style="color: #64748B; margin-bottom: 25px;">Ви ще не здійснили жодного замовлення. Час порадувати свого улюбленця!</p>
-        <a href="/shop" class="btn-primary" style="display: inline-block; text-decoration: none;">Перейти до магазину</a>
+        <h2 style="font-weight: 800; color: #1E293B; margin-bottom: 10px;" th:text="#{orders.empty.title}">Тут поки порожньо</h2>
+        <p style="color: #64748B; margin-bottom: 25px;" th:text="#{orders.empty.desc}">Ви ще не здійснили жодного замовлення.</p>
+        <a href="/shop" class="btn-primary" style="display: inline-block; text-decoration: none;" th:text="#{orders.empty.btn}">Перейти до магазину</a>
     </div>
 
     <div th:unless="${orders == null or orders.isEmpty()}" class="orders-grid">
@@ -38,15 +38,15 @@
                         <i class="fas fa-receipt" style="color: #94A3B8;"></i>
                         <span th:text="'#ORD-' + ${order.id}">#ORD-0</span>
                     </div>
-                    <div class="user-order-date" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm') : 'Дата невідома'}">29.09.2025</div>
+                    <div class="user-order-date" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm') : #messages.msg('orders.date.unknown')}">29.09.2025</div>
                 </div>
 
                 <div>
                     <span th:if="${order.stripePaymentId != null}" style="background: #E0F2FE; color: #0284C7; padding: 6px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: 700;">
-                        <i class="fas fa-check-circle" style="margin-right: 4px;"></i> Оплачено онлайн
+                        <i class="fas fa-check-circle" style="margin-right: 4px;"></i> <span th:text="#{orders.status.paid}">Оплачено онлайн</span>
                     </span>
                     <span th:unless="${order.stripePaymentId != null}" style="background: #FEF3C7; color: #D97706; padding: 6px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: 700;">
-                        <i class="fas fa-wallet" style="margin-right: 4px;"></i> При отриманні
+                        <i class="fas fa-wallet" style="margin-right: 4px;"></i> <span th:text="#{orders.status.cod}">При отриманні</span>
                     </span>
                 </div>
             </div>
@@ -56,20 +56,20 @@
                     <div>
                         <div class="user-order-item-name" th:text="${item.product.name}">Назва продукту</div>
                         <div class="user-order-item-meta">
-                            <span th:text="${#numbers.formatDecimal(item.product.price, 1, 'COMMA', 2, 'POINT')} + ' ₴'">0.00 ₴</span>
-                            × <span th:text="${item.quality}">1</span> шт.
+                            <span th:text="${#numbers.formatDecimal(item.product.price, 1, 'COMMA', 2, 'POINT')} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">0.00 ₴</span>
+                            × <span th:text="${item.quality}">1</span> <span th:text="#{orders.item.pcs}">шт.</span>
                         </div>
                     </div>
 
-                    <div class="user-order-item-price" th:text="${#numbers.formatDecimal(item.product.price * item.quality, 1, 'COMMA', 2, 'POINT')} + ' ₴'">
+                    <div class="user-order-item-price" th:text="${#numbers.formatDecimal(item.product.price * item.quality, 1, 'COMMA', 2, 'POINT')} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">
                         0.00 ₴
                     </div>
                 </div>
             </div>
 
             <div class="user-order-footer">
-                <span class="user-order-total-label">Загальна сума:</span>
-                <span class="user-order-total-val" th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')} + ' ₴'">1500.00 ₴</span>
+                <span class="user-order-total-label" th:text="#{orders.total.label}">Загальна сума:</span>
+                <span class="user-order-total-val" th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">1500.00 ₴</span>
             </div>
 
         </div>

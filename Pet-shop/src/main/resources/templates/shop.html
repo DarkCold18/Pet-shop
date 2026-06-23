@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title} + ' | Зоомагазин'">Магазин</title>
-    <!-- Підключення шрифтів та іконок -->
+    <title th:text="${title} + ' | ' + #{shop.page.title}">Магазин</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -12,14 +11,14 @@
 <body>
 <div th:insert="~{layouts/header :: header}"></div>
 <main class="shop-main-container">
-    <!-- Список категорій -->
     <div class="categories-slider">
         <a th:href="@{/shop(sort=${param.sort != null ? param.sort[0] : null}, keyword=${param.keyword != null ? param.keyword[0] : null})}"
            class="category-chip"
            th:classappend="${currentCategory == null ? 'active' : ''}">
-            <img th:src="@{/images/free-icon-cat-paw.png}" alt="Всі товари" style="width: 20px; height: 20px; object-fit: contain;">
-            Всі товари
+            <img th:src="@{/images/free-icon-cat-paw.png}" alt="All" style="width: 20px; height: 20px; object-fit: contain;">
+            <span th:text="#{shop.categories.all}">Всі товари</span>
         </a>
+
         <a th:each="category : ${categories}"
            th:href="@{/shop(category=${category.id}, sort=${param.sort != null ? param.sort[0] : null}, keyword=${param.keyword != null ? param.keyword[0] : null})}"
            class="category-chip"
@@ -33,57 +32,57 @@
             <span th:text="${category.name}">Назва категорії</span>
         </a>
     </div>
-    <!-- Пошук+сортування -->
+
     <div class="catalog-toolbar-row">
-              <div class="toolbar-search-form">
+        <div class="toolbar-search-form">
             <form action="/shop" method="get" style="margin: 0; display: contents;">
                 <input type="hidden" th:if="${currentCategory != null}" name="category" th:value="${currentCategory.id}">
                 <div class="search-field-wrapper">
                     <i class="fas fa-search search-icon-inside"></i>
-                    <input type="text" name="keyword" th:value="${param.keyword}" placeholder="Пошук товарів за назвою...">
+                    <input type="text" name="keyword" th:value="${param.keyword}" th:placeholder="#{shop.search.placeholder}">
                 </div>
             </form>
         </div>
-        <!-- Блок сортування  -->
+
         <div class="toolbar-sort-form">
             <form action="/shop" method="get" style="margin: 0; display: flex; align-items: center; gap: 8px;">
                 <input type="hidden" th:if="${currentCategory != null}" name="category" th:value="${currentCategory.id}">
                 <input type="hidden" th:if="${param.keyword != null}" name="keyword" th:value="${param.keyword}">
-                <label for="catalog-sort" class="sort-field-label">Сортувати:</label>
+                <label for="catalog-sort" class="sort-field-label" th:text="#{shop.sort.label}">Сортувати:</label>
                 <select id="catalog-sort" name="sort" class="sort-dropdown-select" onchange="this.form.submit()">
-                    <option value="featured" th:selected="${param.sort == null or param.sort[0] == 'featured'}">За замовчуванням</option>
-                    <option value="price-asc" th:selected="${param.sort != null and param.sort[0] == 'price-asc'}">Від дешевших до дорожчих</option>
-                    <option value="price-desc" th:selected="${param.sort != null and param.sort[0] == 'price-desc'}">Від дорожчих до дешевших</option>
-                    <option value="name-asc" th:selected="${param.sort != null and param.sort[0] == 'name-asc'}">За алфавітом (А-Я)</option>
+                    <option value="featured" th:selected="${param.sort == null or param.sort[0] == 'featured'}" th:text="#{shop.sort.default}">За замовчуванням</option>
+                    <option value="price-asc" th:selected="${param.sort != null and param.sort[0] == 'price-asc'}" th:text="#{shop.sort.price_asc}">Від дешевших до дорожчих</option>
+                    <option value="price-desc" th:selected="${param.sort != null and param.sort[0] == 'price-desc'}" th:text="#{shop.sort.price_desc}">Від дорожчих до дешевших</option>
+                    <option value="name-asc" th:selected="${param.sort != null and param.sort[0] == 'name-asc'}" th:text="#{shop.sort.name_asc}">За алфавітом (А-Я)</option>
                 </select>
             </form>
         </div>
     </div>
+
     <div class="catalog-main-content">
-        <!-- Пустий результат пошуку або фільтрації -->
         <div th:if="${products.isEmpty()}" class="empty-catalog-box">
             <div class="empty-icon-circle">
                 <i class="fas fa-search"></i>
             </div>
-            <h2 class="empty-title">Нічого не знайдено</h2>
-            <p class="empty-desc">Спробуйте змінити категорію або параметри пошуку.</p>
-            <a href="/shop" class="btn-reset-filter">Повернутись до всіх товарів</a>
+            <h2 class="empty-title" th:text="#{shop.empty.title}">Нічого не знайдено</h2>
+            <p class="empty-desc" th:text="#{shop.empty.desc}">Спробуйте змінити категорію або параметри пошуку.</p>
+            <a href="/shop" class="btn-reset-filter" th:text="#{shop.empty.btn}">Повернутись до всіх товарів</a>
         </div>
-        <!-- Головна сітка карток товарів -->
+
         <div th:unless="${products.isEmpty()}" class="products-bento-grid">
             <div th:each="product : ${products}" class="product-bento-card">
-                <!-- Зображення товару з переходом на картку детального перегляду -->
                 <a th:href="'/shop/product/'+${product.id}" class="product-image-wrapper">
-                    <img th:if="${product.image != null and product.image != ''}" th:src="'/images/'+${product.image}" alt="Фото товару">
-                    <img th:unless="${product.image != null and product.image != ''}" src="/images/noimage.png" alt="Зображення відсутнє">
+                    <img th:if="${product.image != null and product.image != ''}" th:src="'/images/'+${product.image}" th:alt="#{shop.img.alt.product}">
+                    <img th:unless="${product.image != null and product.image != ''}" src="/images/noimage.png" th:alt="#{shop.img.alt.noimage}">
                 </a>
-                <!--  заголовок картки -->
+
                 <div class="product-card-body">
-                    <span class="product-card-category" th:text="${product.category != null ? product.category.name : 'Без категорії'}">Категорія</span>
+                    <span class="product-card-category" th:text="${product.category != null ? product.category.name : #messages.msg('shop.category.none')}">Категорія</span>
+
                     <a th:href="'/shop/product/'+${product.id}" class="product-card-title" th:text="${product.name}">Назва продукту</a>
-                    <!-- Панель дій -->
+
                     <div class="product-card-footer">
-                        <span class="product-card-price" th:text="${product.price} + ' ₴'">0 ₴</span>
+                        <span class="product-card-price" th:text="${product.price} + (${#locale.language == 'en'} ? ' UAH' : ' ₴')">0 ₴</span>
                         <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post" style="margin: 0;">
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" class="btn-add-to-cart-circle">
