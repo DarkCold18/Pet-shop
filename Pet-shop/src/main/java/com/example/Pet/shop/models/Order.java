@@ -18,7 +18,7 @@ public class Order {
     private  double total;
     private String stripePaymentId;
     private String status = "NEW";
-
+    private boolean urgent = false;
     @ManyToOne
     private AppUser user;
 
@@ -72,4 +72,6 @@ public class Order {
     }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public boolean isUrgent() { return urgent; }
+    public void setUrgent(boolean urgent) { this.urgent = urgent; }
 }

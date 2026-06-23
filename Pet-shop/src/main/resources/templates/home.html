@@ -16,17 +16,19 @@
     <div id="shop-view-container" class="view-container">
         <section id="shop-home" style="display: block !important;">
             <!-- Головний баннер -->
-            <div class="hero-section">
+            <section class="hero-banner">
+
                 <div class="hero-content">
-                    <h1>Здорові улюбленці — <span>щасливі господарі!</span></h1>
-                    <p>Преміум корми, корисні ласощі та захоплюючі іграшки для ваших чотирилапих друзів. Скористайтеся нашим інтелектуальним квізом для індивідуального підбору раціону.</p>
-                    <div class="hero-buttons">
-                        <a href="/shop" class="btn btn-primary" style="text-decoration: none;">
+                    <h1 class="hero-title">Здорові улюбленці —<br><span class="text-highlight">щасливі господарі!</span></h1>
+
+                    <p class="hero-subtitle">Преміум корми, корисні ласощі та захоплюючі іграшки для ваших чотирилапих друзів. Скористайтеся нашим інтелектуальним квізом для індивідуального підбору раціону.</p>
+
+                    <div class="hero-buttons" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <a href="/catalog" class="btn-primary">
                             Перейти в каталог
-                            <div class="icon-box-modern icon-box-sm">
-                                <i class="fas fa-arrow-right"></i>
-                            </div>
+                            <span class="icon-circle"><i class="fas fa-arrow-right"></i></span>
                         </a>
+
                         <a href="/profile/pet/add" class="btn-add-pet-fixed">
                             <div class="icon-box-modern icon-box-sm">
                                 <i class="fas fa-plus"></i>
@@ -35,30 +37,55 @@
                         </a>
                     </div>
                 </div>
-                <div class="hero-illustration">
-                    <div class="hero-circle">
-                        <span class="hero-img" style="font-size: 5rem; display: block; text-align: center; line-height: 150px;">🐕</span>
+
+                <div class="hero-image-wrapper">
+
+                    <div class="floating-badge badge-natural">
+                        <i class="fas fa-leaf" style="color: #10B981; font-size: 1.2rem;"></i> 100% Натурально
                     </div>
-                    <div class="floating-badge badge-1"><span>🐱 Киця рекомендує</span></div>
-                    <div class="floating-badge badge-2"><span>🌾 100% Натурально</span></div>
+
+                    <div class="floating-badge badge-cat">
+                        <i class="fas fa-paw" style="color: #FF8B3D; font-size: 1.2rem;"></i> Киця рекомендує
+                    </div>
+
+                    <img src="/images/a-detailed-close-up-portrait-of-a-stylized--charmi.png" alt="3D кіт маскот" class="hero-cat-img">
+
                 </div>
-            </div>
+
+            </section>
             <div class="category-container">
 
-                <a href="/catalog/dogs" class="category-banner-link">
+                <!-- СОБАКИ (По центру) -->
+                <a href="/catalog/dogs" class="category-banner-link banner-dog">
                     <img src="/images/wmremove-transformed.png" alt="Товари для собак">
-                    <div class="banner-content">
-                        <h3>Товари для собак</h3>
-                        <span class="btn-banner">Дивитись каталог <i class="fas fa-arrow-right"></i></span>
+                    <div class="custom-banner-text align-center">
+                        <i class="fas fa-paw banner-paw-icon"></i>
+                        <h3>Товари<br>для собак</h3>
+                        <p>Все, що потрібно<br>вашому улюбленцю!</p>
+                        <span class="btn-banner">Переглянути каталог <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </a>
 
-                <a href="/catalog/cats" class="category-banner-link">
-                    <img src="/images/cat-banner.jpg" alt="Товари для котів">
+                <!-- КОТИ (По центру) -->
+                <a href="/catalog/cats" class="category-banner-link banner-cat">
+                    <img src="/images/wmremove-transformed1.png" alt="Товари для котів">
+                    <div class="custom-banner-text align-center">
+
+                        <h3>Товари для котів</h3>
+                        <p>Турбота, комфорт і радість<br>для вашого котика</p>
+                        <span class="btn-banner">Переглянути каталог <i class="fas fa-arrow-right"></i></span>
+                    </div>
                 </a>
 
-                <a href="/catalog/accessories" class="category-banner-link">
-                    <img src="/images/acc-banner.jpg" alt="Аксесуари та догляд">
+                <!-- АКСЕСУАРИ (По левому краю) -->
+                <a href="/catalog/accessories" class="category-banner-link banner-acc">
+                    <img src="/images/ChatGPT%20Image%2013%20июн.%202026%20г.,%2022_39_46.png" alt="Аксесуари та догляд">
+                    <div class="custom-banner-text align-left">
+                        <i class="fas fa-paw banner-paw-icon"></i>
+                        <h3>Аксесуари<br>та догляд</h3>
+                        <p>Все для здоров'я,<br>краси та розваг<br>ваших улюбленців</p>
+                        <span class="btn-banner">Переглянути каталог <i class="fas fa-arrow-right"></i></span>
+                    </div>
                 </a>
 
             </div>

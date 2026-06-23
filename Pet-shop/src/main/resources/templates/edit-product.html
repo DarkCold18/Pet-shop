@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редагувати товар | Bento POS</title>
-    <!-- Підключення шрифтів та іконок -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -19,7 +18,6 @@
         <h1 class="page-title">Редагування товару</h1>
     </div>
     <div class="form-card">
-        <!-- Форма редагування -->
         <form th:action="@{/shop/product/{id}/edit(id=${product.id})}" th:object="${product}" method="post" enctype="multipart/form-data" class="form-grid">
             <input type="hidden" th:field="*{image}" />
             <div class="form-group md-col-span-2">
@@ -75,6 +73,28 @@
                     <button type="button" class="btn-quick-adjust" onclick="adjustQuantityFieldValue(20)">+20</button>
                 </div>
             </div>
+
+            <div class="form-group md-col-span-2" style="background: #F8FAFC; padding: 1.5rem; border-radius: 1rem; border: 1px dashed #CBD5E1; margin-top: 10px;">
+                <label class="form-label" style="margin-bottom: 15px;"><i class="fas fa-tags" style="color: #64748B; margin-right: 8px;"></i>Спеціальні маркери (для CRM)</label>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: #ffffff; padding: 10px 16px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.2s;">
+                        <input type="checkbox" th:field="*{cryo}" style="width: 18px; height: 18px; accent-color: #0284C7; cursor: pointer;">
+                        <span style="font-weight: 700; color: #0369A1;"><i class="fas fa-snowflake"></i> Кріо</span>
+                    </label>
+
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: #ffffff; padding: 10px 16px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.2s;">
+                        <input type="checkbox" th:field="*{fragile}" style="width: 18px; height: 18px; accent-color: #D97706; cursor: pointer;">
+                        <span style="font-weight: 700; color: #B45309;"><i class="fas fa-wine-glass-alt"></i> Крихке</span>
+                    </label>
+
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: #ffffff; padding: 10px 16px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: all 0.2s;">
+                        <input type="checkbox" th:field="*{liquid}" style="width: 18px; height: 18px; accent-color: #4338CA; cursor: pointer;">
+                        <span style="font-weight: 700; color: #4338CA;"><i class="fas fa-tint"></i> Рідина</span>
+                    </label>
+                </div>
+                <p style="font-size: 0.85rem; color: #64748B; margin-top: 12px; margin-bottom: 0;">* Відмітьте потрібні маркери. Вони будуть підсвічуватися менеджерам при збиранні замовлень.</p>
+            </div>
+
             <div class="md-col-span-2 form-actions">
                 <button type="submit" class="btn-submit">
                     <i class="fas fa-check-double"></i> ЗБЕРЕГТИ ЗМІНИ
@@ -85,13 +105,10 @@
 </main>
 <footer th:insert="~{layouts/footer :: footer}"></footer>
 <script>
-    <!-- Скрипт для оновлення кількості -->
     function adjustQuantityFieldValue(amount) {
         const qtyInput = document.getElementById('bento-qty-input');
         if (qtyInput) {
-            // Отримуємо поточне значення (якщо пусте - беремо 0)
             let currentVal = parseInt(qtyInput.value) || 0;
-            // Додаємо значення та оновлюємо інпут
             qtyInput.value = currentVal + amount;
         }
     }

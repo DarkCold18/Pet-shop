@@ -71,17 +71,17 @@ public class AuthController {
             return "redirect:/login";
         }
 
-        // 1. Спочатку знаходимо користувача
+        //  Спочатку знаходимо користувача
         String username = authentication.getName();
         AppUser user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         model.addAttribute("user", user);
 
-        // 2. Тільки ПІСЛЯ ЦЬОГО шукаємо його тваринок і додаємо в модель
+
         List<Pet> pets = petRepository.findByUser(user);
         model.addAttribute("pets", pets);
 
-        // 3. Завантажуємо продукти для панелі адміністратора
+        //  Завантажуємо продукти для панелі адміністратора
         List<Product> products = productRepository.findAll();
         model.addAttribute("products", products);
 

@@ -14,12 +14,9 @@ import java.util.List;
 @Controller
 public class PageController {
 
-    // Додав слово final для безпеки (рекомендовано в Spring)
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final PetRepository petRepository;
-
-    // ВИПРАВЛЕНО: Тепер конструктор приймає всі 3 репозиторії
     public PageController(ProductRepository productRepository,
                           UserRepository userRepository,
                           PetRepository petRepository) {
@@ -28,7 +25,7 @@ public class PageController {
         this.petRepository = petRepository;
     }
 
-    // ВИПРАВЛЕНО: Додано Principal principal у параметри методу
+
     @GetMapping("/")
     public String home(Model model, Principal principal) {
         List<Product> products = productRepository.findByRecommendedTrue();

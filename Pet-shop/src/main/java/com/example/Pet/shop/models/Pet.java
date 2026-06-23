@@ -8,12 +8,12 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // DOG, CAT, BIRD, RODENT
+    private String type;
     private String name;
     private String breed;
     private Double age;
     private Double weight;
-    private String healthFocus; // ACTIVE, DIGESTION, SKIN, TEETH
+    private String healthFocus;
 
     // Зв'язок: У одного користувача може бути багато тваринок
     @ManyToOne
@@ -32,7 +32,6 @@ public class Pet {
         this.user = user;
     }
 
-    // --- Getters and Setters ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getType() { return type; }

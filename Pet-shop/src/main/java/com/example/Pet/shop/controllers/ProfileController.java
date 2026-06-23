@@ -167,7 +167,6 @@ public class ProfileController {
         return "pet-quiz";
     }
 
-    // ОНОВЛЕНИЙ МЕТОД ЗБЕРЕЖЕННЯ В БД
     @PostMapping("/profile/pet/add")
     public String savePetProfile(Principal principal,
                                  @RequestParam String type,
@@ -186,13 +185,11 @@ public class ProfileController {
 
         // Створюємо тваринку
         Pet pet = new Pet(type, name, breed, age, weight, healthFocus, user);
-
-        // Зберігаємо в БД
         petRepository.save(pet);
 
         return "redirect:/profile";
     }
-    // 1. Сторінка редагування
+    //  Сторінка редагування
     @GetMapping("/profile/pet/edit/{id}")
     public String editPetForm(@PathVariable Long id, Principal principal, Model model) {
         if (principal == null) {
@@ -202,7 +199,7 @@ public class ProfileController {
         AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
         Pet pet = petRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Невірний ID тваринки: " + id));
 
-        // Перевірка по логіну (username), а не по ID
+        // Перевірка по логіну
         if (!pet.getUser().getUsername().equals(user.getUsername())) {
             return "redirect:/profile";
         }
@@ -212,7 +209,7 @@ public class ProfileController {
         return "pet-edit";
     }
 
-    // 2. Збереження відредагованих даних
+    //  Збереження відредагованих даних
     @PostMapping("/profile/pet/edit/{id}")
     public String updatePetProfile(@PathVariable Long id,
                                    @RequestParam String type,
@@ -244,7 +241,7 @@ public class ProfileController {
         return "redirect:/profile";
     }
 
-    // 3. Видалення тваринки
+    //  Видалення тваринки
     @PostMapping("/profile/pet/delete/{id}")
     public String deletePet(@PathVariable Long id, Principal principal) {
         if (principal == null) {
@@ -253,8 +250,6 @@ public class ProfileController {
 
         AppUser user = userRepository.findByUsername(principal.getName()).orElseThrow();
         Pet pet = petRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Невірний ID тваринки: " + id));
-
-        // Видаляємо тільки якщо тваринка належить користувачу
         if (pet.getUser().getUsername().equals(user.getUsername())) {
             petRepository.delete(pet);
         }
@@ -269,7 +264,7 @@ public class ProfileController {
         model.addAttribute("customers", customers);
         model.addAttribute("title", "База клієнтів");
 
-        return "customers"; // Повертаємо назву HTML-шаблону
+        return "customers";
     }
     @GetMapping("/crm-dashboard")
     public String showCrmDashboard(Model model) {
@@ -284,16 +279,17 @@ public class ProfileController {
         return "crm-dashboard";
     }
     @PostMapping("/crm-dashboard/order/status")
-    public String updateOrderStatus(@RequestParam Long orderId, @RequestParam String newStatus) {
+    public String updateOrderStatus(@RequestParam Long orderId, @RequestParam String newStatus, @RequestParam(defaultValue = "false") boolean urgent) {
         // Знаходимо замовлення за його ID
         Order order = orderRepository.findById(orderId).orElse(null);
 
         if (order != null) {
-            order.setStatus(newStatus); // Встановлюємо новий статус
+            order.setStatus(newStatus);
+            order.setUrgent(urgent);
             orderRepository.save(order); // Зберігаємо в базу
         }
 
-        return "redirect:/crm-dashboard"; // Оновлюємо сторінку Канбану
+        return "redirect:/crm-dashboard";
     }
 
 }

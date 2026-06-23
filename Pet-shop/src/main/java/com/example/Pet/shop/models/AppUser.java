@@ -104,12 +104,12 @@ public class AppUser {
     public void setPets(List<Pet> pets) {
         this.pets = pets;
     }
-    // 1. Автоматический подсчет общего количества замовлень
+    //  Автоматичний підрахунок загальної кількості замовлень
     public int getTotalOrdersCount() {
         return orders != null ? orders.size() : 0;
     }
 
-    // 2. Автоматический подсчет всей потраченной суммы
+    //  Автоматичний підрахунок усієї витраченої суми
     public double getTotalSpentAmount() {
         if (orders == null || orders.isEmpty()) {
             return 0.0;

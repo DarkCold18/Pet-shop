@@ -26,14 +26,11 @@ public class PaymentController {
 
     @Autowired
     private OrderRepository orderRepository;
-    private final String stripeSecretKey = "YOUR_STRIPE_KEY";
+    private final String stripeSecretKey = "   ";
 
-    // ==========================================
-    // КРОК 1: ГЕНЕРАЦІЯ КЛЮЧА ДЛЯ STRIPE ELEMENTS
-    // (Цей метод викликатиметься з JavaScript перед оплатою)
-    // ==========================================
+
     @PostMapping("/create-payment-intent")
-    @ResponseBody // Важливо: повертає JSON, а не HTML
+    @ResponseBody
     public ResponseEntity<Map<String, String>> createPaymentIntent(@RequestBody Map<String, Object> data) {
         Stripe.apiKey = stripeSecretKey;
         try {
@@ -59,9 +56,8 @@ public class PaymentController {
         }
     }
 
-    // ==========================================
-    // КРОК 2: ЗБЕРЕЖЕННЯ ДАНИХ (ПІСЛЯ УСПІШНОЇ ОПЛАТИ)
-    // ==========================================
+
+    // Збереження даних
     @PostMapping("/checkout/process")
     public String processPayment(@RequestParam String name,
                                  @RequestParam String phone,
@@ -71,18 +67,18 @@ public class PaymentController {
                                  @RequestParam Double amount,
                                  @RequestParam(required = false) String stripePaymentId,
                                  java.security.Principal principal,
-                                 jakarta.servlet.http.HttpSession session) { // НОВЕ: Додали HttpSession
+                                 jakarta.servlet.http.HttpSession session) {
 
         if (principal != null) {
             AppUser user = userRepository.findByUsername(principal.getName()).orElse(null);
             if (user != null) {
-                // 1. Оновлюємо дані клієнта
+                //  Оновлюємо дані клієнта
                 user.setFullName(name);
                 user.setPhone(phone);
                 user.setEmail(email);
                 user.setAddress(address);
 
-                // 2. Створюємо замовлення
+                //  Створюємо замовлення
                 Order order = new Order();
                 order.setTotal(amount);
                 order.setOrderDate(java.time.LocalDateTime.now());
@@ -91,10 +87,6 @@ public class PaymentController {
                 if (stripePaymentId != null && !stripePaymentId.isEmpty()) {
                     order.setStripePaymentId(stripePaymentId);
                 }
-
-                // === 3. МАГІЯ: ПЕРЕНОСИМО ТОВАРИ З КОШИКА В БД ===
-                // Дістаємо ваш кошик із сесії.
-                // (Якщо ви називали атрибут якось інакше, а не "cart", замініть це слово нижче)
                 List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 
                 if (cart != null && !cart.isEmpty()) {
@@ -103,8 +95,8 @@ public class PaymentController {
                     for (CartItem cartItem : cart) {
                         OrderItem orderItem = new OrderItem();
                         orderItem.setProduct(cartItem.getProduct());
-                        orderItem.setQuality(cartItem.getQuality()); // Беремо ваше поле quality
-                        orderItem.setOrder(order); // Прив'язуємо цей товар до поточного замовлення
+                        orderItem.setQuality(cartItem.getQuality());
+                        orderItem.setOrder(order);
 
                         orderItems.add(orderItem);
                     }
@@ -112,24 +104,20 @@ public class PaymentController {
                     order.setItems(orderItems);
                 }
 
-                // 4. Зберігаємо все в базу
+                //  Зберігаємо все в базу
                 userRepository.save(user);
-                orderRepository.save(order); // Завдяки налаштуванням зв'язків, товари (OrderItem) збережуться автоматично
-
-                // 5. ОЧИЩАЄМО КОШИК після успішної покупки
+                orderRepository.save(order);
                 session.removeAttribute("cart");
             }
         }
         return "redirect:/payment/success";
     }
 
-    // Страница после успешной оплаты
     @GetMapping("/payment/success")
     public String paymentSuccess() {
         return "success-page";
     }
 
-    // Если пользователь передумал платить
     @GetMapping("/payment/cancel")
     public String paymentCancel() {
         return "redirect:/cart";

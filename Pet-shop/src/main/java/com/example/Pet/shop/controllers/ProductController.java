@@ -45,7 +45,6 @@ public class ProductController {
         model.addAttribute("currentCategory", currentCategory);
         List<Product> products = repoProduct.findAll();
 
-        // Фильтр по категории
         if (categoryId != null) {
             products = products.stream()
                     .filter(p -> p.getCategory() != null && p.getCategory().getId().equals(categoryId))
@@ -120,28 +119,41 @@ public class ProductController {
                               @RequestParam String full_description,
                               @RequestParam double price,
                               @RequestParam Long categoryId,
-                              @RequestParam(required = false) String sizes) throws IOException {
+                              @RequestParam(required = false) String sizes,
+                              // ДОДАНО ПРИЙОМ ТЕГІВ З ФОРМИ:
+                              @RequestParam(defaultValue = "false") boolean cryo,
+                              @RequestParam(defaultValue = "false") boolean fragile,
+                              @RequestParam(defaultValue = "false") boolean liquid) throws IOException {
 
         Category category = repoCategory.findById(categoryId).orElseThrow();
         Product product = new Product(name, price, "", short_description, full_description, category);
+
+        // ЗБЕРІГАЄМО ТЕГИ В ОБ'ЄКТ ТОВАРУ:
+        product.setCryo(cryo);
+        product.setFragile(fragile);
+        product.setLiquid(liquid);
 
         String mainImageName = saveImage(mainImageFile);
         if (mainImageName != null) {
             product.setImage(mainImageName);
         }
 
-        List<String> additionalImageNames = new ArrayList<>();
-        for (MultipartFile file : additionalImageFiles) {
-            String imageName = saveImage(file);
-            if (imageName != null) {
-                additionalImageNames.add(imageName);
+        if (additionalImageFiles != null && !additionalImageFiles.isEmpty()) {
+            List<String> additionalImageNames = new ArrayList<>();
+            for (MultipartFile file : additionalImageFiles) {
+                String imageName = saveImage(file);
+                if (imageName != null) {
+                    additionalImageNames.add(imageName);
+                }
             }
+            product.setImages(additionalImageNames);
         }
-        product.setImages(additionalImageNames);
+
         List<String> sizeList = convertSizesStringToList(sizes);
         product.setAvailableSizes(sizeList);
         product.generateSmartInfoIfEmpty();
         repoProduct.save(product);
+
         return "redirect:/shop";
     }
 
@@ -177,7 +189,9 @@ public class ProductController {
             String mainImageName = saveImage(imageFile);
             product.setImage(mainImageName);
         }
-
+        product.setCryo(updatedProduct.isCryo());
+        product.setFragile(updatedProduct.isFragile());
+        product.setLiquid(updatedProduct.isLiquid());
         repoProduct.save(product);
 
         return "redirect:/inventory";

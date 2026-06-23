@@ -25,10 +25,13 @@
             <a th:href="@{/profile}" class="header-profile-btn" title="Особистий кабінет">
                 <i class="far fa-user"></i>
             </a>
-            <button id="nav-cart-btn" class="header-cart-icon-btn">
+            <a th:href="@{/cart}" id="nav-cart-btn" class="header-cart-icon-btn" style="text-decoration: none;">
                 <i class="fas fa-shopping-basket"></i>
-                <span id="cart-count-badge" class="cart-badge hidden">0</span>
-            </button>
+                <span id="cart-count-badge"
+                      class="cart-badge"
+                      th:classappend="${cartItemCount == null or cartItemCount == 0} ? 'hidden' : ''"
+                      th:text="${cartItemCount != null ? cartItemCount : 0}">0</span>
+            </a>
         </div>
     </header>
     <div style="background: white; border-bottom: 1px solid #E2E8F0; padding: 0.6rem 2rem; display: flex; gap: 1rem; font-weight: 600; font-size: 0.9rem; margin-top: 70px; position: relative; z-index: 9990;">

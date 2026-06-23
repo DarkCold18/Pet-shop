@@ -226,7 +226,7 @@ public class Product {
     public void setGuarantee(String guarantee) {
         this.guarantee = guarantee;
     }
-    // РОЗУМНЕ АВТОЗАПОВНЕННЯ БАЗУЮЧИСЬ НА НАЗВІ ТОВАРУ
+    // Розумне автозаповнення
     public void generateSmartInfoIfEmpty() {
         if (this.name == null) return;
 
